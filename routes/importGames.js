@@ -67,6 +67,11 @@ router.post("/import-games", async (req, res) => {
 // Route to check the import status
 router.get("/import-status", (req, res) => {
 	const { importInProgress, projectID } = req.session;
+	console.log(
+		`SENDING: inProgress= ${importInProgress || false}, projectID= ${
+			importInProgress ? null : projectID
+		}`
+	);
 	res.json({
 		inProgress: importInProgress || false,
 		projectID: importInProgress ? null : projectID,
