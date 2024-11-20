@@ -52,13 +52,19 @@ router.post("/import-games", async (req, res) => {
 			.catch((error) => {
 				console.error("Import failed:", error);
 			})
-			.finally(() => {
+			.finally(async () => {
 				req.session.importInProgress = false; // Reset status regardless of success or failure
 				printReqSession(req);
 				console.log(
 					"IN FINALLY BLOCK, req.session.importInProgress is:",
 					req.session.importInProgress
 				);
+				try {
+					// Send a request to the import-status route to ensure session is updated
+					await axios.get(`${process.env.BASE_URL}/import-status`);
+				} catch (err) {
+					console.error("Error calling import-status:", err);
+				}
 			});
 		res.status(202).json({ message: "Import started" });
 	} catch (error) {
