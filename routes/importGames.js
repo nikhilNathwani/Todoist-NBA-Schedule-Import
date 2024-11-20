@@ -61,7 +61,7 @@ router.post("/import-games", async (req, res) => {
 				);
 				try {
 					// Send a request to the import-status route to ensure session is updated
-					await axios.get(`${process.env.BASE_URL}/import-status`);
+					await axios.get(`/import-status`);
 				} catch (err) {
 					console.error("Error calling import-status:", err);
 				}
