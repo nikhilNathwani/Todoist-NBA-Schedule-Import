@@ -42,24 +42,24 @@ router.post("/import-games", async (req, res) => {
 			`${teamName} schedule`,
 			teamColor
 		);
+		req.session.projectID = projectID;
 
 		// Start the import process in the background
 		importSchedule(api, schedule, projectID, teamName)
 			.then(() => {
-				req.session.projectID = projectID;
 				console.log("Import completed");
 			})
 			.catch((error) => {
-				req.session.projectID = null; // Clear project ID on failure
 				console.error("Import failed:", error);
 			})
 			.finally(() => {
 				req.session.importInProgress = false; // Reset status regardless of success or failure
+				printReqSession(req);
 			});
 		res.status(202).json({ message: "Import started" });
 	} catch (error) {
-		console.error("Error preparing import:", error);
 		req.session.importInProgress = false;
+		console.error("Error preparing import:", error);
 		res.status(500).json({ success: false, message: error.message });
 	}
 });
