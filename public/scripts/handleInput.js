@@ -32,14 +32,14 @@ function startImport(team, project) {
 						"Error starting import in THEN-ELSE:",
 						data.message
 					);
-					showImportStatusUI(importStatus.ERROR, data.message);
+					showImportStatusUI(importStatus.ERROR, null, data.message);
 					// alert(`Failed to start import: ${data.message}`);
 				});
 			}
 		})
 		.catch((error) => {
 			console.error("Error starting import in CATCH:", error);
-			showImportStatusUI(importStatus.ERROR, error);
+			showImportStatusUI(importStatus.ERROR, null, error);
 		});
 }
 
@@ -67,7 +67,7 @@ function pollStatus() {
 			})
 			.catch((error) => {
 				console.error("Error checking status:", error);
-				showImportStatusUI(importStatus.ERROR, data.projectID, error);
+				showImportStatusUI(importStatus.ERROR, null, error);
 				clearInterval(intervalId); // Stop polling on error
 			});
 	}, 3000); // Poll every 3 seconds
