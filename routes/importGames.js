@@ -55,11 +55,16 @@ router.post("/import-games", async (req, res) => {
 			.finally(() => {
 				req.session.importInProgress = false; // Reset status regardless of success or failure
 				printReqSession(req);
+				console.log(
+					"IN FINALLY BLOCK, req.session.importInProgress is:",
+					req.session.importInProgress
+				);
 			});
 		res.status(202).json({ message: "Import started" });
 	} catch (error) {
 		req.session.importInProgress = false;
 		console.error("Error preparing import:", error);
+		printReqSession(req);
 		res.status(500).json({ success: false, message: error.message });
 	}
 });
