@@ -25,7 +25,7 @@ function startImport(team, project) {
 			if (response.ok) {
 				console.log("Import started successfully.");
 				showImportStatusUI(importStatus.LOADING);
-				pollStatus();
+				// pollStatus();
 			} else {
 				return response.json().then((data) => {
 					console.error(
