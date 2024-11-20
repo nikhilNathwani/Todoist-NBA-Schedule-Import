@@ -20,11 +20,11 @@ let importInProgress = false; // Track the import status
 
 // Process user's team/project selections and import schedule
 router.post("/import-games", async (req, res) => {
-	if (importInProgress) {
+	if (req.session.importInProgress) {
 		return res.status(429).json({ message: "Import already in progress" }); // Prevent concurrent imports
 	}
 
-	importInProgress = true; // Set import status to "In Progress"
+	req.session.importInProgress = true; // Set import status to "In Progress"
 
 	printReqSession(req);
 	const { team: teamID, project } = req.body;
@@ -46,25 +46,31 @@ router.post("/import-games", async (req, res) => {
 		// Start the import process in the background
 		importSchedule(api, schedule, projectID, teamName)
 			.then(() => {
+				req.session.projectID = projectID;
 				console.log("Import completed");
 			})
 			.catch((error) => {
+				req.session.projectID = null; // Clear project ID on failure
 				console.error("Import failed:", error);
 			})
 			.finally(() => {
-				importInProgress = false; // Reset status regardless of success or failure
+				req.session.importInProgress = false; // Reset status regardless of success or failure
 			});
 		res.status(202).json({ message: "Import started" });
 	} catch (error) {
 		console.error("Error preparing import:", error);
-		importInProgress = false;
+		req.session.importInProgress = false;
 		res.status(500).json({ success: false, message: error.message });
 	}
 });
 
 // Route to check the import status
 router.get("/import-status", (req, res) => {
-	res.json({ inProgress: importInProgress });
+	const { importInProgress, projectID } = req.session;
+	res.json({
+		inProgress: importInProgress || false,
+		projectID: importInProgress ? null : projectID,
+	});
 });
 
 module.exports = { router, userReachedProjectLimit };

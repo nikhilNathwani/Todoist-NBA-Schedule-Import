@@ -10,7 +10,7 @@ const importStatus = {
 	ERROR: 2,
 };
 
-function showImportStatusUI(status, errorMessage = null) {
+function showImportStatusUI(status, projectID = null, errorMessage = null) {
 	const arrow = document.getElementById("arrow");
 	arrow.innerHTML = getStatusArrow(status);
 
@@ -24,7 +24,7 @@ function showImportStatusUI(status, errorMessage = null) {
 	statusContainer.classList.add("fade-in");
 
 	if (status == importStatus.SUCCESS || status == importStatus.ERROR) {
-		showNextStepsList(status, errorMessage);
+		showNextStepsList(status, projectID, errorMessage);
 	}
 }
 
@@ -78,8 +78,8 @@ function getStatusArrow(status) {
 //         NEXT STEP LINKS UI                //
 //                                           //
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-function showNextStepsList(status, errorMessage = null) {
-	const nextSteps = makeNextStepsList(status, errorMessage);
+function showNextStepsList(status, projectID, errorMessage) {
+	const nextSteps = makeNextStepsList(status, projectID, errorMessage);
 	const appContent = document.querySelector(".app-content");
 	appContent.appendChild(nextSteps);
 	setTimeout(() => {
@@ -87,7 +87,7 @@ function showNextStepsList(status, errorMessage = null) {
 	}, 1200);
 }
 
-function makeNextStepsList(status, errorMessage = null) {
+function makeNextStepsList(status, projectID, errorMessage) {
 	const list = document.createElement("ul");
 	list.classList.add("next-steps-list");
 	// list.classList.add("fade-in");
@@ -100,7 +100,7 @@ function makeNextStepsList(status, errorMessage = null) {
 				icon: `<i class="fa-solid fa-up-right-from-square"></i>`,
 				linkName: "Open Todoist",
 				desc: "to view schedule",
-				link: "todoist://",
+				link: `todoist://project?id=${projectID}`,
 			},
 			{
 				icon: `<i class="fa-solid fa-arrow-left"></i>`,

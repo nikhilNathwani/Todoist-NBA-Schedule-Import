@@ -61,13 +61,13 @@ function pollStatus() {
 					// document.getElementById("status-message").textContent =
 					// 	"Status: Import complete!";
 					console.log("Import complete!");
-					showImportStatusUI(importStatus.SUCCESS);
+					showImportStatusUI(importStatus.SUCCESS, data.projectID);
 					clearInterval(intervalId); // Stop polling once import is complete
 				}
 			})
 			.catch((error) => {
 				console.error("Error checking status:", error);
-				showImportStatusUI(importStatus.ERROR, error);
+				showImportStatusUI(importStatus.ERROR, data.projectID, error);
 				clearInterval(intervalId); // Stop polling on error
 			});
 	}, 3000); // Poll every 3 seconds
