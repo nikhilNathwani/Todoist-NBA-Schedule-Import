@@ -61,7 +61,9 @@ router.post("/import-games", async (req, res) => {
 				);
 				try {
 					// Send a request to the import-status route to ensure session is updated
-					await axios.get(`/import-status`);
+					await axios.get(
+						`https://nba-todoist-import.vercel.app/api/import-status`
+					);
 				} catch (err) {
 					console.error("Error calling import-status:", err);
 				}
