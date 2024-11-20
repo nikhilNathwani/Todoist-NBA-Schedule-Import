@@ -25,7 +25,7 @@ function startImport(team, project) {
 			if (response.ok) {
 				console.log("Import started successfully.");
 				showImportStatusUI(importStatus.LOADING);
-				// pollStatus();
+				pollStatus();
 			} else {
 				return response.json().then((data) => {
 					console.error(
@@ -53,7 +53,7 @@ function pollStatus() {
 				return response.json();
 			})
 			.then((data) => {
-				if (data.inProgress) {
+				if (!data.importEnded) {
 					console.log("Import in progress...");
 					// document.getElementById("status-message").textContent =
 					// 	"Status: Import in progress...";

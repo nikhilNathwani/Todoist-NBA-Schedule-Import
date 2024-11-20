@@ -24,8 +24,6 @@ router.post("/import-games", async (req, res) => {
 		return res.status(429).json({ message: "Import already in progress" }); // Prevent concurrent imports
 	}
 
-	req.session.importInProgress = true; // Set import status to "In Progress"
-
 	printReqSession(req);
 	const { team: teamID, project } = req.body;
 	const api = initializeTodoistAPI(req);
@@ -52,25 +50,17 @@ router.post("/import-games", async (req, res) => {
 			.catch((error) => {
 				console.error("Import failed:", error);
 			})
-			.finally(async () => {
-				req.session.importInProgress = false; // Reset status regardless of success or failure
+			.finally(() => {
+				req.session.importEnded = true;
 				printReqSession(req);
 				console.log(
 					"IN FINALLY BLOCK, req.session.importInProgress is:",
 					req.session.importInProgress
 				);
-				try {
-					// Send a request to the import-status route to ensure session is updated
-					await axios.get(
-						`https://nba-todoist-import.vercel.app/api/import-status`
-					);
-				} catch (err) {
-					console.error("Error calling import-status:", err);
-				}
 			});
 		res.status(202).json({ message: "Import started" });
 	} catch (error) {
-		req.session.importInProgress = false;
+		req.session.importEnded = true;
 		console.error("Error preparing import:", error);
 		printReqSession(req);
 		res.status(500).json({ success: false, message: error.message });
@@ -81,15 +71,15 @@ router.post("/import-games", async (req, res) => {
 router.get("/import-status", (req, res) => {
 	console.log("IN IMPORT STATUS");
 	printReqSession(req);
-	const { importInProgress, projectID } = req.session;
+	const { importEnded, projectID } = req.session;
 	console.log(
-		`SENDING: inProgress= ${importInProgress || false}, projectID= ${
-			importInProgress ? null : projectID
+		`SENDING: importEnded= ${importEnded && true}, projectID= ${
+			importEnded && true ? projectID : null
 		}`
 	);
 	res.json({
-		inProgress: importInProgress || false,
-		projectID: importInProgress ? null : projectID,
+		importEnded: importEnded && true,
+		projectID: importEnded && true ? projectID : null,
 	});
 });
 
