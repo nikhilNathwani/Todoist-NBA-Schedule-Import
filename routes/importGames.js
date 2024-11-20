@@ -54,6 +54,7 @@ router.post("/import-games", async (req, res) => {
 			})
 			.finally(() => {
 				req.session.importInProgress = false; // Reset status regardless of success or failure
+				req.session.save();
 				printReqSession(req);
 			});
 		res.status(202).json({ message: "Import started" });
