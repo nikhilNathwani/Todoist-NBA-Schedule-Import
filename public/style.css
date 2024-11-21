@@ -41,12 +41,30 @@ body {
 
 	min-height: 100svh;
 
+	display: grid;
+	grid-template-rows: 1fr 3rem;
+
+	background-color: var(--clr-bg);
+}
+
+main {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
+}
 
-	background-color: var(--clr-bg);
+footer {
+	width: 100%;
+	height: 3rem;
+
+	background-color: var(--clr-dark);
+	color: var(--clr-bg);
+
+	display: flex;
+	flex-flow: column nowrap;
+	align-items: center;
+	justify-content: center;
 }
 
 .app-frame {

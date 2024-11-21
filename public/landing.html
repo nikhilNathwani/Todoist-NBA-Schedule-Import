@@ -30,44 +30,59 @@
 		></script>
 	</head>
 	<body>
-		<div class="app-frame" id="appFrameLanding">
-			<div class="app-header">
-				<div class="logo-banner logo-banner-large">
-					<div class="logo-container" id="nbaLogoContainer">
-						<img src="images/nba-logo.png" alt="NBA Logo" />
+		<main>
+			<div class="app-frame" id="appFrameLanding">
+				<div class="app-header">
+					<div class="logo-banner logo-banner-large">
+						<div class="logo-container" id="nbaLogoContainer">
+							<img src="images/nba-logo.png" alt="NBA Logo" />
+						</div>
+						<div id="arrow">
+							<i class="fa-solid fa-arrow-right"></i>
+						</div>
+						<div class="logo-container">
+							<img
+								src="images/todoist-color-logo.png"
+								alt="Todoist Brand Logo"
+							/>
+						</div>
 					</div>
-					<div id="arrow">
-						<i class="fa-solid fa-arrow-right"></i>
-					</div>
-					<div class="logo-container">
-						<img
-							src="images/todoist-color-logo.png"
-							alt="Todoist Brand Logo"
-						/>
+					<h1>NBA Schedule Import</h1>
+					<h3>
+						Log in with Todoist to import your favorite NBA team's
+						regular season schedule.
+					</h3>
+				</div>
+				<div class="app-content">
+					<div class="button-container">
+						<a
+							href="/api/auth/login"
+							role="button"
+							class="button button-primary"
+							>Log in with Todoist</a
+						>
+						<a
+							href="/api/auth/login"
+							role="button"
+							class="button button-secondary"
+							>Watch 60s demo</a
+						>
 					</div>
 				</div>
-				<h1>NBA Schedule Import</h1>
-				<h3>
-					Log in with Todoist to import your favorite NBA team's
-					regular season schedule.
-				</h3>
 			</div>
-			<div class="app-content">
-				<div class="button-container">
-					<a
-						href="/api/auth/login"
-						role="button"
-						class="button button-primary"
-						>Log in with Todoist</a
-					>
-					<a
-						href="/api/auth/login"
-						role="button"
-						class="button button-secondary"
-						>Watch 60s demo</a
-					>
-				</div>
-			</div>
-		</div>
+		</main>
+		<footer>
+			<div>&copy; Nikhil Nathwani</div>
+			|
+			<a target="_blank" href="https://nikhilnathwani.netlify.app"
+				>Other Work</a
+			>
+			|
+			<a
+				target="_blank"
+				href="https://github.com/nikhilNathwani/Todoist-NBA-Schedule-Saver"
+				>Github</a
+			>
+		</footer>
 	</body>
 </html>
