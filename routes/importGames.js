@@ -22,8 +22,17 @@ router.post("/import-games", async (req, res) => {
 	// 	return res.status(429).json({ message: "Import already in progress" }); // Prevent concurrent imports
 	// }
 	const { team: teamID, project } = req.body;
-	const api = initializeTodoistAPI(req);
 
+	let api;
+	try {
+		api = initializeTodoistAPI(req);
+	} catch (error) {
+		console.error("Failed to initialize Todoist API:", error.message);
+		return res.status(401).json({
+			success: false,
+			message: "Failed to initialize Todoist API: " + error.message,
+		});
+	}
 	try {
 		const {
 			name: teamName,
@@ -36,22 +45,14 @@ router.post("/import-games", async (req, res) => {
 			`${teamName} schedule`,
 			teamColor
 		);
-
-		// Start the import process in the background
-		await importSchedule(api, schedule, projectID, teamName)
-			.then(() => {
-				console.log("Import completed");
-				res.status(200).json({ projectID: projectID });
-			})
-			.catch((error) => {
-				console.error("Import failed:", error);
-				res.status(500).json({
-					success: false,
-					message: error.message,
-				});
-			});
+		await importSchedule(api, schedule, projectID, teamName);
+		console.log("Import completed");
+		res.status(200).json({ projectID: projectID });
 	} catch (error) {
-		res.status(500).json({ success: false, message: error.message });
+		res.status(500).json({
+			success: false,
+			message: `Error importing games: ${error.message}`,
+		});
 	}
 });
 
@@ -100,38 +101,31 @@ async function userReachedProjectLimit(accessToken) {
 }
 
 async function getProjectID(api, project, name, color) {
-	try {
-		if (project === "inbox") {
-			// Query the Todoist API for the Inbox project ID
-			const projects = await api.getProjects();
-			const inboxProject = projects.find(
-				(project) => project.isInboxProject
-			);
-			if (inboxProject) {
-				return inboxProject.id; // Return the ID of the Inbox project
-			} else {
-				throw new Error("Inbox project not found");
-			}
-		} else if (project === "newProject") {
-			// Check if a color exists for the given team name
-			if (!color) {
-				throw new Error(`No color defined for team: ${name}`);
-			}
-
-			// Create a new Todoist project
-			const newProjectResponse = await api.addProject({
-				name: name,
-				color: color,
-			});
-			return newProjectResponse.id; // Return the ID of the newly created project
+	if (project === "inbox") {
+		// Query the Todoist API for the Inbox project ID
+		const projects = await api.getProjects();
+		const inboxProject = projects.find((project) => project.isInboxProject);
+		if (inboxProject) {
+			return inboxProject.id; // Return the ID of the Inbox project
 		} else {
-			throw new Error(
-				`Invalid project type: ${project}. Expected 'inbox' or 'newProject'.`
-			);
+			throw new Error("Inbox project not found");
 		}
-	} catch (error) {
-		console.error("Error in getProjectID:", error);
-		throw error; // Re-throw to handle it further up if needed
+	} else if (project === "newProject") {
+		// Check if a color exists for the given team name
+		if (!color) {
+			throw new Error(`No color defined for team: ${name}`);
+		}
+
+		// Create a new Todoist project
+		const newProjectResponse = await api.addProject({
+			name: name,
+			color: color,
+		});
+		return newProjectResponse.id; // Return the ID of the newly created project
+	} else {
+		throw new Error(
+			`Invalid project type: ${project}. Expected 'inbox' or 'newProject'.`
+		);
 	}
 }
 
