@@ -47,8 +47,6 @@ body {
 	/* justify-content: center; */
 
 	background-color: var(--clr-bg);
-
-	transition: grid-template-rows 1s ease;
 }
 
 main {
@@ -70,9 +68,6 @@ footer {
 	align-items: center;
 	justify-content: center;
 	gap: 1ch;
-
-	opacity: 1;
-	transition: opacity 1s ease 4s;
 }
 
 footer a {
@@ -269,15 +264,6 @@ h3 {
 /*      FORM PAGE                          */
 /*                                         */
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-body.no-footer {
-	grid-template-rows: 1fr 0fr;
-}
-
-body.no-footer footer {
-	display: none;
-	opacity: 0;
-}
-
 form {
 	width: 100%;
 	display: flex;

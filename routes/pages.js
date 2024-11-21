@@ -26,42 +26,22 @@ router.get("/configure-import", async (req, res) => {
 		// Construct the complete HTML
 		const html = `
 			${makeHTMLIntro("Select Team and Project Settings")}
-			<body class="no-footer">
-				<main>
-					<div class="app-frame">
-						<div class="app-header">
-							${makeLogoBanner()}
-							<div class="app-status">
-								<h1></h1>
-								<h3></h3>
-							</div>
-						</div>
-						<div class="app-content">
-							<form>
-								${teamPickerHTML}
-								${projectPickerHTML}
-								<button id="submitButton" class="button" type="submit" disabled>Import schedule</button>
-							</form>
-						</div>
+			<div class="app-frame">
+				<div class="app-header">
+					${makeLogoBanner()}
+					<div class="app-status">
+						<h1></h1>
+						<h3></h3>
 					</div>
-					<script src="/scripts/formView.js"></script>
-					<script src="/scripts/submitView.js"></script>
-					<script src="/scripts/handleInput.js"></script>
-				</main>
-				<footer>
-					<div>&copy; Nikhil Nathwani</div>
-					|
-					<a target="_blank" href="https://nikhilnathwani.netlify.app"
-						>Other Work</a
-					>
-					|
-					<a
-						target="_blank"
-						href="https://github.com/nikhilNathwani/Todoist-NBA-Schedule-Saver"
-						>Github</a
-					>
-				</footer>
-			</body>
+				</div>
+				<div class="app-content">
+					<form>
+						${teamPickerHTML}
+						${projectPickerHTML}
+						<button id="submitButton" class="button" type="submit" disabled>Import schedule</button>
+					</form>
+				</div>
+			</div>
 			${htmlOutro}`;
 		printReqSession(req);
 		res.send(html); // Send the dynamically constructed HTML
@@ -121,9 +101,38 @@ function makeHTMLIntro(pageTitle) {
 					crossorigin="anonymous"
 				></script>
 			</head>
+			<body>
+				<main>
 	`;
 }
-const htmlOutro = `				
+
+const footer = `
+	<footer>
+		<div>&copy; Nikhil Nathwani</div>
+		|
+		<a target="_blank" href="https://nikhilnathwani.netlify.app"
+			>Other Work</a
+		>
+		|
+		<a
+			target="_blank"
+			href="https://github.com/nikhilNathwani/Todoist-NBA-Schedule-Saver"
+			>Github</a
+		>
+	</footer>
+`;
+
+const scripts = `
+	<script src="/scripts/formView.js"></script>
+	<script src="/scripts/submitView.js"></script>
+	<script src="/scripts/handleInput.js"></script>
+`;
+
+const htmlOutro = `	
+			</main>
+			${footer}
+			${scripts}
+		</body>			
 	</html>
 `;
 
