@@ -44,7 +44,7 @@ body {
 	display: grid;
 	grid-template-rows: 1fr 3rem;
 	align-items: center;
-	justify-content: center;
+	/* justify-content: center; */
 
 	background-color: var(--clr-bg);
 
@@ -72,7 +72,7 @@ footer {
 	gap: 1ch;
 
 	opacity: 1;
-	transition: opacity 1s ease;
+	transition: opacity 1s ease 1s;
 }
 
 footer a {
