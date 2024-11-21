@@ -77,8 +77,8 @@ footer a {
 .app-frame {
 	width: fit-content;
 	max-width: 350px;
-	height: 32.375rem;
-	margin: 2rem 8vw;
+	height: 32.5rem;
+	margin: 2rem auto;
 
 	display: grid;
 	grid-template-rows: min-content 1fr;
@@ -90,7 +90,7 @@ footer a {
 	flex-flow: row nowrap;
 	/* align-items: center; */
 	justify-content: center;
-	overflow: hidden;
+	/* overflow: hidden; */
 
 	max-height: 1000px;
 }
