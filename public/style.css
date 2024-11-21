@@ -270,7 +270,7 @@ h3 {
 /*                                         */
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 body.no-footer {
-	grid-template-rows: 1fr;
+	grid-template-rows: 1fr 0fr;
 }
 
 body.no-footer footer {
