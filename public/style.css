@@ -62,9 +62,13 @@ footer {
 	color: var(--clr-bg);
 
 	display: flex;
-	flex-flow: column nowrap;
+	flex-flow: row nowrap;
 	align-items: center;
 	justify-content: center;
+}
+
+footer a {
+	color: var(--clr-bg);
 }
 
 .app-frame {
