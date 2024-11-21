@@ -375,7 +375,7 @@ form.fade-out {
 		so that a vertical scrollbar doesnt appear
 */
 .logo-banner {
-	transition: height 1s ease 1s, font-size 1s ease 1s, gap 1s ease 1s;
+	transition: height 1s ease, font-size 1s ease, gap 1s ease;
 }
 
 /* .app-frame.loading .app-content {
@@ -388,7 +388,7 @@ form.fade-out {
 	-Arrow fades out and turns into loading spinner
 */
 .app-status {
-	transition: max-height 1s ease 1s, opacity 1s ease 1s;
+	transition: max-height 1s ease, opacity 1s ease;
 }
 
 .app-status.fade-in {
