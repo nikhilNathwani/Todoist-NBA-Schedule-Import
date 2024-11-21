@@ -37,11 +37,11 @@ function showImportStatusUI(status, projectID = null, errorMessage = null) {
 		form.classList.add("fade-out");
 		form.addEventListener("transitionend", (event) => {
 			if (event.propertyName === "opacity") {
+				form.remove();
 				//Then grow logo banner and show Loading status
 				growLogoBanner();
 				const statusContainer = document.querySelector(".app-status");
 				statusContainer.classList.add("fade-in");
-				form.remove();
 			}
 		});
 	} else {
