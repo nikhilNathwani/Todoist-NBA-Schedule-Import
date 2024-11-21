@@ -40,6 +40,7 @@ function showImportStatusUI(status, projectID = null, errorMessage = null) {
 		});
 	} else {
 		showNextStepsList(status, projectID, errorMessage);
+		document.body.classList.remove("no-footer");
 	}
 }
 
