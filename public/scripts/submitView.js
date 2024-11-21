@@ -10,6 +10,18 @@ const importStatus = {
 	ERROR: 2,
 };
 
+function fadeOutForm() {
+	const form = document.querySelector("form");
+	form.classList.add("fade-out");
+	form.addEventListener("transitionend", (event) => {
+		if (event.propertyName === "opacity") {
+			growLogoBanner();
+			showImportStatusUI(importStatus.LOADING);
+			form.remove();
+		}
+	});
+}
+
 function showImportStatusUI(status, projectID = null, errorMessage = null) {
 	const arrow = document.getElementById("arrow");
 	arrow.innerHTML = getStatusArrow(status);

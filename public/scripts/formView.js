@@ -67,14 +67,3 @@ function growLogoBanner() {
 	const logoBanner = document.querySelector(".logo-banner");
 	logoBanner.classList.add("logo-banner-large");
 }
-
-function fadeOutForm() {
-	const form = document.querySelector("form");
-	form.classList.add("fade-out");
-	form.addEventListener("transitionend", (event) => {
-		if (event.propertyName === "opacity") {
-			growLogoBanner();
-			form.remove();
-		}
-	});
-}

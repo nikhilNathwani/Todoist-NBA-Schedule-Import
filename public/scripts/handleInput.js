@@ -14,7 +14,6 @@ form.addEventListener("submit", function (event) {
 });
 
 function startImport(team, project) {
-	showImportStatusUI(importStatus.LOADING);
 	fetch("/api/import-games", {
 		method: "POST",
 		headers: {
