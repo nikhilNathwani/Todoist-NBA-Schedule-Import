@@ -279,13 +279,17 @@ fieldset {
 	display: flex;
 	flex-flow: column nowrap;
 	gap: 1.5rem;
-	padding-block: 1.75rem;
+	padding-block: 1.875rem;
 	padding-inline: 1rem 2rem;
 	/* border: 1px solid var(--clr-accent); */
 }
 
+fieldset#teamPicker {
+	padding-block: 1.625rem;
+}
+
 fieldset#projectPicker {
-	padding-top: 1.125rem;
+	padding-top: 1.375rem;
 }
 
 legend {
