@@ -12,19 +12,6 @@ const importStatus = {
 
 let showingLoadingUI = true;
 
-function fadeOutForm() {
-	const form = document.querySelector("form");
-	form.classList.add("fade-out");
-	form.addEventListener("transitionend", (event) => {
-		if (event.propertyName === "opacity") {
-			growLogoBanner();
-			console.log("SETTIN Gshoing  to FALSE");
-			showingLoadingUI = false;
-			form.remove();
-		}
-	});
-}
-
 function showImportStatusUI(status, projectID = null, errorMessage = null) {
 	const arrow = document.getElementById("arrow");
 	arrow.innerHTML = getStatusArrow(status);
@@ -46,6 +33,7 @@ function showImportStatusUI(status, projectID = null, errorMessage = null) {
 				growLogoBanner();
 				const statusContainer = document.querySelector(".app-status");
 				statusContainer.classList.add("fade-in");
+				showingLoadingUI = false;
 			}
 		});
 	} else {
