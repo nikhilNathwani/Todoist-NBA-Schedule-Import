@@ -33,7 +33,9 @@ function showImportStatusUI(status, projectID = null, errorMessage = null) {
 				growLogoBanner();
 				const statusContainer = document.querySelector(".app-status");
 				statusContainer.classList.add("fade-in");
-				showingLoadingUI = false;
+				setTimeout(() => {
+					showingLoadingUI = false;
+				}, 5000);
 			}
 		});
 	} else {
