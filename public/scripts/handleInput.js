@@ -22,10 +22,16 @@ function startImport(team, project) {
 		},
 		body: JSON.stringify({ team, project }), // Send team and project values in the request body
 	})
-		.then((response) => {
-			if (!response.ok) throw new Error("Failed to import schedule.");
-			return response.json();
-		})
+		.then((response) =>
+			response.json().then((data) => {
+				if (!response.ok) {
+					throw new Error(
+						data.message || "Failed to import schedule."
+					);
+				}
+				return data;
+			})
+		)
 		.then((data) => {
 			console.log("Import complete");
 			showImportStatusUI(importStatus.SUCCESS, data.projectID);
