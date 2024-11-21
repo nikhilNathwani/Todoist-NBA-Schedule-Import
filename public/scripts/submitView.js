@@ -106,7 +106,7 @@ function makeNextStepsList(status, projectID, errorMessage) {
 				icon: `<i class="fa-solid fa-arrow-left"></i>`,
 				linkName: "Import another",
 				desc: "schedule",
-				link: "https://nba-todoist-import.vercel.app/",
+				link: `https://nba-todoist-import.vercel.app/configure-import?isInboxDefault=${isInboxDefault()}`,
 			},
 			{
 				icon: `<i class="fa-regular fa-envelope"></i>`,
