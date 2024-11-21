@@ -10,6 +10,8 @@ const importStatus = {
 	ERROR: 2,
 };
 
+let showingLoadingUI = true;
+
 function fadeOutForm() {
 	const form = document.querySelector("form");
 	form.classList.add("fade-out");
@@ -17,6 +19,7 @@ function fadeOutForm() {
 		if (event.propertyName === "opacity") {
 			growLogoBanner();
 			form.remove();
+			showingLoadingUI = false;
 		}
 	});
 }
