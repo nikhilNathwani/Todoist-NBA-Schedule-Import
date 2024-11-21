@@ -4,7 +4,7 @@
 //                                           //
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-const minDurationLoadingUI = 2500;
+const minDurationLoadingUI = 3000;
 const importStatus = {
 	LOADING: 0,
 	SUCCESS: 1,
