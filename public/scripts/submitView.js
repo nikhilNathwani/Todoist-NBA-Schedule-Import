@@ -16,7 +16,6 @@ function fadeOutForm() {
 	form.addEventListener("transitionend", (event) => {
 		if (event.propertyName === "opacity") {
 			growLogoBanner();
-			showImportStatusUI(importStatus.LOADING);
 			form.remove();
 		}
 	});
@@ -32,10 +31,20 @@ function showImportStatusUI(status, projectID = null, errorMessage = null) {
 	const subtitle = document.querySelector("h3");
 	subtitle.textContent = getStatusSubtitle(status);
 
-	const statusContainer = document.querySelector(".app-status");
-	statusContainer.classList.add("fade-in");
-
-	if (status == importStatus.SUCCESS || status == importStatus.ERROR) {
+	if (status == importStatus.LOADING) {
+		//Fade out form
+		const form = document.querySelector("form");
+		form.classList.add("fade-out");
+		form.addEventListener("transitionend", (event) => {
+			if (event.propertyName === "opacity") {
+				//Then grow logo banner and show Loading status
+				growLogoBanner();
+				const statusContainer = document.querySelector(".app-status");
+				statusContainer.classList.add("fade-in");
+				form.remove();
+			}
+		});
+	} else {
 		showNextStepsList(status, projectID, errorMessage);
 	}
 }
