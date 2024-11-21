@@ -10,8 +10,6 @@ const projectLimits = {
 	PREMIUM: 300,
 };
 
-let importInProgress = false; // Track the import status
-
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 //                                           //
 //           ROUTES                          //
@@ -20,11 +18,9 @@ let importInProgress = false; // Track the import status
 
 // Process user's team/project selections and import schedule
 router.post("/import-games", async (req, res) => {
-	if (req.session.importInProgress) {
-		return res.status(429).json({ message: "Import already in progress" }); // Prevent concurrent imports
-	}
-
-	printReqSession(req);
+	// if (req.session.importInProgress) {
+	// 	return res.status(429).json({ message: "Import already in progress" }); // Prevent concurrent imports
+	// }
 	const { team: teamID, project } = req.body;
 	const api = initializeTodoistAPI(req);
 
@@ -40,47 +36,23 @@ router.post("/import-games", async (req, res) => {
 			`${teamName} schedule`,
 			teamColor
 		);
-		req.session.projectID = projectID;
 
 		// Start the import process in the background
-		importSchedule(api, schedule, projectID, teamName)
+		await importSchedule(api, schedule, projectID, teamName)
 			.then(() => {
 				console.log("Import completed");
+				res.status(200).json({ projectID: projectID });
 			})
 			.catch((error) => {
 				console.error("Import failed:", error);
-			})
-			.finally(() => {
-				req.session.importEnded = true;
-				printReqSession(req);
-				console.log(
-					"IN FINALLY BLOCK, req.session.importInProgress is:",
-					req.session.importInProgress
-				);
+				res.status(500).json({
+					success: false,
+					message: error.message,
+				});
 			});
-		res.status(202).json({ message: "Import started" });
 	} catch (error) {
-		req.session.importEnded = true;
-		console.error("Error preparing import:", error);
-		printReqSession(req);
 		res.status(500).json({ success: false, message: error.message });
 	}
-});
-
-// Route to check the import status
-router.get("/import-status", (req, res) => {
-	console.log("IN IMPORT STATUS");
-	printReqSession(req);
-	const { importEnded, projectID } = req.session;
-	console.log(
-		`SENDING: importEnded= ${importEnded && true}, projectID= ${
-			importEnded && true ? projectID : null
-		}`
-	);
-	res.json({
-		importEnded: importEnded && true,
-		projectID: importEnded && true ? projectID : null,
-	});
 });
 
 module.exports = { router, userReachedProjectLimit };

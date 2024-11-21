@@ -14,6 +14,7 @@ form.addEventListener("submit", function (event) {
 });
 
 function startImport(team, project) {
+	showImportStatusUI(importStatus.LOADING);
 	fetch("/api/import-games", {
 		method: "POST",
 		headers: {
@@ -22,53 +23,15 @@ function startImport(team, project) {
 		body: JSON.stringify({ team, project }), // Send team and project values in the request body
 	})
 		.then((response) => {
-			if (response.ok) {
-				console.log("Import started successfully.");
-				showImportStatusUI(importStatus.LOADING);
-				pollStatus();
-			} else {
-				return response.json().then((data) => {
-					console.error(
-						"Error starting import in THEN-ELSE:",
-						data.message
-					);
-					showImportStatusUI(importStatus.ERROR, null, data.message);
-					// alert(`Failed to start import: ${data.message}`);
-				});
-			}
+			if (!response.ok) throw new Error("Failed to import schedule.");
+			return response.json();
+		})
+		.then((data) => {
+			console.log("Import complete");
+			showImportStatusUI(importStatus.SUCCESS, data.projectID);
 		})
 		.catch((error) => {
-			console.error("Error starting import in CATCH:", error);
+			console.error("Import failed:", error);
 			showImportStatusUI(importStatus.ERROR, null, error);
 		});
-}
-
-// Function to check import status every 3 seconds
-function pollStatus() {
-	const intervalId = setInterval(() => {
-		fetch("/api/import-status")
-			.then((response) => {
-				if (!response.ok)
-					throw new Error("Failed to fetch import status.");
-				return response.json();
-			})
-			.then((data) => {
-				if (!data.importEnded) {
-					console.log("Import in progress...");
-					// document.getElementById("status-message").textContent =
-					// 	"Status: Import in progress...";
-				} else {
-					// document.getElementById("status-message").textContent =
-					// 	"Status: Import complete!";
-					console.log("Import complete!");
-					showImportStatusUI(importStatus.SUCCESS, data.projectID);
-					clearInterval(intervalId); // Stop polling once import is complete
-				}
-			})
-			.catch((error) => {
-				console.error("Error checking status:", error);
-				showImportStatusUI(importStatus.ERROR, null, error);
-				clearInterval(intervalId); // Stop polling on error
-			});
-	}, 3000); // Poll every 3 seconds
 }
