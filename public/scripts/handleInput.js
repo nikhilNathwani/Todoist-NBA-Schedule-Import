@@ -9,7 +9,7 @@ teamSelect.addEventListener("change", function () {
 
 form.addEventListener("submit", function (event) {
 	event.preventDefault(); // Prevent the form from submitting in the traditional way
-	fadeOutForm();
+	showImportStatusUI(importStatus.LOADING);
 	startImport(teamSelect.value, projectSelect.value);
 });
 
