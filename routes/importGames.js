@@ -41,7 +41,9 @@ router.post("/import-games", async (req, res) => {
 		await importSchedule(api, schedule, projectID, teamName)
 			.then(() => {
 				console.log("Import completed");
-				res.status(200).json({ projectID: projectID });
+				setTimeout(() => {
+					res.status(200).json({ projectID: projectID });
+				}, 20000);
 			})
 			.catch((error) => {
 				console.error("Import failed:", error);

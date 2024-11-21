@@ -10,7 +10,7 @@ const staticPathRoot = path.join(__dirname, "public");
 const app = express();
 
 // Cookie session configuration
-// app.set("trust proxy", 1); // Trust the Vercel proxy
+app.set("trust proxy", 1); // Trust the Vercel proxy
 
 app.use(
 	cookieSession({
