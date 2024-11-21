@@ -18,9 +18,9 @@ function fadeOutForm() {
 	form.addEventListener("transitionend", (event) => {
 		if (event.propertyName === "opacity") {
 			growLogoBanner();
-			form.remove();
 			console.log("SETTIN Gshoing  to FALSE");
 			showingLoadingUI = false;
+			form.remove();
 		}
 	});
 }
