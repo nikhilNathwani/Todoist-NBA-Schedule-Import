@@ -65,6 +65,7 @@ footer {
 	flex-flow: row nowrap;
 	align-items: center;
 	justify-content: center;
+	gap: 1ch;
 }
 
 footer a {
