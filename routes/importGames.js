@@ -51,19 +51,11 @@ router.post("/import-games", async (req, res) => {
 			res.status(200).json({ projectID: projectID });
 		}, 20000);
 	} catch (error) {
-		if (error.response) {
-			// Handle axios errors or specific error responses
-			return res.status(500).json({
-				success: false,
-				message: `Error from external API: ${error.response.data}`,
-			});
-		} else {
-			// Handle other errors (like Vercel timeout or internal errors)
-			return res.status(500).json({
-				success: false,
-				message: `An error occurred: ${error.message}`,
-			});
-		}
+		console.log("timeout error:", error);
+		res.status(500).json({
+			success: false,
+			message: `Error importing games: ${error.message}`,
+		});
 	}
 });
 
