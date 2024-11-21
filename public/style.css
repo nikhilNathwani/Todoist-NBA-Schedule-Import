@@ -64,8 +64,8 @@ body {
 	display: flex;
 	flex-flow: row nowrap;
 	align-items: center;
+	justify-content: center;
 	overflow: hidden;
-	/* justify-content: center; */
 
 	max-height: 1000px;
 }
