@@ -4,12 +4,12 @@
 //                                           //
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
+const minDurationLoadingUI = 2500;
 const importStatus = {
 	LOADING: 0,
 	SUCCESS: 1,
 	ERROR: 2,
 };
-
 let showingLoadingUI = true;
 
 function showImportStatusUI(status, projectID = null, errorMessage = null) {
@@ -35,7 +35,7 @@ function showImportStatusUI(status, projectID = null, errorMessage = null) {
 				statusContainer.classList.add("fade-in");
 				setTimeout(() => {
 					showingLoadingUI = false;
-				}, 2500);
+				}, minDurationLoadingUI);
 			}
 		});
 	} else {
