@@ -252,6 +252,8 @@ h3 {
 
 .button-container {
 	width: 25ch;
+	height: fit-content;
+	margin-top: 3.25rem;
 	display: flex;
 	flex-flow: column nowrap;
 	align-items: center;
@@ -344,7 +346,7 @@ label.disabled {
 /*                                         */
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 ul {
-	margin-top: 2rem;
+	margin-top: 3.25rem;
 	list-style-type: none;
 	opacity: 0;
 	transition: opacity 1s ease;
