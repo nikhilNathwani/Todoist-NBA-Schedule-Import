@@ -72,7 +72,7 @@ footer {
 	gap: 1ch;
 
 	opacity: 1;
-	transition: opacity 1s ease 1s;
+	transition: opacity 1s ease 4s;
 }
 
 footer a {
