@@ -35,7 +35,7 @@ function showImportStatusUI(status, projectID = null, errorMessage = null) {
 				statusContainer.classList.add("fade-in");
 				setTimeout(() => {
 					showingLoadingUI = false;
-				}, 5000);
+				}, 2500);
 			}
 		});
 	} else {
