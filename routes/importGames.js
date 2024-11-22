@@ -161,13 +161,21 @@ async function importYearlyReminder(api, projectID, teamName) {
 	const siteURL =
 		"[NBA -> Todoist Schedule Import](https://nba-todoist-import.vercel.app)";
 
+	// Check if October 10 has already passed this year
+	const today = new Date();
+	let year = today.getFullYear();
+
+	if (today > new Date(`${year}-10-01`)) {
+		year += 1; // Use the next year
+	}
 	const task = {
 		content: `Import ${teamName} regular season schedule`,
 		description: siteURL,
 		projectId: projectID,
 		due: {
-			string: "every October 1", // Use natural language for recurring date
+			string: "October 10", // Use natural language for recurring date
 			lang: "en", // Specify the language for parsing the due string
+			isRecurring: true,
 		},
 		order: 120,
 	};
