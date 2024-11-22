@@ -172,11 +172,9 @@ async function importYearlyReminder(api, projectID, teamName) {
 		content: `Import ${teamName} regular season schedule`,
 		description: siteURL,
 		projectId: projectID,
-		due: {
-			string: "October 10", // Use natural language for recurring date
-			lang: "en", // Specify the language for parsing the due string
-			isRecurring: true,
-		},
+		dueString: "every October 10th",
+		dueLang: "en",
+		isRecurring: true,
 		order: 120,
 	};
 	try {
