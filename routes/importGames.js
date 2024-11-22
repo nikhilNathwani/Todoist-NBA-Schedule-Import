@@ -46,6 +46,7 @@ router.post("/import-games", async (req, res) => {
 			teamColor
 		);
 		await importSchedule(api, schedule, projectID, teamName);
+		await importYearlyReminder(api, projectID, teamName);
 		console.log("Import completed");
 		res.status(200).json({ projectID: projectID });
 	} catch (error) {
@@ -154,6 +155,27 @@ function formatTask(game, projectID, teamName, taskOrder) {
 		projectId: projectID,
 		order: taskOrder,
 	};
+}
+
+async function importYearlyReminder(api, projectID, teamName) {
+	const siteURL =
+		"[NBA -> Todoist Schedule Import](https://nba-todoist-import.vercel.app)";
+
+	const task = {
+		content: `Import ${teamName} regular season schedule`,
+		description: siteURL,
+		projectId: projectID,
+		due: {
+			string: "every October 1", // Use natural language for recurring date
+			lang: "en", // Specify the language for parsing the due string
+		},
+		order: 120,
+	};
+	try {
+		await api.addTask(task);
+	} catch (error) {
+		console.error("Error adding reminder task to Todoist:", error);
+	}
 }
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
