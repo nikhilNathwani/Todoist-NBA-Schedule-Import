@@ -174,7 +174,6 @@ async function importYearlyReminder(api, projectID, teamName) {
 		projectId: projectID,
 		dueString: "every October 10th",
 		dueLang: "en",
-		isRecurring: true,
 		order: 120,
 	};
 	try {
