@@ -123,6 +123,33 @@ function makeProjectPickerHTML(isInboxDefault) {
 //         HTML FRAME                        //
 //                                           //
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+const logoBanner = `
+	<div class="logo-banner">
+		<div class="logo-container" id="nbaLogoContainer">	
+			<img src="images/nba-logo.png" 
+			alt="NBA Logo" />
+		</div>
+		<div id="arrow">
+			<i class="fa-solid fa-arrow-right"></i>
+		</div>
+		<div class="logo-container">
+			<img
+				src="images/todoist-color-logo.png"
+				alt="Todoist Brand Logo"
+			/>
+		</div>
+	</div>
+`;
+
+const appHeader = `
+	<div class="app-header">
+		${logoBanner}
+		<div class="app-status">
+			<h1></h1>
+			<h3></h3>
+		</div>
+	</div>
+`;
 
 const htmlIntro = `
 	<!DOCTYPE html>
@@ -185,32 +212,4 @@ const htmlOutro = `
 			<script src="/scripts/handleInput.js"></script>
 		</body>			
 	</html>
-`;
-
-const appHeader = `
-	<div class="app-header">
-		${logoBanner}
-		<div class="app-status">
-			<h1></h1>
-			<h3></h3>
-		</div>
-	</div>
-`;
-
-const logoBanner = `
-	<div class="logo-banner">
-		<div class="logo-container" id="nbaLogoContainer">	
-			<img src="images/nba-logo.png" 
-			alt="NBA Logo" />
-		</div>
-		<div id="arrow">
-			<i class="fa-solid fa-arrow-right"></i>
-		</div>
-		<div class="logo-container">
-			<img
-				src="images/todoist-color-logo.png"
-				alt="Todoist Brand Logo"
-			/>
-		</div>
-	</div>
 `;
