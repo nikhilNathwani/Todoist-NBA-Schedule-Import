@@ -1,17 +1,21 @@
+/* External imports */
 const express = require("express");
 const cookieSession = require("cookie-session");
 const path = require("path");
+/* Internal imports */
 const pagesRoutes = require("./routes/pages");
 const { router: importGamesRoutes } = require("./routes/importGames");
 const oauthRoutes = require("./routes/oauth");
 
-// Configurations
-const staticPathRoot = path.join(__dirname, "public");
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~ */
+/*                           */
+/*    App Configurations     */
+/*                           */
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~ */
 const app = express();
 
-// Cookie session configuration
+// Cookie-session configuration
 app.set("trust proxy", 1); // Trust the Vercel proxy
-
 app.use(
 	cookieSession({
 		name: "session",
@@ -19,20 +23,19 @@ app.use(
 		maxAge: 24 * 60 * 60 * 1000, // 24 hours
 		httpOnly: true, // Prevents client-side JS from accessing the cookie
 		secure: true, // Only HTTPS not HTTP
-		// secure: false,
 		sameSite: "Strict", // Mitigates CSRF attacks
-		// sameSite: "Lax",
 	})
 );
 
-// Serve static files
+// Serve static files from public folder
+const staticPathRoot = path.join(__dirname, "public");
 app.use(express.static(staticPathRoot));
 
 // Middleware to parse request bodies (for POST requests)
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Use the todoist and pages routes
+// Use the routes I defined
 app.use("/api/auth", oauthRoutes);
 app.use("/api", importGamesRoutes);
 app.use("/", pagesRoutes);

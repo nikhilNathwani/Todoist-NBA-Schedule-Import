@@ -24,36 +24,20 @@ router.get("/configure-import", async (req, res) => {
 		const projectPickerHTML = makeProjectPickerHTML(isInboxDefault);
 
 		// Construct the complete HTML
-		const html = `
-			${makeHTMLIntro("Select Team and Project Settings")}
-			<div class="app-frame">
-				<div class="app-header">
-					${makeLogoBanner()}
-					<div class="app-status">
-						<h1></h1>
-						<h3></h3>
-					</div>
-				</div>
-				<div class="app-content">
-					<form>
-						${teamPickerHTML}
-						${projectPickerHTML}
-						<button id="submitButton" class="button" type="submit" disabled>Import schedule</button>
-					</form>
-				</div>
-			</div>
-			${htmlOutro}`;
+		const form = `
+			<form>
+				${teamPickerHTML}
+				${projectPickerHTML}
+				<button id="submitButton" class="button" type="submit" disabled>Import schedule</button>
+			</form>
+		`;
+		const html = htmlIntro + form + htmlOutro;
 		printReqSession(req);
 		res.send(html); // Send the dynamically constructed HTML
 	} catch (error) {
 		console.error("Error reading NBA schedule:", error);
 		res.status(500).send("An error occurred");
 	}
-});
-
-// Serve the confirmation page
-router.get("/confirmation", (req, res) => {
-	res.sendFile(path.join(staticPathRoot, "confirmation.html"));
 });
 
 router.get("*", (req, res) => {
@@ -64,99 +48,9 @@ module.exports = router;
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 //                                           //
-//         HTML ELEMENTS                     //
+//         PICKERS                           //
 //                                           //
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-
-function makeHTMLIntro(pageTitle) {
-	return `
-		<!DOCTYPE html>
-			<html lang="en">
-			<head>
-				<meta charset="UTF-8" />
-				<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-				<title>${pageTitle}</title>
-				<link rel="stylesheet" href="style.css" />
-				<link
-					rel="apple-touch-icon"
-					sizes="180x180"
-					href="/images/favicon/apple-touch-icon.png"
-				/>
-				<link
-					rel="icon"
-					type="image/png"
-					sizes="32x32"
-					href="/images/favicon/favicon-32x32.png"
-				/>
-				<link
-					rel="icon"
-					type="image/png"
-					sizes="16x16"
-					href="/images/favicon/favicon-16x16.png"
-				/>
-				<link rel="manifest" href="/images/favicon/site.webmanifest" />
-				<script
-					src="https://kit.fontawesome.com/caba6ce64c.js"
-					crossorigin="anonymous"
-				></script>
-			</head>
-			<body>
-				<main>
-	`;
-}
-
-const footer = `
-	<footer>
-		<div>&copy; Nikhil Nathwani</div>
-		|
-		<a target="_blank" href="https://nikhilnathwani.netlify.app"
-			>Other Work</a
-		>
-		|
-		<a
-			target="_blank"
-			href="https://github.com/nikhilNathwani/Todoist-NBA-Schedule-Saver"
-			>Github</a
-		>
-	</footer>
-`;
-
-const scripts = `
-	<script src="/scripts/formView.js"></script>
-	<script src="/scripts/submitView.js"></script>
-	<script src="/scripts/handleInput.js"></script>
-`;
-
-const htmlOutro = `	
-			</main>
-			${footer}
-			${scripts}
-		</body>			
-	</html>
-`;
-
-function makeLogoBanner(teamID = null) {
-	return `
-		<div class="logo-banner">
-			<div class="logo-container" id="nbaLogoContainer">	
-				<img src="images/${!teamID ? "nba-logo" : teamID}.png" 
-				alt="${!teamID ? "NBA" : "Selected Team (" + teamID + ")"} Logo" />
-			</div>
-			<div id="arrow">
-				<i class="fa-solid fa-arrow-right"></i>
-			</div>
-			<div class="logo-container">
-				<img
-					src="images/todoist-color-logo.png"
-					alt="Todoist Brand Logo"
-				/>
-			</div>
-		</div>
-	`;
-}
-
-// Get teams for team picker (from the NBA schedule JSON file)
 async function getTeams() {
 	const data = await fs.readFile(
 		path.join(__dirname, "../data/nba_schedule.json")
@@ -176,6 +70,7 @@ function makeTeamPickerHTML(teams) {
 			</select>
 		</fieldset>`;
 
+	//teams sorted alphabetically by city
 	const teamOptions = Object.entries(teams)
 		.sort((a, b) => (a[1].city > b[1].city ? 1 : -1))
 		.map(([teamID, team]) => {
@@ -221,4 +116,105 @@ function makeProjectPickerHTML(isInboxDefault) {
 		</label>`;
 
 	return intro + newProjectOption + inboxOption + outro;
+}
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+//                                           //
+//         HTML FRAME                        //
+//                                           //
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
+const htmlIntro = `
+	<!DOCTYPE html>
+		<html lang="en">
+		<head>
+			<meta charset="UTF-8" />
+			<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+			<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+			<title>"Select Team and Project Settings"</title>
+			<link rel="stylesheet" href="style.css" />
+			<link
+				rel="apple-touch-icon"
+				sizes="180x180"
+				href="/images/favicon/apple-touch-icon.png"
+			/>
+			<link
+				rel="icon"
+				type="image/png"
+				sizes="32x32"
+				href="/images/favicon/favicon-32x32.png"
+			/>
+			<link
+				rel="icon"
+				type="image/png"
+				sizes="16x16"
+				href="/images/favicon/favicon-16x16.png"
+			/>
+			<link rel="manifest" href="/images/favicon/site.webmanifest" />
+			<script
+				src="https://kit.fontawesome.com/caba6ce64c.js"
+				crossorigin="anonymous"
+			></script>
+		</head>
+		<body>
+			<main>
+				<div class="app-frame">
+					${makeAppHeader()}
+					<div class="app-content">
+`;
+
+const htmlOutro = `
+					</div>
+				</div>	
+			</main>
+			<footer>
+				<div>&copy; Nikhil Nathwani</div>
+				|
+				<a target="_blank" href="https://nikhilnathwani.netlify.app"
+					>Other Work</a
+				>
+				|
+				<a
+					target="_blank"
+					href="https://github.com/nikhilNathwani/Todoist-NBA-Schedule-Saver"
+					>Github</a
+				>
+			</footer>
+			<script src="/scripts/formView.js"></script>
+			<script src="/scripts/submitView.js"></script>
+			<script src="/scripts/handleInput.js"></script>
+		</body>			
+	</html>
+`;
+
+function makeAppHeader() {
+	return `
+		<div class="app-header">
+			${makeLogoBanner()}
+			<div class="app-status">
+				<h1></h1>
+				<h3></h3>
+			</div>
+		</div>;
+	`;
+}
+
+function makeLogoBanner() {
+	return `
+		<div class="logo-banner">
+			<div class="logo-container" id="nbaLogoContainer">	
+				<img src="images/nba-logo.png" 
+				alt="NBA Logo" />
+			</div>
+			<div id="arrow">
+				<i class="fa-solid fa-arrow-right"></i>
+			</div>
+			<div class="logo-container">
+				<img
+					src="images/todoist-color-logo.png"
+					alt="Todoist Brand Logo"
+				/>
+			</div>
+		</div>
+	`;
 }

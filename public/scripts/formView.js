@@ -48,8 +48,8 @@ function updateTeamSpecificUI(selectedTeam) {
 }
 
 function updateTeamLogo(selectedTeam) {
-	teamLogo.src = "images/team-logos/" + selectedTeam + ".svg";
-	teamLogo.alt = `${selectedTeam} Logo`;
+	teamLogo.src = `images/team-logos/${selectedTeam}.svg`;
+	teamLogo.alt = `Selected Team (${selectedTeam}) Logo`;
 }
 
 function updateNewProjectSubtitle(selectedTeam) {
