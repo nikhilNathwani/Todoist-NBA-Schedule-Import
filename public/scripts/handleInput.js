@@ -22,29 +22,25 @@ function startImport(team, project) {
 		},
 		body: JSON.stringify({ team, project }), // Send team and project values in the request body
 	})
-		.then((response) =>
-			response.json().then((data) => {
-				if (!response.ok) {
-					throw new Error(
-						data.message || "Failed to import schedule."
-					);
-				}
-				return data;
-			})
-		)
-		.then(async (data) => {
-			while (showingLoadingUI) {
-				// Wait for a small amount of time before checking again
-				await new Promise((resolve) => setTimeout(resolve, 100)); // 100ms delay
+		.then(async (response) => {
+			const data = await response.json();
+			if (!response.ok) {
+				throw new Error(data.message || "Failed to import schedule.");
 			}
+			await waitForLoadingUI(); // Wait until loading UI is no longer shown
+			return data;
+		})
+		.then(async (data) => {
 			showImportStatusUI(importStatus.SUCCESS, data.projectID);
 		})
 		.catch(async (error) => {
-			while (showingLoadingUI) {
-				// Wait for a small amount of time before checking again
-				await new Promise((resolve) => setTimeout(resolve, 100)); // 100ms delay
-			}
 			console.error("Import failed:", error);
 			showImportStatusUI(importStatus.ERROR, null, error);
 		});
+}
+
+async function waitForLoadingUI() {
+	while (showingLoadingUI) {
+		await new Promise((resolve) => setTimeout(resolve, 100));
+	}
 }
