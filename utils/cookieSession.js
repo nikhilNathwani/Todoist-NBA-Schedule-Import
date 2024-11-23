@@ -10,12 +10,10 @@ const { encrypt, decrypt } = require("./encryption");
 function saveAccessToken(req, accessToken) {
 	const encryptedToken = encrypt(accessToken);
 	req.session.accessTokenEncrypted = encryptedToken;
-	printReqSession(req);
 }
 
 //Decrypts accessToken from cookie-session
 function getAccessToken(req) {
-	printReqSession(req);
 	const encryptedToken = req.session.accessTokenEncrypted;
 	if (!encryptedToken) {
 		throw new Error("Access token is not set in the session.");

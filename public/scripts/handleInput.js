@@ -37,7 +37,6 @@ function startImport(team, project) {
 				// Wait for a small amount of time before checking again
 				await new Promise((resolve) => setTimeout(resolve, 100)); // 100ms delay
 			}
-			console.log("Import complete");
 			showImportStatusUI(importStatus.SUCCESS, data.projectID);
 		})
 		.catch(async (error) => {

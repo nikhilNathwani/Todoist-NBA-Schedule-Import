@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const axios = require("axios");
-const { saveAccessToken, printReqSession } = require("../utils/cookieSession");
+const { saveAccessToken } = require("../utils/cookieSession");
 const { userReachedProjectLimit } = require("./importGames");
 
 const { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, STATE_SECRET } = process.env;
@@ -30,7 +30,6 @@ router.get("/callback", async (req, res) => {
 	// Store encrypted access token in session cookie for later api usage
 	const accessToken = await retrieveAccessToken(req, res, code);
 	saveAccessToken(req, accessToken);
-	printReqSession(req);
 	// Redirect to the team selection page
 	const redirectUrlParam = await userReachedProjectLimit(accessToken);
 	res.redirect(`/configure-import?isInboxDefault=${redirectUrlParam}`);

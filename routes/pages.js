@@ -2,7 +2,6 @@ const express = require("express");
 const fs = require("fs").promises;
 const path = require("path");
 const router = express.Router();
-const { printReqSession } = require("../utils/cookieSession.js");
 const staticPathRoot = path.join(__dirname, "../public");
 
 // Serve the landing page (login page)
@@ -13,8 +12,6 @@ router.get("/", (req, res) => {
 // Serve the team selection page
 router.get("/configure-import", async (req, res) => {
 	try {
-		printReqSession(req);
-
 		// Make team picker HTML
 		const teams = await getTeams();
 		const teamPickerHTML = makeTeamPickerHTML(teams);
@@ -32,7 +29,6 @@ router.get("/configure-import", async (req, res) => {
 			</form>
 		`;
 		const html = htmlIntro + form + htmlOutro;
-		printReqSession(req);
 		res.send(html); // Send the dynamically constructed HTML
 	} catch (error) {
 		console.error("Error reading NBA schedule:", error);

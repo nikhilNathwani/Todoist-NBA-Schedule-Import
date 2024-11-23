@@ -3,7 +3,7 @@ const axios = require("axios");
 const router = express.Router();
 const fs = require("fs");
 const path = require("path");
-const { getAccessToken, printReqSession } = require("../utils/cookieSession");
+const { getAccessToken } = require("../utils/cookieSession");
 const { TodoistApi } = require("@doist/todoist-api-typescript");
 const projectLimits = {
 	FREE: 5,
@@ -47,7 +47,6 @@ router.post("/import-games", async (req, res) => {
 		);
 		await importSchedule(api, schedule, projectID, teamName);
 		await importYearlyReminder(api, projectID, teamName);
-		console.log("Import completed");
 		res.status(200).json({ projectID: projectID });
 	} catch (error) {
 		res.status(500).json({
