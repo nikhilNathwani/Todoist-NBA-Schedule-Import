@@ -159,7 +159,7 @@ const htmlIntro = `
 		<body>
 			<main>
 				<div class="app-frame">
-					${makeAppHeader()}
+					${appHeader}
 					<div class="app-content">
 `;
 
@@ -187,34 +187,30 @@ const htmlOutro = `
 	</html>
 `;
 
-function makeAppHeader() {
-	return `
-		<div class="app-header">
-			${makeLogoBanner()}
-			<div class="app-status">
-				<h1></h1>
-				<h3></h3>
-			</div>
+const appHeader = `
+	<div class="app-header">
+		${logoBanner}
+		<div class="app-status">
+			<h1></h1>
+			<h3></h3>
 		</div>
-	`;
-}
+	</div>
+`;
 
-function makeLogoBanner() {
-	return `
-		<div class="logo-banner">
-			<div class="logo-container" id="nbaLogoContainer">	
-				<img src="images/nba-logo.png" 
-				alt="NBA Logo" />
-			</div>
-			<div id="arrow">
-				<i class="fa-solid fa-arrow-right"></i>
-			</div>
-			<div class="logo-container">
-				<img
-					src="images/todoist-color-logo.png"
-					alt="Todoist Brand Logo"
-				/>
-			</div>
+const logoBanner = `
+	<div class="logo-banner">
+		<div class="logo-container" id="nbaLogoContainer">	
+			<img src="images/nba-logo.png" 
+			alt="NBA Logo" />
 		</div>
-	`;
-}
+		<div id="arrow">
+			<i class="fa-solid fa-arrow-right"></i>
+		</div>
+		<div class="logo-container">
+			<img
+				src="images/todoist-color-logo.png"
+				alt="Todoist Brand Logo"
+			/>
+		</div>
+	</div>
+`;
