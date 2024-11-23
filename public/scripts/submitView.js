@@ -12,6 +12,12 @@ const importStatus = {
 };
 let showingLoadingUI = true;
 
+async function waitForLoadingUI() {
+	while (showingLoadingUI) {
+		await new Promise((resolve) => setTimeout(resolve, 100));
+	}
+}
+
 function showImportStatusUI(status, projectID = null, errorMessage = null) {
 	const arrow = document.getElementById("arrow");
 	arrow.innerHTML = getStatusArrow(status);

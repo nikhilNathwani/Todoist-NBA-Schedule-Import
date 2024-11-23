@@ -38,9 +38,3 @@ function startImport(team, project) {
 			showImportStatusUI(importStatus.ERROR, null, error);
 		});
 }
-
-async function waitForLoadingUI() {
-	while (showingLoadingUI) {
-		await new Promise((resolve) => setTimeout(resolve, 100));
-	}
-}
