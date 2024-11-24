@@ -203,8 +203,8 @@ const htmlOutro = `
 					>Github</a
 				>
 			</footer>
-			<script src="/scripts/formView.js"></script>
-			<script src="/scripts/submitView.js"></script>
+			<script src="/scripts/renderForm.js"></script>
+			<script src="/scripts/renderConfirmation.js"></script>
 			<script src="/scripts/handleInput.js"></script>
 		</body>			
 	</html>
