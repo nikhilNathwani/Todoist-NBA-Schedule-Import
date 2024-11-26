@@ -2,7 +2,8 @@
 	--clr-dark: #1e1e1e;
 	--clr-light: white;
 	--clr-bg: #fff9f3;
-	--clr-accent: #e44232;
+	/* --clr-accent: #e44232; */
+	--clr-accent: #dc4c3e;
 	--clr-accent-dark: #c3392c;
 	--clr-subtitle: #4b4b4b;
 	--clr-disabled: rgb(118, 118, 118);
