@@ -4,6 +4,7 @@
 	--clr-bg: #fff9f3;
 	--clr-accent: #e44232;
 	--clr-accent-dark: #c3392c;
+	--clr-subtitle: #4b4b4b;
 	--clr-disabled: rgb(118, 118, 118);
 }
 
@@ -38,6 +39,7 @@ and was causing icons not to show up
 
 body {
 	font-family: Arial, sans-serif;
+	color: var(--clr-dark);
 
 	min-height: 100svh;
 
@@ -166,7 +168,6 @@ img {
 
 h1 {
 	font-size: 1.875rem;
-	color: var(--clr-dark);
 }
 
 h3 {
