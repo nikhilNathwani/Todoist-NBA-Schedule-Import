@@ -190,6 +190,7 @@ h3 {
 
 .button {
 	font-size: 16px;
+	font-weight: 600;
 	text-align: center;
 	text-decoration: none;
 	color: var(--clr-light);
@@ -222,6 +223,7 @@ h3 {
 }
 
 .button:disabled {
+	font-weight: normal;
 	background-color: var(--clr-disabled);
 	cursor: not-allowed;
 }
@@ -282,6 +284,7 @@ fieldset {
 	gap: 1.5rem;
 	padding-block: 1.875rem;
 	padding-inline: 1rem 2rem;
+	border-radius: 9px;
 	/* border: 1px solid var(--clr-accent); */
 }
 
