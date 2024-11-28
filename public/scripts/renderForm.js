@@ -2,38 +2,30 @@ const submitButton = document.getElementById("submitButton");
 const teamLogo = document
 	.getElementById("nbaLogoContainer")
 	.querySelector("img");
-const teamNames = {
-	ATL: "Hawks",
-	BOS: "Celtics",
-	BKN: "Nets",
-	CHA: "Hornets",
-	CHI: "Bulls",
-	CLE: "Cavaliers",
-	DAL: "Mavericks",
-	DEN: "Nuggets",
-	DET: "Pistons",
-	GS: "Warriors",
-	HOU: "Rockets",
-	IND: "Pacers",
-	LAC: "Clippers",
-	LAL: "Lakers",
-	MEM: "Grizzlies",
-	MIA: "Heat",
-	MIL: "Bucks",
-	MIN: "Timberwolves",
-	NO: "Pelicans",
-	NY: "Knicks",
-	OKC: "Thunder",
-	ORL: "Magic",
-	PHI: "Sixers",
-	PHO: "Suns",
-	POR: "Trailblazers",
-	SAC: "Kings",
-	SA: "Spurs",
-	TOR: "Raptors",
-	UTA: "Jazz",
-	WAS: "Wizards",
-};
+
+let teamNames = null; // Will be populated dynamically
+
+// Fetch team data from the /api/teams route
+fetchTeamData();
+
+async function fetchTeamData() {
+	try {
+		const response = await fetch("/api/teams");
+		if (!response.ok) {
+			throw new Error(`HTTP error! status: ${response.status}`);
+		}
+		teamNames = await response.json();
+	} catch (error) {
+		console.error("Failed to fetch team data:", error);
+		teamNames = {}; // Fallback to empty object in case of error
+	}
+}
+
+// // Wait for the DOM to load before fetching the data
+// document.addEventListener("DOMContentLoaded", () => {
+// 	fetchTeamData();
+// });
+
 const newProjectSubtitle = document
 	.getElementById("newProject")
 	.querySelector("small");
@@ -54,7 +46,9 @@ function updateTeamLogo(selectedTeam) {
 
 function updateNewProjectSubtitle(selectedTeam) {
 	if (!isInboxDefault()) {
-		newProjectSubtitle.textContent = `Import games into a new Todoist project called "${teamNames[selectedTeam]} schedule"`;
+		newProjectSubtitle.textContent = `Import games into a new Todoist project called "${
+			!teamNames ? "[team name]" : teamNames[selectedTeam]
+		} schedule"`;
 	}
 }
 

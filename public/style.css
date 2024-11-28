@@ -10,9 +10,9 @@
 }
 
 /* Overriding 
-content: var(--fa) / "";
-because this syntax isn't supported in several browsers
-and was causing icons not to show up
+	  content: var(--fa) / "";
+   because this syntax isn't supported in several browsers
+   and was causing icons not to show up
 */
 .fa-brands:before,
 .fa-regular:before,
