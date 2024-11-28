@@ -92,7 +92,7 @@ function makeProjectPickerHTML(isInboxDefault) {
 			}>
 			<span>
 				<strong>Create New Project</strong><br>
-				<small>${
+				<small aria-live="polite">${
 					isInboxDefault
 						? "Project limit reached. Can't create more Todoist projects."
 						: "Import games into a new Todoist project"

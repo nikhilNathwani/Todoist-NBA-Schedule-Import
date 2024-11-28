@@ -4,6 +4,10 @@ const teamLogo = document
 	.querySelector("img");
 
 let teamNames = null; // Will be populated dynamically
+const isInboxDefault = (() => {
+	const urlParams = new URLSearchParams(window.location.search);
+	return urlParams.get("isInboxDefault") !== "false";
+})();
 
 // Fetch team data from the /api/teams route
 fetchTeamData();
@@ -45,16 +49,11 @@ function updateTeamLogo(selectedTeam) {
 }
 
 function updateNewProjectSubtitle(selectedTeam) {
-	if (!isInboxDefault()) {
+	if (!isInboxDefault) {
 		newProjectSubtitle.textContent = `Import games into a new Todoist project called "${
 			!teamNames ? "[team name]" : teamNames[selectedTeam]
 		} schedule"`;
 	}
-}
-
-function isInboxDefault() {
-	const urlParams = new URLSearchParams(window.location.search);
-	return urlParams.get("isInboxDefault") !== "false";
 }
 
 function growLogoBanner() {
