@@ -93,6 +93,8 @@ async function userReachedProjectLimit(accessToken) {
 			(count, project) => count + (!project.isInboxProject ? 1 : 0),
 			0
 		);
+		console.log("PROJECTS:", projects);
+		console.log("PROJECT COUNT:", projectCount);
 
 		return isPremium
 			? projectCount >= projectLimits.PREMIUM
