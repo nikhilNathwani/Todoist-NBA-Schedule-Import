@@ -90,7 +90,7 @@ async function userReachedProjectLimit(accessToken) {
 		const { user, projects } = response.data;
 		const isPremium = user.is_premium; // Check if the user is premium
 		const projectCount = projects.reduce(
-			(count, project) => count + (!project.isInboxProject ? 1 : 0),
+			(count, project) => count + (!project.inbox_project ? 1 : 0),
 			0
 		);
 		console.log("PROJECTS:", projects);
