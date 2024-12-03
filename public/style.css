@@ -305,7 +305,7 @@ legend {
 	text-align: center;
 
 	width: fit-content;
-	padding: 0.5rem 0.75ch;
+	padding: 0.25rem 0.75ch;
 	border: 1px solid;
 
 	display: flex;
@@ -315,13 +315,6 @@ legend {
 
 	color: var(--clr-accent);
 }
-
-/* .step {
-	display: none;
-	padding: 0.5ch 1.125ch;
-	border-radius: 50%;
-	background-color: lightgray;
-} */
 
 select {
 	height: 2.25rem;

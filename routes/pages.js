@@ -58,7 +58,7 @@ function makeTeamPickerHTML(teams) {
 	const intro = `
 		<fieldset id="teamPicker">
 			<legend>
-				<span class="step">1:</span> Select your NBA team
+				1. Select your NBA team
 			</legend>
 			<select id="team-selector" name="team" aria-label="NBA Team">
 				<option value="" disabled selected>Choose a team</option> <!-- Ghost text -->`;
@@ -81,7 +81,7 @@ function makeProjectPickerHTML(isInboxDefault) {
 	const intro = `
 		<fieldset id="projectPicker">
 			<legend>
-				<span class="step">2:</span> Select Todoist project
+				2. Select Todoist project
 			</legend>`;
 	const outro = `</fieldset>`;
 
