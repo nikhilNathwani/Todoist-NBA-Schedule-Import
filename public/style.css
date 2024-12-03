@@ -319,8 +319,8 @@ legend {
 select {
 	width: 100%;
 	height: 2.5rem;
-	padding-block: 0.25rem;
-	padding-inline: 0.5ch;
+	/* padding-block: 0.25rem; */
+	padding-inline: 0.75ch;
 	border-radius: 8px;
 
 	font-size: 1rem;
