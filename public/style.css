@@ -286,8 +286,8 @@ fieldset {
 	flex-flow: column nowrap;
 	gap: 1.5rem;
 	padding-block: 1.875rem;
-	padding-inline: 1rem 2rem;
-	border-radius: 9px;
+	padding-inline: 1.5rem;
+	/* border-radius: 9px; */
 	/* border: 1px solid var(--clr-accent); */
 }
 
@@ -300,14 +300,19 @@ fieldset#projectPicker {
 }
 
 legend {
-	width: fit-content;
 	font-size: 1.125rem;
 	font-weight: bold;
+	text-align: center;
+
+	width: fit-content;
+	padding: 0.5rem 0.75ch;
+	border: 1px solid;
+
 	display: flex;
 	flex-flow: row nowrap;
 	align-items: center;
 	gap: 1ch;
-	padding-inline: 0.5ch;
+
 	color: var(--clr-accent);
 }
 
