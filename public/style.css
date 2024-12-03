@@ -5,6 +5,7 @@
 	/* --clr-accent: #e44232; */
 	--clr-accent: #dc4c3e;
 	--clr-accent-dark: #c3392c;
+	--clr-accent-light: #f07f75;
 	--clr-subtitle: #4b4b4b;
 	--clr-disabled: rgb(118, 118, 118);
 }
@@ -64,7 +65,7 @@ footer {
 	height: 3rem;
 
 	background-color: var(--clr-dark);
-	color: var(--clr-bg);
+	color: var(--clr-accent-light);
 
 	display: flex;
 	flex-flow: row nowrap;
@@ -74,7 +75,7 @@ footer {
 }
 
 footer a {
-	color: var(--clr-bg);
+	color: var(--clr-accent-light);
 }
 
 .app-frame {
