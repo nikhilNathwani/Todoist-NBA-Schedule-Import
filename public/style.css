@@ -288,7 +288,7 @@ fieldset {
 	padding-block: 1.875rem;
 	padding-inline: 1.5rem;
 	/* border-radius: 9px; */
-	/* border: 1px solid var(--clr-accent); */
+	border: 1px solid var(--clr-accent);
 }
 
 fieldset#teamPicker {
