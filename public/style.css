@@ -65,7 +65,7 @@ footer {
 	height: 3rem;
 
 	background-color: var(--clr-dark);
-	color: var(--clr-accent-light);
+	color: var(--clr-bg);
 
 	display: flex;
 	flex-flow: row nowrap;
@@ -75,7 +75,7 @@ footer {
 }
 
 footer a {
-	color: var(--clr-accent-light);
+	color: var(--clr-bg);
 }
 
 .app-frame {
