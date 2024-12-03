@@ -288,7 +288,7 @@ fieldset {
 	padding-block: 1.875rem;
 	padding-inline: 1.5rem;
 	/* border-radius: 9px; */
-	border: 1px solid var(--clr-accent);
+	border: 1px dotted var(--clr-accent);
 }
 
 fieldset#teamPicker {
@@ -305,8 +305,8 @@ legend {
 	text-align: center;
 
 	width: fit-content;
-	padding: 0.25rem 0.75ch;
-	border: 1px solid;
+	padding-inline: 0.75ch;
+	/* border: 1px solid; */
 
 	display: flex;
 	flex-flow: row nowrap;
