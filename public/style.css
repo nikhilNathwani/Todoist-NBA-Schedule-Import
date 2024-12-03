@@ -299,6 +299,7 @@ fieldset#projectPicker {
 }
 
 legend {
+	width: fit-content;
 	font-size: 1.125rem;
 	font-weight: bold;
 	display: flex;
