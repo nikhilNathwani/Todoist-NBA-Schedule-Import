@@ -127,7 +127,9 @@ function makeNextStepsList(status, projectID, errorMessage) {
 				icon: `<i class="fa-regular fa-envelope"></i>`,
 				linkName: "Contact me",
 				desc: "",
-				link: "mailto:nnathwani36@gmail.com?subject=Regarding%20NBA%20Todoist%20Import",
+				link: `mailto:nnathwani36@gmail.com?subject=${encodeURIComponent(
+					"Regarding NBA Todoist Import"
+				)}`,
 			},
 		];
 	}
