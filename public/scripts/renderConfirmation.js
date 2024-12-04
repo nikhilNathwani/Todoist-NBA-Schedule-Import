@@ -12,12 +12,6 @@ const importStatus = {
 };
 let showingLoadingUI = true;
 
-async function waitForLoadingUI() {
-	while (showingLoadingUI) {
-		await new Promise((resolve) => setTimeout(resolve, 100));
-	}
-}
-
 function showImportStatusUI(status, projectID = null, errorMessage = null) {
 	const arrow = document.getElementById("arrow");
 	arrow.innerHTML = getStatusArrow(status);
@@ -112,7 +106,6 @@ function showNextStepsList(status, projectID, errorMessage) {
 function makeNextStepsList(status, projectID, errorMessage) {
 	const list = document.createElement("ul");
 	list.classList.add("next-steps-list");
-	// list.classList.add("fade-in");
 
 	var listItems = [];
 
@@ -145,7 +138,9 @@ function makeNextStepsList(status, projectID, errorMessage) {
 				icon: `<i class="fa-regular fa-envelope"></i>`,
 				linkName: "Send error report",
 				desc: "",
-				link: `mailto:nnathwani36@gmail.com?subject=Issue%20with%20NBA%20Todoist%20Import&body=${encodeURIComponent(
+				link: `mailto:nnathwani36@gmail.com?subject=${encodeURIComponent(
+					"Issue with NBA Todoist Import"
+				)}&body=${encodeURIComponent(
 					"I encountered the following error when trying to import an NBA schedule into Todoist:\n\n" +
 						errorMessage
 				)}`,
