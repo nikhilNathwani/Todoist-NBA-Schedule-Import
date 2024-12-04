@@ -42,15 +42,13 @@
 body {
 	font-family: Arial, sans-serif;
 	color: var(--clr-dark);
+	background-color: var(--clr-bg);
 
 	min-height: 100svh;
 
 	display: grid;
 	grid-template-rows: 1fr 3rem;
 	align-items: center;
-	/* justify-content: center; */
-
-	background-color: var(--clr-bg);
 }
 
 main {
@@ -61,11 +59,11 @@ main {
 }
 
 footer {
-	width: 100%;
-	height: 3rem;
-
 	background-color: var(--clr-dark);
 	color: var(--clr-bg);
+
+	width: 100%;
+	height: 3rem;
 
 	display: flex;
 	flex-flow: row nowrap;
@@ -92,9 +90,7 @@ footer a {
 .app-content {
 	display: flex;
 	flex-flow: row nowrap;
-	/* align-items: center; */
 	justify-content: center;
-	/* overflow: hidden; */
 
 	max-height: 1000px;
 }
@@ -115,6 +111,7 @@ footer a {
 .logo-banner {
 	font-size: 1.125rem;
 	color: var(--clr-dark);
+
 	height: 40px;
 
 	display: flex;
@@ -130,16 +127,20 @@ footer a {
 }
 
 .logo-banner-large {
+	font-size: 1.5rem;
+
 	height: 60px;
 	margin-top: 2rem;
-	font-size: 1.5rem;
+
 	gap: 0.75rem;
 }
 
 #nbaLogoContainer {
+	background-color: white;
+
 	border: 1px solid lightgray;
 	border-radius: 6px;
-	background-color: white;
+
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -174,12 +175,13 @@ h1 {
 
 h3 {
 	font-size: 1.125rem;
-	line-height: 1.25;
 	font-weight: normal;
+	line-height: 1.25;
 }
 
 #arrow {
 	width: 3.5rem;
+
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -197,13 +199,12 @@ h3 {
 	text-align: center;
 	text-decoration: none;
 	color: var(--clr-light);
+	background-color: var(--clr-accent);
 
 	width: 100%;
 	padding: 15px 30px;
 	border: none;
 	border-radius: 8px;
-
-	background-color: var(--clr-accent);
 
 	cursor: pointer;
 
@@ -212,8 +213,10 @@ h3 {
 
 .button-secondary {
 	display: none; /* Hidden until I make demo*/
-	background-color: var(--clr-light);
+
 	color: var(--clr-accent);
+	background-color: var(--clr-light);
+
 	border: 1px solid var(--clr-accent);
 }
 
@@ -260,6 +263,7 @@ h3 {
 	width: 25ch;
 	height: fit-content;
 	margin-top: 3.25rem;
+
 	display: flex;
 	flex-flow: column nowrap;
 	align-items: center;
@@ -274,6 +278,7 @@ h3 {
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 form {
 	width: 100%;
+
 	display: flex;
 	flex-flow: column nowrap;
 	gap: 2.5rem;
@@ -282,13 +287,13 @@ form {
 }
 
 fieldset {
+	padding-block: 1.875rem;
+	padding-inline: 1.5rem;
+	border: 1px dotted var(--clr-accent);
+
 	display: flex;
 	flex-flow: column nowrap;
 	gap: 1.5rem;
-	padding-block: 1.875rem;
-	padding-inline: 1.5rem;
-	/* border-radius: 9px; */
-	border: 1px dotted var(--clr-accent);
 }
 
 fieldset#teamPicker {
@@ -303,28 +308,25 @@ legend {
 	font-size: 1.125rem;
 	font-weight: bold;
 	text-align: center;
+	color: var(--clr-accent);
 
 	width: fit-content;
 	padding-inline: 0.75ch;
-	/* border: 1px solid; */
 
 	display: flex;
 	flex-flow: row nowrap;
 	align-items: center;
 	gap: 1ch;
-
-	color: var(--clr-accent);
 }
 
 select {
-	width: 100%;
-	height: 2.5rem;
-	/* padding-block: 0.25rem; */
-	padding-inline: 0.75ch;
-	border-radius: 8px;
-
 	font-size: 1rem;
 	color: var(--clr-dark);
+
+	width: 100%;
+	height: 2.5rem;
+	padding-inline: 0.75ch;
+	border-radius: 8px;
 }
 
 #newProject {
@@ -343,9 +345,10 @@ select {
 }
 
 input[type="radio"] {
+	accent-color: var(--clr-accent); /* Optional: Change color if supported */
+
 	width: 1.5em; /* Increase width */
 	height: 1.5em; /* Increase height */
-	accent-color: var(--clr-accent); /* Optional: Change color if supported */
 }
 
 label.disabled {
@@ -358,9 +361,9 @@ label.disabled {
 /*                                         */
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 ul {
+	opacity: 0;
 	margin-top: 3.25rem;
 	list-style-type: none;
-	opacity: 0;
 	transition: opacity 1s ease;
 }
 
@@ -369,9 +372,9 @@ ul.fade-in {
 }
 
 ul a {
-	color: var(--clr-accent);
 	font-weight: bold;
 	text-decoration: none;
+	color: var(--clr-accent);
 }
 
 li {
@@ -418,10 +421,6 @@ form.fade-out {
 	transition: height 1s ease, font-size 1s ease, gap 1s ease,
 		margin-top 1s ease;
 }
-
-/* .app-frame.loading .app-content {
-	overflow: hidden;
-} */
 
 /* Transition 3: 
 	-Also after form fades out (1s delay)
