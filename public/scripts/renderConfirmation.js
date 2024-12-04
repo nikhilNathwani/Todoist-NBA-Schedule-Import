@@ -5,6 +5,7 @@
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
 const minDurationLoadingUI = 3000;
+const delayNextStepsFadeIn = 1200;
 const importStatus = {
 	LOADING: 0,
 	SUCCESS: 1,
@@ -100,7 +101,7 @@ function showNextStepsList(status, projectID, errorMessage) {
 	appContent.appendChild(nextSteps);
 	setTimeout(() => {
 		nextSteps.classList.add("fade-in");
-	}, 1200);
+	}, delayNextStepsFadeIn);
 }
 
 function makeNextStepsList(status, projectID, errorMessage) {
