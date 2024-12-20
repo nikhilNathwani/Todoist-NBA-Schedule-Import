@@ -193,7 +193,7 @@ const htmlOutro = `
 			<footer>
 				<div>&copy; Nikhil Nathwani</div>
 				|
-				<a target="_blank" href="https://nikhilnathwani.netlify.app"
+				<a target="_blank" href="https://nikhilnathwani.com"
 					>Other Work</a
 				>
 				|
