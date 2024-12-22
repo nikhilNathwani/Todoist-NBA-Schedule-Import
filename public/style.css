@@ -5,7 +5,7 @@
 	/* --clr-accent: #e44232; */
 	--clr-accent: #dc4c3e;
 	--clr-accent-dark: #c3392c;
-	--clr-accent-light: #ff7066;
+	--clr-accent-light: hsl(4, 40%, 80%);
 	--clr-subtitle: #4b4b4b;
 	--clr-disabled: rgb(118, 118, 118);
 }
@@ -226,7 +226,7 @@ h3 {
 }
 
 .button-secondary:hover {
-	font-weight: 600;
+	background-color: var(--clr-accent-light);
 	/* border-width: 3px; */
 }
 
