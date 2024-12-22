@@ -216,7 +216,7 @@ h3 {
 	font-weight: normal;
 
 	color: var(--clr-accent);
-	background-color: var(--clr-light);
+	background-color: var(--clr-bg);
 
 	border: 1px solid var(--clr-accent);
 }
@@ -226,7 +226,7 @@ h3 {
 }
 
 .button-secondary:hover {
-	background-color: var(--clr-accent-light);
+	background-color: var(--clr-light);
 	/* border-width: 3px; */
 }
 
