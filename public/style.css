@@ -225,7 +225,7 @@ h3 {
 	background-color: var(--clr-accent-dark);
 }
 
-.button-primary:hover {
+.button-secondary:hover {
 	font-weight: 600;
 	border-width: 3px;
 }
