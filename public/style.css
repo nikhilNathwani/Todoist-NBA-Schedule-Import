@@ -213,6 +213,7 @@ h3 {
 
 .button-secondary {
 	/* display: none; */
+	font-weight: normal;
 
 	color: var(--clr-accent);
 	background-color: var(--clr-light);
@@ -222,6 +223,11 @@ h3 {
 
 .button-primary:hover {
 	background-color: var(--clr-accent-dark);
+}
+
+.button-primary:hover {
+	font-weight: 600;
+	border-width: 3px;
 }
 
 .button:active {
