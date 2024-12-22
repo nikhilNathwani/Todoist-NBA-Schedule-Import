@@ -212,7 +212,7 @@ h3 {
 }
 
 .button-secondary {
-	display: none; /* Hidden until I make demo*/
+	/* display: none; */
 
 	color: var(--clr-accent);
 	background-color: var(--clr-light);
