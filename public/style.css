@@ -227,7 +227,7 @@ h3 {
 
 .button-secondary:hover {
 	font-weight: 600;
-	border-width: 3px;
+	/* border-width: 3px; */
 }
 
 .button:active {
