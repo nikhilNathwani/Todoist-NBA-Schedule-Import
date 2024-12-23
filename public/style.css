@@ -216,22 +216,24 @@ h3 {
 	font-weight: normal;
 
 	color: var(--clr-accent);
-	background-color: var(--clr-bg);
+	background-color: var(--clr-light);
 
 	border: 1px solid var(--clr-accent);
 }
 
 .button-primary:hover {
-	background-color: var(--clr-accent-dark);
+	/* background-color: var(--clr-accent-dark); */
+	transform: scale(1.02);
 }
 
 .button-secondary:hover {
-	background-color: var(--clr-light);
+	transform: scale(1.02);
+	/* background-color: var(--clr-light); */
 	/* border-width: 3px; */
 }
 
 .button:active {
-	transform: scale(0.95);
+	transform: scale(0.98);
 }
 
 .button:disabled {
