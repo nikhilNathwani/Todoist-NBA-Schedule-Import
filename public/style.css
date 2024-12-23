@@ -221,15 +221,8 @@ h3 {
 	border: 1px solid var(--clr-accent);
 }
 
-.button-primary:hover {
-	/* background-color: var(--clr-accent-dark); */
-	transform: scale(1.02);
-}
-
-.button-secondary:hover {
+.button:hover {
 	transform: scale(1.03);
-	/* background-color: var(--clr-light); */
-	/* border-width: 3px; */
 }
 
 .button:active {
