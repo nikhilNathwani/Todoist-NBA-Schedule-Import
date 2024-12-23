@@ -227,7 +227,7 @@ h3 {
 }
 
 .button-secondary:hover {
-	transform: scale(1.02);
+	transform: scale(1.03);
 	/* background-color: var(--clr-light); */
 	/* border-width: 3px; */
 }
