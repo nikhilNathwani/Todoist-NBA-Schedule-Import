@@ -6,7 +6,13 @@ const staticPathRoot = path.join(__dirname, "../public");
 
 // Serve the landing page (login page)
 router.get("/", (req, res) => {
-	res.sendFile(path.join(staticPathRoot, "landing.html"));
+	var isSeasonUnderway= true;
+	if (isSeasonUnderway) {
+		res.sendFile(path.join(staticPathRoot, "landing.html"));
+	}
+	else () {
+		res.sendFile(path.join(staticPathRoot, "seasonOver.html"));
+	}
 });
 
 // Serve the team selection page
