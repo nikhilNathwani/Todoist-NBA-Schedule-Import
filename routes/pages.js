@@ -13,9 +13,9 @@ function isSeasonOver() {
 // Serve the landing page (login page)
 router.get("/", (req, res) => {
 	//var isSeasonUnderway= false;
-	var isSeasonOver= isSeasonOver();
+	var isSeasonOverBool= isSeasonOver();
 
-	if (isSeasonOver) {
+	if (isSeasonOverBool) {
 		res.sendFile(path.join(staticPathRoot, "seasonOver.html"));
 	}
 	else {
