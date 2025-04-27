@@ -6,7 +6,7 @@ const staticPathRoot = path.join(__dirname, "../public");
 
 // Serve the landing page (login page)
 router.get("/", (req, res) => {
-	var isSeasonUnderway= true;
+	var isSeasonUnderway= false;
 	if (isSeasonUnderway) {
 		res.sendFile(path.join(staticPathRoot, "landing.html"));
 	}
