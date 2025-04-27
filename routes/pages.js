@@ -10,7 +10,7 @@ router.get("/", (req, res) => {
 	if (isSeasonUnderway) {
 		res.sendFile(path.join(staticPathRoot, "landing.html"));
 	}
-	else () {
+	else {
 		res.sendFile(path.join(staticPathRoot, "seasonOver.html"));
 	}
 });
