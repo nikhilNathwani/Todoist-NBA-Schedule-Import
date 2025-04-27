@@ -272,6 +272,21 @@ h3 {
 	gap: 1rem;
 }
 
+
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+/*                                         */
+/*      LANDING PAGE - SEASON OVER         */
+/*                                         */
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
+#appFrameLanding.season-over h3 {
+	margin-top: 4rem;
+}
+
+#appFrameLanding.season-over a{
+	color: var(--clr-accent-dark);
+}
+
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 /*                                         */
 /*      FORM PAGE                          */
