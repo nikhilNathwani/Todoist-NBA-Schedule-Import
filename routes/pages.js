@@ -5,7 +5,7 @@ const router = express.Router();
 const staticPathRoot = path.join(__dirname, "../public");
 
 function isSeasonOver() {
-	const finalGameDateTime = new Date("2025-04-13T22:00:00+00:00");
+	const finalGameDateTime = new Date("2025-04-13T19:30:00+00:00");
 	const now = new Date();
 	return now > finalGameDateTime;
 }
