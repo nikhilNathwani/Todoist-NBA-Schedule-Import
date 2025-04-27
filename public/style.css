@@ -279,6 +279,10 @@ h3 {
 /*                                         */
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#appFrameLanding.season-over {
+	height: 28.75rem;
+}
+
 #appFrameLanding.season-over h3 {
 	margin-top: 4rem;
 }
