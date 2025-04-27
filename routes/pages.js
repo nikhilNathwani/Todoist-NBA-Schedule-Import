@@ -4,14 +4,22 @@ const path = require("path");
 const router = express.Router();
 const staticPathRoot = path.join(__dirname, "../public");
 
+function isSeasonOver() {
+	const finalGameDateTime = new Date("2025-04-13T22:00:00+00:00");
+	const now = new Date();
+	return now > finalGameDateTime;
+}
+
 // Serve the landing page (login page)
 router.get("/", (req, res) => {
-	var isSeasonUnderway= false;
-	if (isSeasonUnderway) {
-		res.sendFile(path.join(staticPathRoot, "landing.html"));
+	//var isSeasonUnderway= false;
+	var isSeasonOver= isSeasonOver();
+
+	if (isSeasonOver) {
+		res.sendFile(path.join(staticPathRoot, "seasonOver.html"));
 	}
 	else {
-		res.sendFile(path.join(staticPathRoot, "seasonOver.html"));
+		res.sendFile(path.join(staticPathRoot, "landing.html"));
 	}
 });
 
