@@ -2,6 +2,7 @@ const express = require("express");
 const fs = require("fs").promises;
 const path = require("path");
 const router = express.Router();
+const { getFinalGameTime } = require("../utils/parseSchedule");
 const staticPathRoot = path.join(__dirname, "../public");
 
 function isSeasonOverOld() {
@@ -13,11 +14,7 @@ function isSeasonOverOld() {
 
 async function isSeasonOver() {
 	try {
-		const response = await fetch("/api/finalGameTime");
-		if (!response.ok) {
-			throw new Error(`HTTP error! status: ${response.status}`);
-		}
-		finalGameDateTime = await response.json();
+		const finalGameDateTime = await getFinalGameTime();
 		console.log(`Received last game time: ${finalGameDateTime}`)
 		const now= new Date();
 		return now > finalGameDateTime;

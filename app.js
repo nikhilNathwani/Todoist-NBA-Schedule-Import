@@ -4,7 +4,6 @@ const cookieSession = require("cookie-session");
 const path = require("path");
 /* Internal imports */
 const teamsRoutes = require("./routes/teams");
-const finalGameTimeRoutes = require("./routes/finalGameTime");
 const pagesRoutes = require("./routes/pages");
 const { router: importGamesRoutes } = require("./routes/importGames");
 const oauthRoutes = require("./routes/oauth");
@@ -40,7 +39,6 @@ app.use(express.urlencoded({ extended: true }));
 // Use the routes I defined
 app.use("/api/auth", oauthRoutes);
 app.use("/api/teams", teamsRoutes);
-app.use("/api/finalGameTime", finalGameTimeRoutes);
 app.use("/api", importGamesRoutes);
 app.use("/", pagesRoutes);
 
