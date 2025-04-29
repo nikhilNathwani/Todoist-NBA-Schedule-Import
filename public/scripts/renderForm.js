@@ -14,7 +14,7 @@ fetchTeamData();
 
 async function fetchTeamData() {
 	try {
-		const response = await fetch("/api/schedule/teams");
+		const response = await fetch("/api/teams");
 		if (!response.ok) {
 			throw new Error(`HTTP error! status: ${response.status}`);
 		}

@@ -13,7 +13,7 @@ function isSeasonOverOld() {
 
 async function isSeasonOver() {
 	try {
-		const response = await fetch("/api/schedule/lastGameTime");
+		const response = await fetch("/api/finalGameTime");
 		if (!response.ok) {
 			throw new Error(`HTTP error! status: ${response.status}`);
 		}
