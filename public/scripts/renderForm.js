@@ -9,12 +9,12 @@ const isInboxDefault = (() => {
 	return urlParams.get("isInboxDefault") !== "false";
 })();
 
-// Fetch team data from the /api/teams route
+// Fetch team data from the /api/schedule route
 fetchTeamData();
 
 async function fetchTeamData() {
 	try {
-		const response = await fetch("/api/teams");
+		const response = await fetch("/api/schedule/teams");
 		if (!response.ok) {
 			throw new Error(`HTTP error! status: ${response.status}`);
 		}

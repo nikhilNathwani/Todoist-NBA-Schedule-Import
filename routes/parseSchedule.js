@@ -4,7 +4,7 @@ const fs = require("fs").promises;
 const path = require("path");
 const schedulePath = path.join(__dirname, "../data/nba_schedule.json");
 
-router.get("/", async (req, res) => {
+router.get("/teams", async (req, res) => {
 	try {
 		const data = await fs.readFile(schedulePath, "utf-8");
 		const nbaSchedule = JSON.parse(data);
