@@ -29,7 +29,7 @@ async function isSeasonOver() {
 router.get("/", (req, res) => {
 	// var isSeasonOverBool = false;
 	var isSeasonOverBool = isSeasonOver();
-	res.sendFile(makeLandingPageHTML(isSeasonOverBool));
+	res.send(makeLandingPageHTML(isSeasonOverBool));
 });
 
 // Serve the team selection page
