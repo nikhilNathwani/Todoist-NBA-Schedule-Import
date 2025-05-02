@@ -27,8 +27,8 @@ async function isSeasonOver() {
 
 // Serve the landing page (login page)
 router.get("/", (req, res) => {
-	var isSeasonOverBool = false;
-	// var isSeasonOverBool = isSeasonOver();
+	// var isSeasonOverBool = false;
+	var isSeasonOverBool = isSeasonOver();
 	res.send(makeLandingPageHTML(isSeasonOverBool));
 });
 
