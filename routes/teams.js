@@ -3,7 +3,7 @@ const router = express.Router();
 const { getTeams } = require('../utils/parseSchedule');
 
 
-router.get("/teams", async (req, res) => {
+router.get("/", async (req, res) => {
 	try {
 		const teamNames= await getTeams();
 		res.json(teamData);
