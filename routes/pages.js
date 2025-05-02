@@ -2,6 +2,7 @@ const express = require("express");
 const fs = require("fs").promises;
 const path = require("path");
 const router = express.Router();
+const { makeLandingPageHTML } = require("../utils/renderLandingPage.js");
 const { getFinalGameTime } = require("../utils/parseSchedule");
 const staticPathRoot = path.join(__dirname, "../public");
 
@@ -15,8 +16,8 @@ function isSeasonOverOld() {
 async function isSeasonOver() {
 	try {
 		const finalGameDateTime = await getFinalGameTime();
-		console.log(`Received last game time: ${finalGameDateTime}`)
-		const now= new Date();
+		console.log(`Received last game time: ${finalGameDateTime}`);
+		const now = new Date();
 		return now > finalGameDateTime;
 	} catch (error) {
 		console.error("Failed to fetch team data:", error);
@@ -26,15 +27,9 @@ async function isSeasonOver() {
 
 // Serve the landing page (login page)
 router.get("/", (req, res) => {
-	var isSeasonOverBool= false;
-	// var isSeasonOverBool= isSeasonOver();
-
-	if (isSeasonOverBool) {
-		res.sendFile(path.join(staticPathRoot, "seasonOver.html"));
-	}
-	else {
-		res.sendFile(path.join(staticPathRoot, "landing.html"));
-	}
+	// var isSeasonOverBool = false;
+	var isSeasonOverBool = isSeasonOver();
+	res.sendFile(makeLandingPageHTML(isSeasonOverBool));
 });
 
 // Serve the team selection page
