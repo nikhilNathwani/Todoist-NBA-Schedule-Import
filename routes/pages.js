@@ -3,33 +3,11 @@ const fs = require("fs").promises;
 const path = require("path");
 const router = express.Router();
 const { makeLandingPageHTML } = require("../utils/renderLandingPage.js");
-const { getFinalGameTime } = require("../utils/parseSchedule");
 const staticPathRoot = path.join(__dirname, "../public");
-
-function isSeasonOverOld() {
-	//Hard-coded final game time (UTC) of last game of 2024-25 regular season
-	const finalGameDateTime = new Date("2025-04-13T19:30:00+00:00");
-	const now = new Date();
-	return now > finalGameDateTime;
-}
-
-async function isSeasonOver() {
-	try {
-		const finalGameDateTime = await getFinalGameTime();
-		console.log(`Received last game time: ${finalGameDateTime}`);
-		const now = new Date();
-		return now > finalGameDateTime;
-	} catch (error) {
-		console.error("Failed to fetch team data:", error);
-		return false; // Fallback to empty object in case of error
-	}
-}
 
 // Serve the landing page (login page)
 router.get("/", (req, res) => {
-	// var isSeasonOverBool = false;
-	var isSeasonOverBool = isSeasonOver();
-	res.send(makeLandingPageHTML(isSeasonOverBool));
+	res.send(makeLandingPageHTML());
 });
 
 // Serve the team selection page
