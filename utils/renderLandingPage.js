@@ -3,6 +3,7 @@ const { getFinalGameTime } = require("./parseSchedule");
 function makeLandingPageHTML() {
 	// const isSeasonOverBool = false;
 	var { isSeasonOverBool, seasonEndYear } = isSeasonOver();
+	console.log("isSeasonOVerBool is:", isSeasonOverBool);
 	return `
 	<!DOCTYPE html>
 	<html lang="en">
