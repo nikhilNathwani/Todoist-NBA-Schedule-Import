@@ -40,7 +40,7 @@ function makeLandingPageHTML() {
 				<div class="app-frame ${
 					isSeasonOverBool ? "season-over" : ""
 				}" id="appFrameLanding">
-					${makeAppHeaderHTML(isSeasonOverBool)}
+					${makeAppHeaderHTML(isSeasonOverBool, seasonEndYear)}
 					${makeAppContentHTML(isSeasonOverBool)}
 				</div>
 			</main>
