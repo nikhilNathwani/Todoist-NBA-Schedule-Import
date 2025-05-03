@@ -1,8 +1,8 @@
 const { getFinalGameTime } = require("./parseSchedule");
 
 function makeLandingPageHTML() {
-	const isSeasonOverBool = false;
-	// const isSeasonOverBool = isSeasonOver();
+	// const isSeasonOverBool = false;
+	const isSeasonOverBool = isSeasonOver();
 	return `
 	<!DOCTYPE html>
 	<html lang="en">
