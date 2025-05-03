@@ -85,7 +85,7 @@ function makeAppHeaderHTML(isSeasonOver, seasonEndYear) {
 				? "Log in with Todoist to import your favorite NBA team's regular season schedule."
 				: `
 					<b>Come back in October</b> when the ${seasonEndYear}-${
-						seasonEndYear % 100
+						(seasonEndYear + 1) % 100
 				  } NBA schedule is available.
 					<br />
 					<br />
