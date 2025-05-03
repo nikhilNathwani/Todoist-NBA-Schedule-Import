@@ -2,7 +2,7 @@ const { getFinalGameTime } = require("./parseSchedule");
 
 function makeLandingPageHTML() {
 	// const isSeasonOverBool = false;
-	var isSeasonOverBool = isSeasonOver();
+	var { isSeasonOverBool, seasonEndYear } = isSeasonOver();
 	return `
 	<!DOCTYPE html>
 	<html lang="en">
@@ -60,7 +60,7 @@ function makeLandingPageHTML() {
 `;
 }
 
-function makeAppHeaderHTML(isSeasonOver) {
+function makeAppHeaderHTML(isSeasonOver, seasonEndYear) {
 	return `
 	<div class="app-header">
 		<div class="logo-banner logo-banner-large">
@@ -83,7 +83,7 @@ function makeAppHeaderHTML(isSeasonOver) {
 			!isSeasonOver
 				? "Log in with Todoist to import your favorite NBA team's regular season schedule."
 				: `
-					<b>Come back in October</b> when the 2025-26 NBA schedule is available.
+					<b>Come back in October</b> when the ${seasonEndYear} 2025-26 NBA schedule is available.
 					<br />
 					<br />
 					Then import your favorite team's games into Todoist!
@@ -130,15 +130,24 @@ function isSeasonOverOld() {
 	return now > finalGameDateTime;
 }
 
+//returns 1) true/false indicating whether season is over,
+//        2) the end-year of the season in question
 async function isSeasonOver() {
 	try {
 		const finalGameDateTime = await getFinalGameTime();
+		const seasonEndYear = finalGameDateTime.getFullYear();
 		console.log(`Received last game time: ${finalGameDateTime}`);
 		const now = new Date();
-		return now > finalGameDateTime;
+		return {
+			isSeasonOverBool: now > finalGameDateTime,
+			seasonEndYear: seasonEndYear,
+		};
 	} catch (error) {
 		console.error("Failed to fetch team data:", error);
-		return false; // Fallback to empty object in case of error
+		return {
+			isSeasonOverBool: false,
+			seasonEndYear: 0,
+		};
 	}
 }
 
