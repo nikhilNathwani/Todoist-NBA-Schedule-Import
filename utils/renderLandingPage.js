@@ -1,8 +1,13 @@
 const { getFinalGameTime } = require("./parseSchedule");
 
+const testSeasonUnderwayParam = (() => {
+	const urlParams = new URLSearchParams(window.location.search);
+	return urlParams.get("a") == "a";
+})();
+
 function makeLandingPageHTML() {
 	// const isSeasonOverBool = false;
-	const isSeasonOverBool = isSeasonOver();
+	var isSeasonOverBool = testSeasonUnderwayParam ? false : isSeasonOver();
 	return `
 	<!DOCTYPE html>
 	<html lang="en">
