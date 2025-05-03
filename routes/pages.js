@@ -6,8 +6,9 @@ const { makeLandingPageHTML } = require("../utils/renderLandingPage.js");
 const staticPathRoot = path.join(__dirname, "../public");
 
 // Serve the landing page (login page)
-router.get("/", (req, res) => {
-	res.send(makeLandingPageHTML());
+router.get("/", async (req, res) => {
+	const html = await makeLandingPageHTML();
+	res.send(html);
 });
 
 // Serve the team selection page
