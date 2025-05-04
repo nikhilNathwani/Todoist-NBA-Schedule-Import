@@ -30,6 +30,7 @@ async function fetchTeamData() {
 // 	fetchTeamData();
 // });
 
+const newProjectInput = document.querySelector('input[value="newProject"]');
 const newProjectSubtitle = document
 	.getElementById("newProject")
 	.querySelector("small");
@@ -49,7 +50,8 @@ function updateTeamLogo(selectedTeam) {
 }
 
 function updateNewProjectSubtitle(selectedTeam) {
-	if (!isInboxDefault) {
+	if (!newProjectInput.disabled) {
+		console.log("correctly ended up here without inboxDefault check");
 		newProjectSubtitle.textContent = `Import games into a new Todoist project called "${
 			!teamNames ? "[team name]" : teamNames[selectedTeam]
 		} schedule"`;
