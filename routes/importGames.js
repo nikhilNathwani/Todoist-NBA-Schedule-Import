@@ -155,7 +155,7 @@ function formatTask(game, projectID, teamName, taskOrder) {
 		content: `${teamName} ${game.isHomeGame ? "vs" : "at"} ${
 			game.opponent
 		}`,
-		dueDatetime: game.dateTime,
+		dueDatetime: game.gameTimeUtcIso8601,
 		projectId: projectID,
 		order: taskOrder,
 	};
@@ -209,7 +209,7 @@ async function getTeamData(team) {
 function getUpcomingGames(schedule) {
 	const upcomingGames = [];
 	for (const game of schedule) {
-		if (isLaterThanNow(game.dateTime)) {
+		if (isLaterThanNow(game.gameTimeUtcIso8601)) {
 			upcomingGames.push(game);
 		}
 	}

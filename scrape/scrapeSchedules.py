@@ -99,8 +99,8 @@ def scrapeTeamSchedule(link):
            isHomeGame= scrapeIsHomeGame(row)
            date= scrapeDate(row)
            time= scrapeTime(row)
-           dateTime= formatDateTime(date,time)
-           games.append({"opponent":opponent, "isHomeGame":isHomeGame, "dateTime":dateTime})
+           gameTimeUtcIso8601= formatDateTime(date,time)
+           games.append({"opponent":opponent, "isHomeGame":isHomeGame, "gameTimeUtcIso8601":gameTimeUtcIso8601})
     return games
 
 
