@@ -46,7 +46,6 @@ function updateTeamLogo(selectedTeam) {
 
 function updateNewProjectSubtitle(selectedTeam) {
 	if (!newProjectInput.disabled) {
-		console.log("correctly ended up here without inboxDefault check");
 		newProjectSubtitle.textContent = `Import games into a new Todoist project called "${
 			!teamNames ? "[team name]" : teamNames[selectedTeam]
 		} schedule"`;
