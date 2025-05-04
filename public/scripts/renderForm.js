@@ -2,12 +2,7 @@ const submitButton = document.getElementById("submitButton");
 const teamLogo = document
 	.getElementById("nbaLogoContainer")
 	.querySelector("img");
-
 let teamNames = null; // Will be populated dynamically
-const isInboxDefault = (() => {
-	const urlParams = new URLSearchParams(window.location.search);
-	return urlParams.get("isInboxDefault") !== "false";
-})();
 
 // Fetch team data from the /api/schedule route
 fetchTeamData();
