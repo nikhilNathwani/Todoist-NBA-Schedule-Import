@@ -32,7 +32,7 @@ router.get("/callback", async (req, res) => {
 	console.log("In /oauth, about to save access token");
 	saveAccessToken(req, accessToken);
 	console.log("In /oauth, just saved access token");
-	printReqSession();
+	printReqSession(req);
 	// Redirect to the team selection page
 	const redirectUrlParam = await userReachedProjectLimit(accessToken);
 	console.log("In /oauth, about to redirect to /configure-import now");
