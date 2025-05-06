@@ -1,9 +1,9 @@
 const express = require("express");
 const fs = require("fs").promises;
 const path = require("path");
+const { printReqSession } = require("../utils/cookieSession.js");
 const router = express.Router();
 const { makeLandingPageHTML } = require("../utils/renderLandingPage.js");
-const staticPathRoot = path.join(__dirname, "../public");
 
 // Serve the landing page (login page)
 router.get("/", async (req, res) => {
@@ -14,6 +14,8 @@ router.get("/", async (req, res) => {
 // Serve the team selection page
 router.get("/configure-import", async (req, res) => {
 	try {
+		console.log("In /configure-import, req.session is:");
+		printReqSession(req);
 		// Make team picker HTML
 		const teams = await getTeams();
 		const teamPickerHTML = makeTeamPickerHTML(teams);

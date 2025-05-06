@@ -30,6 +30,7 @@ router.get("/callback", async (req, res) => {
 	// Store encrypted access token in session cookie for later api usage
 	const accessToken = await retrieveAccessToken(req, res, code);
 	console.log("In /oauth, about to save access token");
+	printReqSession(req);
 	saveAccessToken(req, accessToken);
 	console.log("In /oauth, just saved access token");
 	printReqSession(req);
