@@ -15,7 +15,7 @@ async function makeLandingPageHTML() {
 			<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 			<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 			<title>NBA -> Todoist Schedule Import</title>
-			<link rel="stylesheet" href="style.css" />
+			<link rel="stylesheet" href="/style.css" />
 			<link
 				rel="apple-touch-icon"
 				sizes="180x180"
@@ -69,14 +69,14 @@ function makeAppHeaderHTML(isSeasonOver, seasonEndYear) {
 	<div class="app-header">
 		<div class="logo-banner logo-banner-large">
 			<div class="logo-container" id="nbaLogoContainer">
-				<img src="images/nba-logo.png" alt="NBA Logo" />
+				<img src="/images/nba-logo.png" alt="NBA Logo" />
 			</div>
 			<div id="arrow">
 				<i class="fa-solid fa-arrow-right"></i>
 			</div>
 			<div class="logo-container">
 				<img
-					src="images/todoist-color-logo.png"
+					src="/images/todoist-color-logo.png"
 					alt="Todoist Brand Logo"
 				/>
 			</div>
