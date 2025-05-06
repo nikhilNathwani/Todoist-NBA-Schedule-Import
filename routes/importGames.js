@@ -3,7 +3,7 @@ const axios = require("axios");
 const router = express.Router();
 const fs = require("fs");
 const path = require("path");
-const { getAccessToken } = require("../utils/cookieSession");
+const { getAccessToken, printReqSession } = require("../utils/cookieSession");
 const { TodoistApi } = require("@doist/todoist-api-typescript");
 const projectLimits = {
 	FREE: 5,
@@ -21,6 +21,7 @@ router.post("/import-games", async (req, res) => {
 	// if (req.session.importInProgress) {
 	// 	return res.status(429).json({ message: "Import already in progress" }); // Prevent concurrent imports
 	// }
+	console.log("In /import-games");
 	const { team: teamID, project } = req.body;
 
 	let api;
@@ -67,7 +68,10 @@ module.exports = { router, userReachedProjectLimit };
 // Initialize API with the user's token
 function initializeTodoistAPI(req) {
 	// Initialize Todoist API with the access token
+	console.log("In /import-games, about to get access token");
+	printReqSession(req);
 	const accessToken = getAccessToken(req);
+	console.log("In /import-games, got accessToken:", accessToken);
 	return new TodoistApi(accessToken);
 }
 
