@@ -38,7 +38,6 @@ router.get("/callback", async (req, res) => {
 	const redirectUrlParam = await userReachedProjectLimit(accessToken);
 	console.log("In /oauth, about to redirect to /configure-import now");
 	res.redirect(`/configure-import?isInboxDefault=${redirectUrlParam}`);
-	res.end(); // Force response to flush
 });
 
 module.exports = router;

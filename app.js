@@ -20,13 +20,12 @@ app.set("trust proxy", 1); // Trust the Vercel proxy
 app.use(
 	cookieSession({
 		name: "session",
-		path: "/",
 		secret: process.env.COOKIE_SECRET,
 		maxAge: 24 * 60 * 60 * 1000, // 24 hours
 		httpOnly: true, // Prevents client-side JS from accessing the cookie
 		secure: true, // Only HTTPS not HTTP
 		// sameSite: "Strict", // Mitigates CSRF attacks
-		sameSite: "Lax",
+		sameSite: "Lax", // Necessary because Strict blocks cookie from getting passed to configure-import as part of the redirect chain from todoist's auth flow
 	})
 );
 
