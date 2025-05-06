@@ -125,7 +125,7 @@ function makeProjectPickerHTML(isInboxDefault) {
 const logoBanner = `
 	<div class="logo-banner">
 		<div class="logo-container" id="nbaLogoContainer">	
-			<img src="images/nba-logo.png" 
+			<img src="/images/nba-logo.png" 
 			alt="NBA Logo" />
 		</div>
 		<div id="arrow">
@@ -133,7 +133,7 @@ const logoBanner = `
 		</div>
 		<div class="logo-container">
 			<img
-				src="images/todoist-color-logo.png"
+				src="/images/todoist-color-logo.png"
 				alt="Todoist Brand Logo"
 			/>
 		</div>
@@ -158,7 +158,7 @@ const htmlIntro = `
 			<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 			<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 			<title>Select Team and Project Settings</title>
-			<link rel="stylesheet" href="style.css" />
+			<link rel="stylesheet" href="/style.css" />
 			<link
 				rel="apple-touch-icon"
 				sizes="180x180"
