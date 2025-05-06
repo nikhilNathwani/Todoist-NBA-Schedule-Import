@@ -38,8 +38,9 @@ router.get("/configure-import", async (req, res) => {
 	}
 });
 
-router.get("*", (req, res) => {
-	res.sendFile(path.join(staticPathRoot, "landing.html"));
+router.get("*", async (req, res) => {
+	const html = await makeLandingPageHTML();
+	res.send(html);
 });
 
 module.exports = router;
