@@ -25,7 +25,8 @@ app.use(
 		maxAge: 24 * 60 * 60 * 1000, // 24 hours
 		httpOnly: true, // Prevents client-side JS from accessing the cookie
 		secure: true, // Only HTTPS not HTTP
-		sameSite: "Strict", // Mitigates CSRF attacks
+		// sameSite: "Strict", // Mitigates CSRF attacks
+		sameSite: "Lax",
 	})
 );
 
