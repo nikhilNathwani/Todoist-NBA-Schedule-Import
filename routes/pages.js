@@ -18,14 +18,11 @@ router.get("/", async (req, res) => {
 // Serve the team selection page
 router.get("/configure-import", async (req, res) => {
 	try {
-		console.log("In /configure-import, req.session is:");
-		printReqSession(req);
 		// Make team picker HTML
 		const teams = await getTeams();
 		const teamPickerHTML = makeTeamPickerHTML(teams);
 
 		// Make project picker HTML
-		//const isInboxDefault = req.query.isInboxDefault !== "false"; // Get isInboxDefault for project picker (from the URL parameters)
 		const accessToken = getAccessToken(req);
 		const isInboxDefault = await userReachedProjectLimit(accessToken);
 		const projectPickerHTML = makeProjectPickerHTML(isInboxDefault);

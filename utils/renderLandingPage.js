@@ -6,7 +6,6 @@ async function makeLandingPageHTML() {
 		seasonEndYear: 2025,
 	};
 	// var { isSeasonOverBool, seasonEndYear } = await isSeasonOver();
-	console.log("isSeasonOverBool is:", isSeasonOverBool);
 	return `
 	<!DOCTYPE html>
 	<html lang="en">
@@ -142,7 +141,6 @@ async function isSeasonOver() {
 	try {
 		const finalGameDateTime = await getFinalGameTime();
 		const seasonEndYear = finalGameDateTime.getFullYear();
-		console.log(`Received last game time: ${finalGameDateTime}`);
 		const now = new Date();
 		return {
 			isSeasonOverBool: now > finalGameDateTime,

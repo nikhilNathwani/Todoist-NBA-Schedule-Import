@@ -27,14 +27,9 @@ router.get("/callback", async (req, res) => {
 	}
 
 	// Store encrypted access token in session cookie for later api usage
-	const accessToken = await retrieveAccessToken(req, res, code);
-	console.log("In /oauth, about to save access token");
-	printReqSession(req);
+	const accessToken = await retrieveAccessToken(res, code);
 	saveAccessToken(req, accessToken);
-	console.log("In /oauth, just saved access token");
-	printReqSession(req);
 	// Redirect to the team selection page
-	console.log("In /oauth, about to redirect to /configure-import now");
 	res.redirect(`/configure-import`);
 });
 
@@ -47,7 +42,7 @@ module.exports = router;
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
 // Retrive access token from Todoist API
-async function retrieveAccessToken(req, res, code) {
+async function retrieveAccessToken(res, code) {
 	try {
 		const response = await axios.post(
 			"https://todoist.com/oauth/access_token",
