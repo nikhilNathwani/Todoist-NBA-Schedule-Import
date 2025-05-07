@@ -45,7 +45,7 @@ async function getFinalGameTime() {
 				finalGameTime = teamFinalGameTime;
 			}
 		}
-		// console.log(`Final game time: ${finalGameTime}`);
+		console.log(`Final game time: ${finalGameTime}`);
 		return finalGameTime;
 	} catch (err) {
 		console.error(
