@@ -11526,21 +11526,6 @@
 				"opponent": "raptors",
 				"isHomeGame": true,
 				"gameTimeUtcIso8601": "2025-04-13T19:30:00+00:00"
-			},
-			{
-				"opponent": "raptors",
-				"isHomeGame": true,
-				"gameTimeUtcIso8601": "2025-06-13T19:30:00+00:00"
-			},
-			{
-				"opponent": "raptors",
-				"isHomeGame": true,
-				"gameTimeUtcIso8601": "2025-07-13T19:30:00+00:00"
-			},
-			{
-				"opponent": "raptors",
-				"isHomeGame": true,
-				"gameTimeUtcIso8601": "2025-08-13T19:30:00+00:00"
 			}
 		]
 	}
