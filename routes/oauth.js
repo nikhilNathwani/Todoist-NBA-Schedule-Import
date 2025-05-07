@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const axios = require("axios");
-const { saveAccessToken, printReqSession } = require("../utils/cookieSession");
+const { saveAccessToken } = require("../utils/cookieSession");
 
 const { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, STATE_SECRET } = process.env;
 

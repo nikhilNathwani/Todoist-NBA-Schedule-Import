@@ -2,10 +2,7 @@ const express = require("express");
 const fs = require("fs").promises;
 const path = require("path");
 const router = express.Router();
-const {
-	getAccessToken,
-	printReqSession,
-} = require("../utils/cookieSession.js");
+const { getAccessToken } = require("../utils/cookieSession.js");
 const { userReachedProjectLimit } = require("./importGames");
 const { makeLandingPageHTML } = require("../utils/renderLandingPage.js");
 
