@@ -1,7 +1,10 @@
 const express = require("express");
 const fs = require("fs").promises;
 const path = require("path");
-const { printReqSession } = require("../utils/cookieSession.js");
+const {
+	getAccessToken,
+	printReqSession,
+} = require("../utils/cookieSession.js");
 const router = express.Router();
 const { makeLandingPageHTML } = require("../utils/renderLandingPage.js");
 
@@ -21,7 +24,9 @@ router.get("/configure-import", async (req, res) => {
 		const teamPickerHTML = makeTeamPickerHTML(teams);
 
 		// Make project picker HTML
-		const isInboxDefault = req.query.isInboxDefault !== "false"; // Get isInboxDefault for project picker (from the URL parameters)
+		//const isInboxDefault = req.query.isInboxDefault !== "false"; // Get isInboxDefault for project picker (from the URL parameters)
+		const accessToken = getAccessToken(req);
+		const isInboxDefault = await userReachedProjectLimit(accessToken);
 		const projectPickerHTML = makeProjectPickerHTML(isInboxDefault);
 
 		// Construct the complete HTML

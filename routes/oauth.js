@@ -35,9 +35,8 @@ router.get("/callback", async (req, res) => {
 	console.log("In /oauth, just saved access token");
 	printReqSession(req);
 	// Redirect to the team selection page
-	const redirectUrlParam = await userReachedProjectLimit(accessToken);
 	console.log("In /oauth, about to redirect to /configure-import now");
-	res.redirect(`/configure-import?isInboxDefault=${redirectUrlParam}`);
+	res.redirect(`/configure-import`);
 });
 
 module.exports = router;
