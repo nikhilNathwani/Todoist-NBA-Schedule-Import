@@ -1,11 +1,12 @@
 const express = require("express");
 const fs = require("fs").promises;
 const path = require("path");
+const router = express.Router();
 const {
 	getAccessToken,
 	printReqSession,
 } = require("../utils/cookieSession.js");
-const router = express.Router();
+const { userReachedProjectLimit } = require("./importGames");
 const { makeLandingPageHTML } = require("../utils/renderLandingPage.js");
 
 // Serve the landing page (login page)
