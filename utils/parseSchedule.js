@@ -76,4 +76,4 @@ async function getFinalGameTime() {
 	}
 }
 
-module.exports = { getTeams, isSeasonOver };
+module.exports = { getSchedule, getTeams, isSeasonOver };

@@ -2,6 +2,7 @@ const express = require("express");
 const fs = require("fs").promises;
 const path = require("path");
 const router = express.Router();
+const { getSchedule } = require("../utils/parseSchedule.js");
 const { getAccessToken } = require("../utils/cookieSession.js");
 const { userReachedProjectLimit } = require("./importGames");
 const { makeLandingPageHTML } = require("../utils/renderLandingPage.js");
@@ -16,13 +17,10 @@ router.get("/", async (req, res) => {
 router.get("/configure-import", async (req, res) => {
 	try {
 		// Make team picker HTML
-		const teams = await getTeams();
-		const teamPickerHTML = makeTeamPickerHTML(teams);
+		const teamPickerHTML = await makeTeamPickerHTML();
 
 		// Make project picker HTML
-		const accessToken = getAccessToken(req);
-		const isInboxDefault = await userReachedProjectLimit(accessToken);
-		const projectPickerHTML = makeProjectPickerHTML(isInboxDefault);
+		const projectPickerHTML = await makeProjectPickerHTML(req);
 
 		// Construct the complete HTML
 		const form = `
@@ -52,14 +50,8 @@ module.exports = router;
 //         PICKERS                           //
 //                                           //
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-async function getTeams() {
-	const data = await fs.readFile(
-		path.join(__dirname, "../data/nba_schedule.json")
-	);
-	return JSON.parse(data);
-}
 
-function makeTeamPickerHTML(teams) {
+async function makeTeamPickerHTML() {
 	const intro = `
 		<fieldset id="teamPicker">
 			<legend>
@@ -72,6 +64,7 @@ function makeTeamPickerHTML(teams) {
 		</fieldset>`;
 
 	//teams sorted alphabetically by city
+	const teams = await getSchedule();
 	const teamOptions = Object.entries(teams)
 		.sort((a, b) => (a[1].city > b[1].city ? 1 : -1))
 		.map(([teamID, team]) => {
@@ -82,7 +75,10 @@ function makeTeamPickerHTML(teams) {
 	return intro + teamOptions + outro;
 }
 
-function makeProjectPickerHTML(isInboxDefault) {
+async function makeProjectPickerHTML(req) {
+	const accessToken = getAccessToken(req);
+	const isInboxDefault = await userReachedProjectLimit(accessToken);
+
 	const intro = `
 		<fieldset id="projectPicker">
 			<legend>
