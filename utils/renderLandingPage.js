@@ -1,4 +1,4 @@
-const { getFinalGameTime } = require("./parseSchedule");
+const { isSeasonOver } = require("./parseSchedule");
 
 async function makeLandingPageHTML() {
 	// var { isSeasonOverBool, seasonEndYear } = {
@@ -126,33 +126,6 @@ function makeAppContentHTML(isSeasonOver) {
 			</div>
 		</div>
 		`;
-}
-
-function isSeasonOverOld() {
-	//Hard-coded final game time (UTC) of last game of 2024-25 regular season
-	const finalGameDateTime = new Date("2025-04-13T19:30:00+00:00");
-	const now = new Date();
-	return now > finalGameDateTime;
-}
-
-//returns 1) true/false indicating whether season is over,
-//        2) the end-year of the season in question
-async function isSeasonOver() {
-	try {
-		const finalGameDateTime = await getFinalGameTime();
-		const seasonEndYear = finalGameDateTime.getFullYear();
-		const now = new Date();
-		return {
-			isSeasonOverBool: now > finalGameDateTime,
-			seasonEndYear: seasonEndYear,
-		};
-	} catch (error) {
-		console.error("Failed to fetch team data:", error);
-		return {
-			isSeasonOverBool: false,
-			seasonEndYear: 0,
-		};
-	}
 }
 
 module.exports = { makeLandingPageHTML };

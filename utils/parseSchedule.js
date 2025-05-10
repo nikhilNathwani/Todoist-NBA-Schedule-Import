@@ -4,6 +4,26 @@ const path = require("path");
 // Path to the NBA schedule JSON file
 const schedulePath = path.join(__dirname, "../data/nba_schedule.json");
 
+//returns 1) true/false indicating whether season is over,
+//        2) the end-year of the season in question
+async function isSeasonOver() {
+	try {
+		const finalGameDateTime = await getFinalGameTime();
+		const seasonEndYear = finalGameDateTime.getFullYear();
+		const now = new Date();
+		return {
+			isSeasonOverBool: now > finalGameDateTime,
+			seasonEndYear: seasonEndYear,
+		};
+	} catch (error) {
+		console.error("Failed to fetch team data:", error);
+		return {
+			isSeasonOverBool: false,
+			seasonEndYear: 0,
+		};
+	}
+}
+
 // Utility function to read and parse the JSON file
 async function getSchedule() {
 	try {
@@ -56,4 +76,4 @@ async function getFinalGameTime() {
 	}
 }
 
-module.exports = { getTeams, getFinalGameTime };
+module.exports = { getTeams, isSeasonOver };
