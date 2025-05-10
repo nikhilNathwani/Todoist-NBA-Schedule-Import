@@ -41,6 +41,7 @@ async function getFinalGameTime() {
 			const teamFinalGameTimeString =
 				teamData["schedule"][numGames - 1]["dateTime"];
 			const teamFinalGameTime = new Date(teamFinalGameTimeString);
+			console.log(teamFinalGameTime);
 			if (teamFinalGameTime > finalGameTime) {
 				finalGameTime = teamFinalGameTime;
 			}
