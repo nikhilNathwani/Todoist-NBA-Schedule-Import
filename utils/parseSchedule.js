@@ -39,7 +39,7 @@ async function getFinalGameTime() {
 		for (const [teamId, teamData] of Object.entries(nbaSchedule)) {
 			const numGames = teamData["schedule"].length;
 			const teamFinalGameTimeString =
-				teamData["schedule"][numGames - 1]["dateTime"];
+				teamData["schedule"][numGames - 1]["gameTimeUtcIso8601"];
 			const teamFinalGameTime = new Date(teamFinalGameTimeString);
 			console.log(teamFinalGameTime);
 			if (teamFinalGameTime > finalGameTime) {
