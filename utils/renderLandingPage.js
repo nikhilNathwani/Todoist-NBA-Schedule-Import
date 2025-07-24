@@ -1,11 +1,11 @@
 const { isSeasonOver } = require("./parseSchedule");
 
 async function makeLandingPageHTML() {
-	var { isSeasonOverBool, seasonEndYear } = {
-		isSeasonOverBool: false,
-		seasonEndYear: 2025,
-	};
-	// var { isSeasonOverBool, seasonEndYear } = await isSeasonOver();
+	// var { isSeasonOverBool, seasonEndYear } = {
+	// 	isSeasonOverBool: false,
+	// 	seasonEndYear: 2025,
+	// };
+	var { isSeasonOverBool, seasonEndYear } = await isSeasonOver();
 	return `
 	<!DOCTYPE html>
 	<html lang="en">
