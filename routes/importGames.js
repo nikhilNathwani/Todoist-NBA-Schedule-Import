@@ -139,6 +139,10 @@ async function importGame(api, game, projectID, teamName, taskOrder) {
 }
 
 async function importSchedule(api, schedule, projectID, teamName) {
+	console.log(
+		`Importing ${schedule.length} games for ${teamName} into project ID ${projectID}`
+	);
+	// Use map to create an array of promises
 	const tasks = schedule.map(
 		(game, index) => importGame(api, game, projectID, teamName, index + 1) // Pass index + 1 because task order is non-zero
 	);

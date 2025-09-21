@@ -5,101 +5,37 @@ from config import team, auth_key
 from bs4 import BeautifulSoup
 from todoist_api_python.api import TodoistAPI
 
-teamNames= {
-    "Atlanta": "Hawks",
-    "Boston": "Celtics",
-    "Brooklyn": "Nets",
-    "Charlotte": "Hornets",
-    "Chicago": "Bulls",
-    "Cleveland": "Cavaliers",
-    "Dallas": "Mavericks",
-    "Denver": "Nuggets",
-    "Detroit": "Pistons",
-    "Golden State": "Warriors",
-    "Houston": "Rockets",
-    "Indiana": "Pacers",
-    "L.A. Clippers": "Clippers",
-    "L.A. Lakers": "Lakers",
-    "Memphis": "Grizzlies",
-    "Miami": "Heat",
-    "Milwaukee": "Bucks",
-    "Minnesota": "Timberwolves",
-    "New Orleans": "Pelicans",
-    "New York": "Knicks",
-    "Oklahoma City": "Thunder",
-    "Orlando": "Magic",
-    "Philadelphia": "76ers",
-    "Phoenix": "Suns",
-    "Portland": "Trail Blazers",
-    "Sacramento": "Kings",
-    "San Antonio": "Spurs",
-    "Toronto": "Raptors",
-    "Utah": "Jazz",
-    "Washington": "Wizards"
-}
-teamNamesCasual = {
-    "Atlanta": "hawks",
-    "Boston": "celtics",
-    "Brooklyn": "nets",
-    "Charlotte": "hornets",
-    "Chicago": "bulls",
-    "Cleveland": "cavs",
-    "Dallas": "mavs",
-    "Denver": "nuggets",
-    "Detroit": "pistons",
-    "Golden St.": "warriors",
-    "Houston": "rockets",
-    "Indiana": "pacers",
-    "L.A. Clippers": "clippers",
-    "L.A. Lakers": "lakers",
-    "Memphis": "grizzlies",
-    "Miami": "heat",
-    "Milwaukee": "bucks",
-    "Minnesota": "t-wolves",
-    "New Orleans": "pelicans",
-    "New York": "knicks",
-    "Oklahoma City": "thunder",
-    "Orlando": "magic",
-    "Philadelphia": "76ers",
-    "Phoenix": "suns",
-    "Portland": "blazers",
-    "Sacramento": "kings",
-    "San Antonio": "spurs",
-    "Toronto": "raptors",
-    "Utah": "jazz",
-    "Washington": "wizards"
-}
-teamColors = {
-    "Atlanta": "red",
-    "Boston": "green",
-    "Brooklyn": "grey",
-    "Charlotte": "mint_green",
-    "Chicago": "red",
-    "Cleveland": "berry_red",
-    "Dallas": "blue",
-    "Denver": "light_blue",
-    "Detroit": "blue",
-    "Golden State": "yellow",
-    "Houston": "red",
-    "Indiana": "yellow",
-    "L.A. Clippers": "red",
-    "L.A. Lakers": "violet",
-    "Memphis": "light_blue",
-    "Miami": "berry_red",
-    "Milwaukee": "taupe",
-    "Minnesota": "lime_green",
-    "New Orleans": "taupe",
-    "New York": "orange",
-    "Oklahoma City": "blue",
-    "Orlando": "blue",
-    "Philadelphia": "red",
-    "Phoenix": "orange",
-    "Portland": "red",
-    "Sacramento": "grape",
-    "San Antonio": "grey",
-    "Toronto": "red",
-    "Utah": "grape",
-    "Washington": "red"
+teams = {
+    "Atlanta": {"formal": "Hawks", "casual": "hawks", "color": "red"},
+    "Boston": {"formal": "Celtics", "casual": "celtics", "color": "green"},
+    "Brooklyn": {"formal": "Nets", "casual": "nets", "color": "grey"},
+    "Charlotte": {"formal": "Hornets", "casual": "hornets", "color": "mint_green"},
+    "Chicago": {"formal": "Bulls", "casual": "bulls", "color": "red"},
+    "Cleveland": {"formal": "Cavaliers", "casual": "cavs", "color": "berry_red"},
+    "Dallas": {"formal": "Mavericks", "casual": "mavs", "color": "blue"},
+    "Denver": {"formal": "Nuggets", "casual": "nuggets", "color": "light_blue"},
+    "Detroit": {"formal": "Pistons", "casual": "pistons", "color": "blue"},
+    "Golden State": {"formal": "Warriors", "casual": "warriors", "color": "yellow"},
+    "Houston": {"formal": "Rockets", "casual": "rockets", "color": "red"},
+    "Indiana": {"formal": "Pacers", "casual": "pacers", "color": "yellow"},
+    "L.A. Clippers": {"formal": "Clippers", "casual": "clippers", "color": "red"},
+    "L.A. Lakers": {"formal": "Lakers", "casual": "lakers", "color": "violet"},
+    "Memphis": {"formal": "Grizzlies", "casual": "grizzlies", "color": "light_blue"},
+    "Miami": {"formal": "Heat", "casual": "heat", "color": "berry_red"},
+    "Milwaukee": {"formal": "Bucks", "casual": "bucks", "color": "taupe"},
+    "Minnesota": {"formal": "Timberwolves", "casual": "t-wolves", "color": "lime_green"},
+    "New Orleans": {"formal": "Pelicans", "casual": "pelicans", "color": "taupe"},
+    "New York": {"formal": "Knicks", "casual": "knicks", "color": "orange"},
+    "Oklahoma City": {"formal": "Thunder", "casual": "thunder", "color": "blue"},
+    "Orlando": {"formal": "Magic", "casual": "magic", "color": "blue"},
+    "Philadelphia": {"formal": "76ers", "casual": "76ers", "color": "red"},
+    "Phoenix": {"formal": "Suns", "casual": "suns", "color": "orange"},
+    "Portland": {"formal": "Trail Blazers", "casual": "blazers", "color": "red"},
+    "Sacramento": {"formal": "Kings", "casual": "kings", "color": "grape"},
+    "San Antonio": {"formal": "Spurs", "casual": "spurs", "color": "grey"},
+    "Toronto": {"formal": "Raptors", "casual": "raptors", "color": "red"},
+    "Utah": {"formal": "Jazz", "casual": "jazz", "color": "grape"},
+    "Washington": {"formal": "Wizards", "casual": "wizards", "color": "red"}
 }
 
 
@@ -135,7 +71,7 @@ def scrapeOpponent(row):
    opponentElement= row.find(class_ = "TeamName").find("a")
    opponent= opponentElement.text
    #my preferred formatting:
-   opponent= teamNamesCasual[opponent]
+   opponent = teams[opponent]["casual"]
    return opponent
 
 def scrapeDate(row):
@@ -161,7 +97,7 @@ def uploadScheduleToTodoist(games, projectID):
 
 #creates Todoist project and returns project ID
 def createTodoistProject(teamCity):
-   project = api.add_project(name= teamNames[teamCity]+" new", color= teamColors[teamCity])
+   project = api.add_project(name= teams[teamCity]["formal"] + " new", color= teams[teamCity]["color"])
    return project.id
 
 def formatDate(date, time):
