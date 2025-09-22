@@ -6,7 +6,7 @@
         "color": "green",
         "schedule": [
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": true,
                 "gameTimeUtcIso8601": "2025-10-22T23:30:00+00:00"
             },
@@ -31,7 +31,7 @@
                 "gameTimeUtcIso8601": "2025-10-29T23:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": false,
                 "gameTimeUtcIso8601": "2025-10-31T23:00:00+00:00"
             },
@@ -61,7 +61,7 @@
                 "gameTimeUtcIso8601": "2025-11-09T23:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": false,
                 "gameTimeUtcIso8601": "2025-11-12T01:00:00+00:00"
             },
@@ -291,7 +291,7 @@
                 "gameTimeUtcIso8601": "2026-02-28T00:30:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": true,
                 "gameTimeUtcIso8601": "2026-03-01T23:00:00+00:00"
             },
@@ -439,7 +439,7 @@
                 "gameTimeUtcIso8601": "2025-10-29T23:30:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": true,
                 "gameTimeUtcIso8601": "2025-11-02T23:00:00+00:00"
             },
@@ -499,7 +499,7 @@
                 "gameTimeUtcIso8601": "2025-11-25T00:30:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": true,
                 "gameTimeUtcIso8601": "2025-11-29T00:30:00+00:00"
             },
@@ -539,7 +539,7 @@
                 "gameTimeUtcIso8601": "2025-12-21T23:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": false,
                 "gameTimeUtcIso8601": "2025-12-24T00:00:00+00:00"
             },
@@ -734,7 +734,7 @@
                 "gameTimeUtcIso8601": "2026-03-12T23:30:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": false,
                 "gameTimeUtcIso8601": "2026-03-14T17:00:00+00:00"
             },
@@ -815,7 +815,7 @@
             }
         ]
     },
-    "NY": {
+    "NYK": {
         "name": "Knicks",
         "nameCasual": "knicks",
         "city": "New York",
@@ -942,7 +942,7 @@
                 "gameTimeUtcIso8601": "2025-12-19T00:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": true,
                 "gameTimeUtcIso8601": "2025-12-20T00:00:00+00:00"
             },
@@ -982,7 +982,7 @@
                 "gameTimeUtcIso8601": "2026-01-03T00:30:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": true,
                 "gameTimeUtcIso8601": "2026-01-04T00:30:00+00:00"
             },
@@ -1032,7 +1032,7 @@
                 "gameTimeUtcIso8601": "2026-01-22T00:30:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": false,
                 "gameTimeUtcIso8601": "2026-01-24T20:00:00+00:00"
             },
@@ -1082,7 +1082,7 @@
                 "gameTimeUtcIso8601": "2026-02-11T00:30:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": false,
                 "gameTimeUtcIso8601": "2026-02-12T00:30:00+00:00"
             },
@@ -1683,7 +1683,7 @@
                 "gameTimeUtcIso8601": "2025-11-08T00:30:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": false,
                 "gameTimeUtcIso8601": "2025-11-09T00:30:00+00:00"
             },
@@ -1708,7 +1708,7 @@
                 "gameTimeUtcIso8601": "2025-11-18T00:30:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": false,
                 "gameTimeUtcIso8601": "2025-11-20T00:00:00+00:00"
             },
@@ -1823,12 +1823,12 @@
                 "gameTimeUtcIso8601": "2026-01-10T00:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": true,
                 "gameTimeUtcIso8601": "2026-01-11T23:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": true,
                 "gameTimeUtcIso8601": "2026-01-13T00:30:00+00:00"
             },
@@ -2076,7 +2076,7 @@
                 "gameTimeUtcIso8601": "2025-11-03T00:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": true,
                 "gameTimeUtcIso8601": "2025-11-05T01:00:00+00:00"
             },
@@ -2181,7 +2181,7 @@
                 "gameTimeUtcIso8601": "2025-12-24T00:30:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": true,
                 "gameTimeUtcIso8601": "2025-12-27T01:00:00+00:00"
             },
@@ -2391,7 +2391,7 @@
                 "gameTimeUtcIso8601": "2026-03-24T00:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": false,
                 "gameTimeUtcIso8601": "2026-03-25T23:00:00+00:00"
             },
@@ -2489,7 +2489,7 @@
                 "gameTimeUtcIso8601": "2025-11-02T23:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": true,
                 "gameTimeUtcIso8601": "2025-11-06T00:00:00+00:00"
             },
@@ -2649,12 +2649,12 @@
                 "gameTimeUtcIso8601": "2026-01-13T00:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": false,
                 "gameTimeUtcIso8601": "2026-01-15T00:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": false,
                 "gameTimeUtcIso8601": "2026-01-17T00:00:00+00:00"
             },
@@ -2764,7 +2764,7 @@
                 "gameTimeUtcIso8601": "2026-03-08T17:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": true,
                 "gameTimeUtcIso8601": "2026-03-09T23:00:00+00:00"
             },
@@ -2907,7 +2907,7 @@
                 "gameTimeUtcIso8601": "2025-11-08T00:30:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": false,
                 "gameTimeUtcIso8601": "2025-11-10T00:30:00+00:00"
             },
@@ -2922,7 +2922,7 @@
                 "gameTimeUtcIso8601": "2025-11-13T00:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": true,
                 "gameTimeUtcIso8601": "2025-11-15T00:30:00+00:00"
             },
@@ -3172,7 +3172,7 @@
                 "gameTimeUtcIso8601": "2026-03-10T23:30:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": true,
                 "gameTimeUtcIso8601": "2026-03-12T23:00:00+00:00"
             },
@@ -3237,7 +3237,7 @@
                 "gameTimeUtcIso8601": "2026-04-02T23:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": false,
                 "gameTimeUtcIso8601": "2026-04-04T23:00:00+00:00"
             },
@@ -3475,7 +3475,7 @@
                 "gameTimeUtcIso8601": "2026-01-18T00:30:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": false,
                 "gameTimeUtcIso8601": "2026-01-20T00:00:00+00:00"
             },
@@ -3550,7 +3550,7 @@
                 "gameTimeUtcIso8601": "2026-02-22T22:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": true,
                 "gameTimeUtcIso8601": "2026-02-25T00:00:00+00:00"
             },
@@ -3660,7 +3660,7 @@
                 "gameTimeUtcIso8601": "2026-04-09T23:30:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": true,
                 "gameTimeUtcIso8601": "2026-04-10T23:30:00+00:00"
             },
@@ -3753,7 +3753,7 @@
                 "gameTimeUtcIso8601": "2025-11-18T00:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": true,
                 "gameTimeUtcIso8601": "2025-11-21T01:00:00+00:00"
             },
@@ -3793,7 +3793,7 @@
                 "gameTimeUtcIso8601": "2025-12-04T01:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": true,
                 "gameTimeUtcIso8601": "2025-12-06T01:00:00+00:00"
             },
@@ -3893,7 +3893,7 @@
                 "gameTimeUtcIso8601": "2026-01-26T00:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": false,
                 "gameTimeUtcIso8601": "2026-01-28T01:00:00+00:00"
             },
@@ -4073,7 +4073,7 @@
                 "gameTimeUtcIso8601": "2026-04-11T00:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": false,
                 "gameTimeUtcIso8601": "2026-04-12T22:00:00+00:00"
             }
@@ -4186,7 +4186,7 @@
                 "gameTimeUtcIso8601": "2025-11-29T00:30:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": false,
                 "gameTimeUtcIso8601": "2025-11-30T23:00:00+00:00"
             },
@@ -4356,7 +4356,7 @@
                 "gameTimeUtcIso8601": "2026-02-12T00:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": false,
                 "gameTimeUtcIso8601": "2026-02-20T00:00:00+00:00"
             },
@@ -4391,7 +4391,7 @@
                 "gameTimeUtcIso8601": "2026-03-05T02:30:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": true,
                 "gameTimeUtcIso8601": "2026-03-08T00:30:00+00:00"
             },
@@ -4499,7 +4499,7 @@
                 "gameTimeUtcIso8601": "2025-10-22T23:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": false,
                 "gameTimeUtcIso8601": "2025-10-25T23:30:00+00:00"
             },
@@ -4714,7 +4714,7 @@
                 "gameTimeUtcIso8601": "2026-01-24T23:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": true,
                 "gameTimeUtcIso8601": "2026-01-27T00:00:00+00:00"
             },
@@ -4849,7 +4849,7 @@
                 "gameTimeUtcIso8601": "2026-03-26T23:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": true,
                 "gameTimeUtcIso8601": "2026-03-28T22:00:00+00:00"
             },
@@ -4982,7 +4982,7 @@
                 "gameTimeUtcIso8601": "2025-11-22T01:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": false,
                 "gameTimeUtcIso8601": "2025-11-23T18:00:00+00:00"
             },
@@ -5187,7 +5187,7 @@
                 "gameTimeUtcIso8601": "2026-02-25T01:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": false,
                 "gameTimeUtcIso8601": "2026-02-27T00:00:00+00:00"
             },
@@ -5267,7 +5267,7 @@
                 "gameTimeUtcIso8601": "2026-03-29T21:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": true,
                 "gameTimeUtcIso8601": "2026-03-30T23:00:00+00:00"
             },
@@ -5325,7 +5325,7 @@
                 "gameTimeUtcIso8601": "2025-10-25T23:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": false,
                 "gameTimeUtcIso8601": "2025-10-27T23:00:00+00:00"
             },
@@ -5400,7 +5400,7 @@
                 "gameTimeUtcIso8601": "2025-11-23T23:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": false,
                 "gameTimeUtcIso8601": "2025-11-26T01:00:00+00:00"
             },
@@ -5490,7 +5490,7 @@
                 "gameTimeUtcIso8601": "2026-01-08T00:30:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": true,
                 "gameTimeUtcIso8601": "2026-01-10T00:00:00+00:00"
             },
@@ -5733,7 +5733,7 @@
                 "gameTimeUtcIso8601": "2025-10-26T22:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": true,
                 "gameTimeUtcIso8601": "2025-10-28T23:00:00+00:00"
             },
@@ -5813,7 +5813,7 @@
                 "gameTimeUtcIso8601": "2025-12-02T00:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": false,
                 "gameTimeUtcIso8601": "2025-12-03T00:00:00+00:00"
             },
@@ -5883,7 +5883,7 @@
                 "gameTimeUtcIso8601": "2026-01-07T00:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": false,
                 "gameTimeUtcIso8601": "2026-01-08T00:00:00+00:00"
             },
@@ -6083,7 +6083,7 @@
                 "gameTimeUtcIso8601": "2026-03-31T02:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": true,
                 "gameTimeUtcIso8601": "2026-04-01T23:00:00+00:00"
             },
@@ -6291,7 +6291,7 @@
                 "gameTimeUtcIso8601": "2026-01-04T20:30:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": false,
                 "gameTimeUtcIso8601": "2026-01-06T01:30:00+00:00"
             },
@@ -6461,7 +6461,7 @@
                 "gameTimeUtcIso8601": "2026-03-15T00:30:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": true,
                 "gameTimeUtcIso8601": "2026-03-18T01:00:00+00:00"
             },
@@ -6809,7 +6809,7 @@
                 "gameTimeUtcIso8601": "2026-02-21T00:30:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": true,
                 "gameTimeUtcIso8601": "2026-02-23T00:00:00+00:00"
             },
@@ -6904,7 +6904,7 @@
                 "gameTimeUtcIso8601": "2026-04-02T23:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": false,
                 "gameTimeUtcIso8601": "2026-04-03T23:00:00+00:00"
             },
@@ -7087,7 +7087,7 @@
                 "gameTimeUtcIso8601": "2025-12-25T19:30:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": true,
                 "gameTimeUtcIso8601": "2025-12-28T20:30:00+00:00"
             },
@@ -7287,7 +7287,7 @@
                 "gameTimeUtcIso8601": "2026-03-21T21:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": false,
                 "gameTimeUtcIso8601": "2026-03-23T23:00:00+00:00"
             },
@@ -7605,7 +7605,7 @@
                 "gameTimeUtcIso8601": "2026-02-08T03:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": true,
                 "gameTimeUtcIso8601": "2026-02-10T03:00:00+00:00"
             },
@@ -7675,7 +7675,7 @@
                 "gameTimeUtcIso8601": "2026-03-14T02:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": false,
                 "gameTimeUtcIso8601": "2026-03-15T22:00:00+00:00"
             },
@@ -8053,7 +8053,7 @@
                 "gameTimeUtcIso8601": "2026-03-03T02:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": false,
                 "gameTimeUtcIso8601": "2026-03-05T00:30:00+00:00"
             },
@@ -8098,7 +8098,7 @@
                 "gameTimeUtcIso8601": "2026-03-20T01:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": true,
                 "gameTimeUtcIso8601": "2026-03-22T01:30:00+00:00"
             },
@@ -8159,7 +8159,7 @@
             }
         ]
     },
-    "GS": {
+    "GSW": {
         "name": "Warriors",
         "nameCasual": "warriors",
         "city": "Golden State",
@@ -8276,7 +8276,7 @@
                 "gameTimeUtcIso8601": "2025-12-03T04:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": false,
                 "gameTimeUtcIso8601": "2025-12-05T00:00:00+00:00"
             },
@@ -8406,7 +8406,7 @@
                 "gameTimeUtcIso8601": "2026-01-31T03:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": true,
                 "gameTimeUtcIso8601": "2026-02-04T03:00:00+00:00"
             },
@@ -8639,7 +8639,7 @@
                 "gameTimeUtcIso8601": "2025-11-16T20:30:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": false,
                 "gameTimeUtcIso8601": "2025-11-18T00:00:00+00:00"
             },
@@ -8672,56 +8672,6 @@
                 "opponent": "mavs",
                 "isHomeGame": true,
                 "gameTimeUtcIso8601": "2025-11-30T03:00:00+00:00"
-            },
-            {
-                "opponent": "heat",
-                "isHomeGame": false,
-                "gameTimeUtcIso8601": "2025-12-02T00:30:00+00:00"
-            },
-            {
-                "opponent": "hawks",
-                "isHomeGame": false,
-                "gameTimeUtcIso8601": "2025-12-04T00:30:00+00:00"
-            },
-            {
-                "opponent": "grizzlies",
-                "isHomeGame": false,
-                "gameTimeUtcIso8601": "2025-12-06T01:00:00+00:00"
-            },
-            {
-                "opponent": "t-wolves",
-                "isHomeGame": false,
-                "gameTimeUtcIso8601": "2025-12-07T01:00:00+00:00"
-            },
-            {
-                "opponent": "thunder",
-                "isHomeGame": false,
-                "gameTimeUtcIso8601": "2025-12-18T01:00:00+00:00"
-            },
-            {
-                "opponent": "lakers",
-                "isHomeGame": true,
-                "gameTimeUtcIso8601": "2025-12-21T03:30:00+00:00"
-            },
-            {
-                "opponent": "rockets",
-                "isHomeGame": true,
-                "gameTimeUtcIso8601": "2025-12-24T04:00:00+00:00"
-            },
-            {
-                "opponent": "blazers",
-                "isHomeGame": false,
-                "gameTimeUtcIso8601": "2025-12-27T03:00:00+00:00"
-            },
-            {
-                "opponent": "pistons",
-                "isHomeGame": true,
-                "gameTimeUtcIso8601": "2025-12-29T02:00:00+00:00"
-            },
-            {
-                "opponent": "kings",
-                "isHomeGame": true,
-                "gameTimeUtcIso8601": "2025-12-31T04:00:00+00:00"
             },
             {
                 "opponent": "jazz",
@@ -8804,7 +8754,7 @@
                 "gameTimeUtcIso8601": "2026-02-02T01:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": true,
                 "gameTimeUtcIso8601": "2026-02-03T03:30:00+00:00"
             },
@@ -9092,7 +9042,7 @@
                 "gameTimeUtcIso8601": "2025-12-06T00:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": false,
                 "gameTimeUtcIso8601": "2025-12-08T00:30:00+00:00"
             },
@@ -9217,7 +9167,7 @@
                 "gameTimeUtcIso8601": "2026-02-04T00:30:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": true,
                 "gameTimeUtcIso8601": "2026-02-06T03:00:00+00:00"
             },
@@ -9595,7 +9545,7 @@
                 "gameTimeUtcIso8601": "2026-01-20T00:30:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": false,
                 "gameTimeUtcIso8601": "2026-01-21T00:00:00+00:00"
             },
@@ -9640,7 +9590,7 @@
                 "gameTimeUtcIso8601": "2026-02-06T02:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": true,
                 "gameTimeUtcIso8601": "2026-02-08T02:00:00+00:00"
             },
@@ -10028,7 +9978,7 @@
                 "gameTimeUtcIso8601": "2026-01-28T00:30:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": false,
                 "gameTimeUtcIso8601": "2026-01-30T00:00:00+00:00"
             },
@@ -10138,7 +10088,7 @@
                 "gameTimeUtcIso8601": "2026-03-18T03:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": true,
                 "gameTimeUtcIso8601": "2026-03-20T02:00:00+00:00"
             },
@@ -10336,7 +10286,7 @@
                 "gameTimeUtcIso8601": "2025-12-19T01:30:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": false,
                 "gameTimeUtcIso8601": "2025-12-21T00:00:00+00:00"
             },
@@ -10366,7 +10316,7 @@
                 "gameTimeUtcIso8601": "2025-12-30T04:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": true,
                 "gameTimeUtcIso8601": "2026-01-02T01:30:00+00:00"
             },
@@ -10809,7 +10759,7 @@
                 "gameTimeUtcIso8601": "2026-01-21T01:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": false,
                 "gameTimeUtcIso8601": "2026-01-23T00:00:00+00:00"
             },
@@ -10999,7 +10949,7 @@
                 "gameTimeUtcIso8601": "2026-04-08T03:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": true,
                 "gameTimeUtcIso8601": "2026-04-10T00:00:00+00:00"
             },
@@ -11172,7 +11122,7 @@
                 "gameTimeUtcIso8601": "2025-12-28T23:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": true,
                 "gameTimeUtcIso8601": "2025-12-31T01:00:00+00:00"
             },
@@ -11332,7 +11282,7 @@
                 "gameTimeUtcIso8601": "2026-03-09T23:30:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": false,
                 "gameTimeUtcIso8601": "2026-03-10T23:00:00+00:00"
             },
@@ -11423,7 +11373,7 @@
             }
         ]
     },
-    "NO": {
+    "NOP": {
         "name": "Pelicans",
         "nameCasual": "pelicans",
         "city": "New Orleans",
@@ -11670,7 +11620,7 @@
                 "gameTimeUtcIso8601": "2026-01-31T00:30:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": false,
                 "gameTimeUtcIso8601": "2026-02-01T00:30:00+00:00"
             },
@@ -11705,7 +11655,7 @@
                 "gameTimeUtcIso8601": "2026-02-21T01:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": true,
                 "gameTimeUtcIso8601": "2026-02-22T00:00:00+00:00"
             },
@@ -11831,7 +11781,7 @@
             }
         ]
     },
-    "SA": {
+    "SAS": {
         "name": "Spurs",
         "nameCasual": "spurs",
         "city": "San Antonio",
@@ -12128,7 +12078,7 @@
                 "gameTimeUtcIso8601": "2026-03-01T18:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": false,
                 "gameTimeUtcIso8601": "2026-03-04T01:00:00+00:00"
             },
@@ -12218,7 +12168,7 @@
                 "gameTimeUtcIso8601": "2026-04-04T19:00:00+00:00"
             },
             {
-                "opponent": "76ers",
+                "opponent": "sixers",
                 "isHomeGame": true,
                 "gameTimeUtcIso8601": "2026-04-07T00:00:00+00:00"
             },

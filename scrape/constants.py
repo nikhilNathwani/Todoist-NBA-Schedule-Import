@@ -1,6 +1,12 @@
-# NBA team constants for scraping and schedule processing
 
-teams = {
+# Canonical team IDs (used everywhere)
+TEAM_IDS = [
+    "BOS","BKN","NYK","PHI","TOR","CHI","CLE","DET","IND","MIL",
+    "ATL","CHA","MIA","ORL","WAS","DEN","MIN","OKC","POR","UTA",
+    "GSW","LAC","LAL","PHO","SAC","DAL","HOU","MEM","NOP","SAS"
+]
+
+TEAM_METADATA = {
     "ATL": {"name": "Hawks", "nameCasual": "hawks", "city": "Atlanta", "color": "red"},
     "BOS": {"name": "Celtics", "nameCasual": "celtics", "city": "Boston", "color": "green"},
     "BKN": {"name": "Nets", "nameCasual": "nets", "city": "Brooklyn", "color": "grey"},
@@ -10,7 +16,7 @@ teams = {
     "DAL": {"name": "Mavericks", "nameCasual": "mavs", "city": "Dallas", "color": "blue"},
     "DEN": {"name": "Nuggets", "nameCasual": "nuggets", "city": "Denver", "color": "light_blue"},
     "DET": {"name": "Pistons", "nameCasual": "pistons", "city": "Detroit", "color": "blue"},
-    "GS": {"name": "Warriors", "nameCasual": "warriors", "city": "Golden State", "color": "yellow"},
+    "GSW": {"name": "Warriors", "nameCasual": "warriors", "city": "Golden State", "color": "yellow"},
     "HOU": {"name": "Rockets", "nameCasual": "rockets", "city": "Houston", "color": "red"},
     "IND": {"name": "Pacers", "nameCasual": "pacers", "city": "Indiana", "color": "yellow"},
     "LAC": {"name": "Clippers", "nameCasual": "clippers", "city": "Los Angeles", "color": "red"},
@@ -19,19 +25,24 @@ teams = {
     "MIA": {"name": "Heat", "nameCasual": "heat", "city": "Miami", "color": "berry_red"},
     "MIL": {"name": "Bucks", "nameCasual": "bucks", "city": "Milwaukee", "color": "taupe"},
     "MIN": {"name": "Timberwolves", "nameCasual": "t-wolves", "city": "Minnesota", "color": "lime_green"},
-    "NO": {"name": "Pelicans", "nameCasual": "pelicans", "city": "New Orleans", "color": "taupe"},
-    "NY": {"name": "Knicks", "nameCasual": "knicks", "city": "New York", "color": "orange"},
+    "NOP": {"name": "Pelicans", "nameCasual": "pelicans", "city": "New Orleans", "color": "taupe"},
+    "NYK": {"name": "Knicks", "nameCasual": "knicks", "city": "New York", "color": "orange"},
     "OKC": {"name": "Thunder", "nameCasual": "thunder", "city": "Oklahoma City", "color": "blue"},
     "ORL": {"name": "Magic", "nameCasual": "magic", "city": "Orlando", "color": "blue"},
     "PHI": {"name": "Sixers", "nameCasual": "sixers", "city": "Philadelphia", "color": "red"},
     "PHO": {"name": "Suns", "nameCasual": "suns", "city": "Phoenix", "color": "orange"},
     "POR": {"name": "Blazers", "nameCasual": "blazers", "city": "Portland", "color": "red"},
     "SAC": {"name": "Kings", "nameCasual": "kings", "city": "Sacramento", "color": "grape"},
-    "SA": {"name": "Spurs", "nameCasual": "spurs", "city": "San Antonio", "color": "grey"},
+    "SAS": {"name": "Spurs", "nameCasual": "spurs", "city": "San Antonio", "color": "grey"},
     "TOR": {"name": "Raptors", "nameCasual": "raptors", "city": "Toronto", "color": "red"},
     "UTA": {"name": "Jazz", "nameCasual": "jazz", "city": "Utah", "color": "grape"},
     "WAS": {"name": "Wizards", "nameCasual": "wizards", "city": "Washington", "color": "red"}
 }
+
+# Runtime check: ensure teams dict keys match TEAM_IDS
+# Runtime check: ensure TEAM_METADATA dict keys match TEAM_IDS
+if set(TEAM_METADATA.keys()) != set(TEAM_IDS):
+    raise ValueError("TEAM_METADATA dict keys do not match canonical TEAM_IDS")
 
 cityToTeamNamesCasual = {
     "Atlanta": "hawks",           "Boston": "celtics",         "Brooklyn": "nets",
