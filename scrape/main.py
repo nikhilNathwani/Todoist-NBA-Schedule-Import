@@ -1,33 +1,31 @@
-# Entrypoint for NBA schedule scraping
+import os
 import json
-from parsers.cbs_parser import CBSScheduleParser
-from .constants import teams
-from .team import Team
+from scrapeSchedules import getTeamScheduleLinks, getTeamID, scrapeGames
+from scheduleToJson import save_schedule_to_json
 
-def scrapeAllTeamSchedules(parser_class):
-    """
-    Scrape all team schedules using the provided parser class.
-    The parser class must implement getTeamScheduleLinks (class method), getTeamID (class method), and parse_team_schedule (instance method).
-    """
-    teamSchedules = {}
-    links = parser_class.getTeamScheduleLinks()
-    for link in links:
-        teamID = parser_class.getTeamID(link)
-        team_info = teams[teamID]
-        parser_instance = parser_class()
-        schedule = parser_instance.parse_team_schedule(link)
-        team_obj = Team(teamID, team_info, schedule)
-        teamSchedules[teamID] = team_obj
-    return teamSchedules
-
-def saveSchedulesToJSON(schedules, filename):
-    print("\n\n Saving schedules to " + filename)
+def main():
+    schedule_links = getTeamScheduleLinks()
+    print(f"Found {len(schedule_links)} team schedule links.")  
+   
+    # Use absolute path relative to script location
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    filename = os.path.join(os.path.dirname(script_dir), "data", "nba_schedule.json")
+   
+    # Start with an empty JSON file
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
     with open(filename, 'w') as f:
-        print("opened file " + filename)
-        # Convert Team objects to dicts for JSON serialization
-        json.dump({tid: team.to_dict() for tid, team in schedules.items()}, f, indent=4)
+        json.dump({}, f, indent=4)
+   
+    processed_teams = 0
+    for url in schedule_links:
+        team_id = getTeamID(url)
+        print(f"Processing team {team_id} from URL: {url}")
+        games = scrapeGames(url)
+        save_schedule_to_json(games, filename, team_id)
+        processed_teams += 1
+        print(f"Updated {team_id}: {len(games)} games")
+   
+    print(f"{'All' if processed_teams>=30 else 'Only'} {processed_teams} schedules updated.")
 
 if __name__ == "__main__":
-    schedules = scrapeAllTeamSchedules(CBSScheduleParser)
-    print(schedules)
-    saveSchedulesToJSON(schedules, "data/nba_schedule.json")
+    main()

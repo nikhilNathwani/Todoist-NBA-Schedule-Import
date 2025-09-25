@@ -1,9 +1,7 @@
 import requests
 from datetime import datetime
-import pytz
 from bs4 import BeautifulSoup
 import json
-from constants import TEAM_IDS, TEAM_METADATA
 from game import Game
 
 # CBS Sports to canonical mapping (CBS-specific, lives here)
@@ -90,15 +88,6 @@ def scrapeGames(url):
          games.append(Game(opponent, isHomeGame, date, time))
    return games
 
-def scrapeOpponent(row):
-   opponentElement = row.find(class_ = "TeamName").find("a")
-   city_name = opponentElement.text.strip()
-   canonical_id = CBS_CITY_TO_CANONICAL.get(city_name)
-   if canonical_id and canonical_id in TEAM_METADATA:
-      return TEAM_METADATA[canonical_id]["nameCasual"]
-   # fallback to text if mapping fails
-   return city_name
-
 def scrapeIsHomeGame(row):
    opponentPrefixSpan = row.find(class_ = "CellLogoNameLockup-opposingPrefix")
    opponentPrefixValue = opponentPrefixSpan.text.strip()
@@ -108,7 +97,6 @@ def scrapeIsHomeGame(row):
       return True
    else:
       raise ValueError(f"Unexpected opponent prefix: {opponentPrefixValue}") 
-        
 
 def scrapeDate(row):
    dateElement= row.find(class_ = "CellGameDate")
@@ -120,53 +108,16 @@ def scrapeTime(row):
 
 def scrapeOpponent(row):
    opponentElement = row.find(class_ = "TeamName").find("a")
-   cbs_abbr = None
    href = opponentElement.get("href", "")
    parts = href.split("/")
    try:
       idx = parts.index("teams")
       cbs_abbr = parts[idx + 1]
-   except (ValueError, IndexError):
-      pass
-   if cbs_abbr:
       canonical_id = CBS_ABBREV_TO_CANONICAL.get(cbs_abbr)
-      if canonical_id and canonical_id in TEAM_METADATA:
-         return TEAM_METADATA[canonical_id]["nameCasual"]
-   # fallback to text if mapping fails
-   return opponentElement.text.strip()
+      if not canonical_id:
+         raise ValueError(f"No canonical mapping found for CBS abbreviation: {cbs_abbr}")
+      return canonical_id
+   except (ValueError, IndexError):
+      raise ValueError(f"Could not extract canonical team ID from opponent element: {opponentElement}")
 
 
-# ~~~~~~~~ CONVERT GAMES TO JSON ~~~~~~~~~
-def schedulesToJson(games, filename):
-   with open(filename, 'r') as f:
-      data = json.load(f)
-   # Convert Game objects to dicts for JSON serialization
-   schedule_list = [game.to_dict() for game in games]
-   data["BOS"]["schedule"] = schedule_list
-   with open(filename, 'w') as f:
-      json.dump(data, f, indent=4)
-   print("Schedule written to JSON:")
-   print(schedule_list)
-   print(f"Schedule length: {len(schedule_list)}")
-
-
-# ~~~~~~~~ MAIN THREAD ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-if __name__ ==  "__main__": 
-   schedule_links = getTeamScheduleLinks()
-   print(f"Found {len(schedule_links)} team schedule links.")  
-   filename = "../data/celtics_schedule.json"
-   with open(filename, 'r') as f:
-      data = json.load(f)
-   for url in schedule_links:
-      team_id = getTeamID(url)
-      print(f"Processing team {team_id} from URL: {url}")
-      games = scrapeGames(url)
-      schedule_list = [game.__dict__ for game in games]
-      if team_id in data:
-         data[team_id]["schedule"] = schedule_list
-         print(f"Updated {team_id}: {len(schedule_list)} games")
-      else:
-         print(f"Warning: {team_id} not found in JSON data.")
-   with open(filename, 'w') as f:
-      json.dump(data, f, indent=4)
-print(f"{'All' if len(data)>=30 else 'Only'} {len(data)} schedules updated.")

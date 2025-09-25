@@ -1,43 +1,20 @@
-from datetime import datetime
-import pytz
-from dateutil import parser
+from constants import TEAM_METADATA
+from formatDateTime import format_date_time
 
 class Game:
-    def __init__(self, opponent, isHomeGame, date, time, tz_name=None):
-        if tz_name is None:
-            tz_name = 'America/New_York' # Default timezone if none provided
-        self.opponent = opponent
+    def __init__(self, opponent_id, isHomeGame, date, time):
+        self.opponent_id = opponent_id
         self.isHomeGame = isHomeGame
-        self.gameTimeUtcIso8601 = self.formatDateTime(date, time, tz_name)
+        self.gameTimeUtcIso8601 = format_date_time(date, time, 'America/New_York')
 
     def to_dict(self):
+        if self.opponent_id not in TEAM_METADATA:
+            raise ValueError(f"No team metadata found for opponent_id: {self.opponent_id}")
         return {
-            "opponent": self.opponent,
+            "opponent": TEAM_METADATA[self.opponent_id]["nameCasual"],
             "isHomeGame": self.isHomeGame,
             "gameTimeUtcIso8601": self.gameTimeUtcIso8601
         }
-
-    def formatDateTime(self, date, time, tz_name):
-        date_str = date + " " + time
-        # Try strict parsing first
-        try:
-            date_format = "%b %d, %Y %I:%M%p"
-            naive_date = datetime.strptime(date_str, date_format)
-        except Exception:
-            try:
-                # Fallback to flexible parsing
-                naive_date = parser.parse(date_str)
-            except Exception as e:
-                print(f"Warning: Could not parse date/time '{date} {time}': {e}")
-                return None
-        try:
-            tz = pytz.timezone(tz_name)
-        except Exception as e:
-            print(f"Warning: Could not use timezone '{tz_name}': {e}. Defaulting to America/New_York.")
-            tz = pytz.timezone('America/New_York')
-        localized_date = tz.localize(naive_date)
-        utc_date = localized_date.astimezone(pytz.utc)
-        return utc_date.isoformat()
 
 # Test code
 if __name__ == "__main__":
