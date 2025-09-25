@@ -1,23 +1,23 @@
 import os
 from parsers.cbs_parser import CBSParser
 from schedulesToJson import save_schedules_to_json
+from verifySchedule import verify_schedule
 
 """
 Annual Update Instructions:
 1. Run this script in July/August when next season's schedule is released
-2. The script will update data/nba_schedule.json with the new season's games
-3. Run verify_schedule.py to validate the output JSON:
-   - Checks for all 30 NBA teams
-   - Verifies each team has 80 games
-   - Validates game times are proper UTC format
-4. (If validation fails) Verify the parser still works with CBS Sports' website structure
-   - If the site structure changed, update CBSParser accordingly
-   - Or if using a new site, create a new parser subclassing BaseParser
-5. Once verification passes, commit and push the updated nba_schedule.json file
+2. The script will:
+   a) Update data/nba_schedule.json with the new season's games
+   b) Automatically verify:
+      - All 30 NBA teams are present
+      - Each team has 80 games
+      - Game times are in proper UTC format
+3. If verification fails:
+   - Check if CBS Sports' website structure changed
+   - Update CBSParser accordingly or create new parser
+4. Once verification passes, commit and push the updated nba_schedule.json
 
-Example: 
-1. python3 main.py
-2. python3 verify_schedule.py
+Example: python3 main.py
 """
 
 # Define output json path
@@ -42,7 +42,14 @@ def main():
     
     # Save all schedules at once
     save_schedules_to_json(team_schedules, NBA_SCHEDULE_JSON_PATH)
-    print(f"{'All' if len(team_schedules)>=30 else 'Only'} {len(team_schedules)} schedules saved to file.")
+    
+    # Verify the saved schedule
+    print("\nVerifying saved schedule...")
+    if not verify_schedule(NBA_SCHEDULE_JSON_PATH):
+        print("\n❌ Schedule verification failed! Please check the errors above.")
+        exit(1) # exit with error code if verification fails
+    else:
+        print("\n✅ Schedule update and verification complete!")
 
 if __name__ == "__main__":
     main()
