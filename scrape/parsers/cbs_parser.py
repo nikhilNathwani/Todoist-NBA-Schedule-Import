@@ -5,7 +5,11 @@ from game import Game
 from .base_parser import BaseParser
 
 class CBSParser(BaseParser):
-    """Parser for CBS Sports NBA schedules."""
+    """
+    Parser for CBS Sports NBA schedules.
+    Created in September 2025 to scrape the 2025-26 NBA regular season.
+    If CBS Sports changes their website structure, this parser may need updates.
+    """
     
     # CBS Sports to canonical mapping (CBS-specific)
     CBS_ABBREV_TO_CANONICAL = {
