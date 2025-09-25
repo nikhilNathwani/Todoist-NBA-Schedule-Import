@@ -1,31 +1,29 @@
 import os
-import json
-from scrapeSchedules import getTeamScheduleLinks, getTeamID, scrapeGames
-from scheduleToJson import save_schedule_to_json
+from parsers.cbs_parser import CBSParser
+from schedulesToJson import save_schedules_to_json
 
 def main():
-    schedule_links = getTeamScheduleLinks()
+    parser = CBSParser()
+    schedule_links = parser.getTeamScheduleLinks()
     print(f"Found {len(schedule_links)} team schedule links.")  
    
     # Use absolute path relative to script location
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    filename = os.path.join(os.path.dirname(script_dir), "data", "nba_schedule.json")
+    scheduleJson_filename = os.path.join(os.path.dirname(script_dir), "data", "nba_schedule.json")
    
-    # Start with an empty JSON file
-    os.makedirs(os.path.dirname(filename), exist_ok=True)
-    with open(filename, 'w') as f:
-        json.dump({}, f, indent=4)
-   
-    processed_teams = 0
+    # Collect all team schedules
+    team_schedules = {}
     for url in schedule_links:
-        team_id = getTeamID(url)
+        team_id = parser.getTeamID(url)
         print(f"Processing team {team_id} from URL: {url}")
-        games = scrapeGames(url)
-        save_schedule_to_json(games, filename, team_id)
-        processed_teams += 1
-        print(f"Updated {team_id}: {len(games)} games")
-   
-    print(f"{'All' if processed_teams>=30 else 'Only'} {processed_teams} schedules updated.")
+        games = parser.scrapeGames(url)
+        team_schedules[team_id] = games
+        print(f"Scraped {team_id}: {len(games)} games")
+    
+    # Save all schedules at once
+    save_schedules_to_json(team_schedules, scheduleJson_filename)
+    processed_teams = len(team_schedules)
+    print(f"{'All' if processed_teams>=30 else 'Only'} {processed_teams} schedules saved to file.")
 
 if __name__ == "__main__":
     main()

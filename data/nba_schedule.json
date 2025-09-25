@@ -10606,5 +10606,1637 @@
                 "gameTimeUtcIso8601": "2026-04-13T00:30:00+00:00"
             }
         ]
+    },
+    "HOU": {
+        "name": "Rockets",
+        "nameCasual": "rockets",
+        "city": "Houston",
+        "color": "red",
+        "schedule": [
+            {
+                "opponent": "thunder",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-10-21T23:30:00+00:00"
+            },
+            {
+                "opponent": "pistons",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-10-25T00:00:00+00:00"
+            },
+            {
+                "opponent": "nets",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-10-28T00:00:00+00:00"
+            },
+            {
+                "opponent": "raptors",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-10-29T23:30:00+00:00"
+            },
+            {
+                "opponent": "celtics",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-11-02T00:00:00+00:00"
+            },
+            {
+                "opponent": "mavs",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-11-04T01:00:00+00:00"
+            },
+            {
+                "opponent": "grizzlies",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-11-06T01:00:00+00:00"
+            },
+            {
+                "opponent": "spurs",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-11-08T00:30:00+00:00"
+            },
+            {
+                "opponent": "bucks",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-11-09T20:30:00+00:00"
+            },
+            {
+                "opponent": "wizards",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-11-13T01:00:00+00:00"
+            },
+            {
+                "opponent": "blazers",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-11-15T01:00:00+00:00"
+            },
+            {
+                "opponent": "magic",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-11-17T00:00:00+00:00"
+            },
+            {
+                "opponent": "cavs",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-11-20T00:00:00+00:00"
+            },
+            {
+                "opponent": "nuggets",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-11-22T02:30:00+00:00"
+            },
+            {
+                "opponent": "suns",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-11-25T02:30:00+00:00"
+            },
+            {
+                "opponent": "warriors",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-11-27T03:00:00+00:00"
+            },
+            {
+                "opponent": "jazz",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-11-30T20:00:00+00:00"
+            },
+            {
+                "opponent": "jazz",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-12-02T02:00:00+00:00"
+            },
+            {
+                "opponent": "kings",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-12-04T01:00:00+00:00"
+            },
+            {
+                "opponent": "suns",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-12-06T01:00:00+00:00"
+            },
+            {
+                "opponent": "mavs",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-12-07T01:30:00+00:00"
+            },
+            {
+                "opponent": "pelicans",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-12-19T01:00:00+00:00"
+            },
+            {
+                "opponent": "nuggets",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-12-20T22:00:00+00:00"
+            },
+            {
+                "opponent": "kings",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-12-22T03:00:00+00:00"
+            },
+            {
+                "opponent": "clippers",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-12-24T04:00:00+00:00"
+            },
+            {
+                "opponent": "lakers",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-12-26T01:00:00+00:00"
+            },
+            {
+                "opponent": "cavs",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-12-28T01:00:00+00:00"
+            },
+            {
+                "opponent": "pacers",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-12-30T01:00:00+00:00"
+            },
+            {
+                "opponent": "nets",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-01-01T23:00:00+00:00"
+            },
+            {
+                "opponent": "mavs",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-01-04T01:30:00+00:00"
+            },
+            {
+                "opponent": "suns",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-01-06T01:00:00+00:00"
+            },
+            {
+                "opponent": "blazers",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-01-08T03:00:00+00:00"
+            },
+            {
+                "opponent": "blazers",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-01-10T03:00:00+00:00"
+            },
+            {
+                "opponent": "kings",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-01-12T02:00:00+00:00"
+            },
+            {
+                "opponent": "bulls",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-01-14T01:00:00+00:00"
+            },
+            {
+                "opponent": "thunder",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-01-16T00:30:00+00:00"
+            },
+            {
+                "opponent": "t-wolves",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-01-17T02:30:00+00:00"
+            },
+            {
+                "opponent": "pelicans",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-01-19T00:00:00+00:00"
+            },
+            {
+                "opponent": "spurs",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-01-21T01:00:00+00:00"
+            },
+            {
+                "opponent": "sixers",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-01-23T00:00:00+00:00"
+            },
+            {
+                "opponent": "pistons",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-01-24T00:00:00+00:00"
+            },
+            {
+                "opponent": "grizzlies",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-01-27T01:00:00+00:00"
+            },
+            {
+                "opponent": "spurs",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-01-29T02:30:00+00:00"
+            },
+            {
+                "opponent": "hawks",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-01-30T01:00:00+00:00"
+            },
+            {
+                "opponent": "mavs",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-02-01T01:30:00+00:00"
+            },
+            {
+                "opponent": "pacers",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-02-03T00:00:00+00:00"
+            },
+            {
+                "opponent": "celtics",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-02-05T01:00:00+00:00"
+            },
+            {
+                "opponent": "hornets",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-02-06T01:00:00+00:00"
+            },
+            {
+                "opponent": "thunder",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-02-07T20:30:00+00:00"
+            },
+            {
+                "opponent": "clippers",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-02-11T01:00:00+00:00"
+            },
+            {
+                "opponent": "clippers",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-02-12T01:00:00+00:00"
+            },
+            {
+                "opponent": "hornets",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-02-20T00:00:00+00:00"
+            },
+            {
+                "opponent": "knicks",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-02-22T01:30:00+00:00"
+            },
+            {
+                "opponent": "jazz",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-02-24T02:30:00+00:00"
+            },
+            {
+                "opponent": "kings",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-02-26T01:00:00+00:00"
+            },
+            {
+                "opponent": "magic",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-02-27T00:30:00+00:00"
+            },
+            {
+                "opponent": "heat",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-02-28T20:00:00+00:00"
+            },
+            {
+                "opponent": "wizards",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-03-03T00:00:00+00:00"
+            },
+            {
+                "opponent": "warriors",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-03-06T00:30:00+00:00"
+            },
+            {
+                "opponent": "blazers",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-03-07T01:00:00+00:00"
+            },
+            {
+                "opponent": "spurs",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-03-09T00:00:00+00:00"
+            },
+            {
+                "opponent": "raptors",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-03-11T00:00:00+00:00"
+            },
+            {
+                "opponent": "nuggets",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-03-12T02:00:00+00:00"
+            },
+            {
+                "opponent": "pelicans",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-03-14T00:00:00+00:00"
+            },
+            {
+                "opponent": "lakers",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-03-17T01:00:00+00:00"
+            },
+            {
+                "opponent": "lakers",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-03-19T01:30:00+00:00"
+            },
+            {
+                "opponent": "hawks",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-03-21T00:00:00+00:00"
+            },
+            {
+                "opponent": "heat",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-03-22T00:00:00+00:00"
+            },
+            {
+                "opponent": "bulls",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-03-24T00:00:00+00:00"
+            },
+            {
+                "opponent": "t-wolves",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-03-26T01:30:00+00:00"
+            },
+            {
+                "opponent": "grizzlies",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-03-28T00:00:00+00:00"
+            },
+            {
+                "opponent": "pelicans",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-03-29T23:00:00+00:00"
+            },
+            {
+                "opponent": "knicks",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-04-01T00:00:00+00:00"
+            },
+            {
+                "opponent": "bucks",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-04-02T00:00:00+00:00"
+            },
+            {
+                "opponent": "jazz",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-04-04T00:00:00+00:00"
+            },
+            {
+                "opponent": "warriors",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-04-06T02:00:00+00:00"
+            },
+            {
+                "opponent": "suns",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-04-08T03:00:00+00:00"
+            },
+            {
+                "opponent": "sixers",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-04-10T00:00:00+00:00"
+            },
+            {
+                "opponent": "t-wolves",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-04-11T00:00:00+00:00"
+            },
+            {
+                "opponent": "grizzlies",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-04-13T00:30:00+00:00"
+            }
+        ]
+    },
+    "MEM": {
+        "name": "Grizzlies",
+        "nameCasual": "grizzlies",
+        "city": "Memphis",
+        "color": "light_blue",
+        "schedule": [
+            {
+                "opponent": "pelicans",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-10-23T00:00:00+00:00"
+            },
+            {
+                "opponent": "heat",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-10-25T00:00:00+00:00"
+            },
+            {
+                "opponent": "pacers",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-10-26T00:00:00+00:00"
+            },
+            {
+                "opponent": "warriors",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-10-28T02:00:00+00:00"
+            },
+            {
+                "opponent": "suns",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-10-30T02:00:00+00:00"
+            },
+            {
+                "opponent": "lakers",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-11-01T01:30:00+00:00"
+            },
+            {
+                "opponent": "raptors",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-11-02T23:00:00+00:00"
+            },
+            {
+                "opponent": "pistons",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-11-04T01:00:00+00:00"
+            },
+            {
+                "opponent": "rockets",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-11-06T01:00:00+00:00"
+            },
+            {
+                "opponent": "mavs",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-11-08T01:00:00+00:00"
+            },
+            {
+                "opponent": "thunder",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-11-09T23:00:00+00:00"
+            },
+            {
+                "opponent": "knicks",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-11-12T00:30:00+00:00"
+            },
+            {
+                "opponent": "celtics",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-11-13T00:30:00+00:00"
+            },
+            {
+                "opponent": "cavs",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-11-15T22:00:00+00:00"
+            },
+            {
+                "opponent": "spurs",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-11-19T01:00:00+00:00"
+            },
+            {
+                "opponent": "kings",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-11-21T01:00:00+00:00"
+            },
+            {
+                "opponent": "mavs",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-11-23T01:30:00+00:00"
+            },
+            {
+                "opponent": "nuggets",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-11-25T01:00:00+00:00"
+            },
+            {
+                "opponent": "pelicans",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-11-27T01:00:00+00:00"
+            },
+            {
+                "opponent": "clippers",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-11-29T03:00:00+00:00"
+            },
+            {
+                "opponent": "kings",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-12-01T02:00:00+00:00"
+            },
+            {
+                "opponent": "spurs",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-12-03T01:00:00+00:00"
+            },
+            {
+                "opponent": "clippers",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-12-06T01:00:00+00:00"
+            },
+            {
+                "opponent": "blazers",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-12-07T23:00:00+00:00"
+            },
+            {
+                "opponent": "t-wolves",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-12-18T01:00:00+00:00"
+            },
+            {
+                "opponent": "wizards",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-12-21T01:00:00+00:00"
+            },
+            {
+                "opponent": "thunder",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-12-23T02:30:00+00:00"
+            },
+            {
+                "opponent": "jazz",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-12-24T02:00:00+00:00"
+            },
+            {
+                "opponent": "bucks",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-12-27T01:00:00+00:00"
+            },
+            {
+                "opponent": "wizards",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-12-28T23:00:00+00:00"
+            },
+            {
+                "opponent": "sixers",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-12-31T01:00:00+00:00"
+            },
+            {
+                "opponent": "lakers",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-01-03T03:30:00+00:00"
+            },
+            {
+                "opponent": "lakers",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-01-05T02:30:00+00:00"
+            },
+            {
+                "opponent": "spurs",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-01-07T01:00:00+00:00"
+            },
+            {
+                "opponent": "suns",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-01-08T01:00:00+00:00"
+            },
+            {
+                "opponent": "thunder",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-01-10T01:00:00+00:00"
+            },
+            {
+                "opponent": "nets",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-01-11T20:30:00+00:00"
+            },
+            {
+                "opponent": "magic",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-01-15T19:00:00+00:00"
+            },
+            {
+                "opponent": "magic",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-01-18T17:00:00+00:00"
+            },
+            {
+                "opponent": "hawks",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-01-22T01:00:00+00:00"
+            },
+            {
+                "opponent": "pelicans",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-01-24T01:00:00+00:00"
+            },
+            {
+                "opponent": "nuggets",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-01-25T20:30:00+00:00"
+            },
+            {
+                "opponent": "rockets",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-01-27T01:00:00+00:00"
+            },
+            {
+                "opponent": "hornets",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-01-29T01:00:00+00:00"
+            },
+            {
+                "opponent": "pelicans",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-01-31T00:30:00+00:00"
+            },
+            {
+                "opponent": "t-wolves",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-02-01T01:00:00+00:00"
+            },
+            {
+                "opponent": "t-wolves",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-02-03T02:30:00+00:00"
+            },
+            {
+                "opponent": "kings",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-02-05T03:00:00+00:00"
+            },
+            {
+                "opponent": "blazers",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-02-07T03:00:00+00:00"
+            },
+            {
+                "opponent": "blazers",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-02-08T03:00:00+00:00"
+            },
+            {
+                "opponent": "warriors",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-02-10T03:00:00+00:00"
+            },
+            {
+                "opponent": "nuggets",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-02-12T03:00:00+00:00"
+            },
+            {
+                "opponent": "jazz",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-02-21T00:00:00+00:00"
+            },
+            {
+                "opponent": "heat",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-02-22T01:00:00+00:00"
+            },
+            {
+                "opponent": "kings",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-02-24T01:00:00+00:00"
+            },
+            {
+                "opponent": "warriors",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-02-26T00:30:00+00:00"
+            },
+            {
+                "opponent": "mavs",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-02-28T01:30:00+00:00"
+            },
+            {
+                "opponent": "pacers",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-03-01T22:00:00+00:00"
+            },
+            {
+                "opponent": "t-wolves",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-03-04T01:00:00+00:00"
+            },
+            {
+                "opponent": "blazers",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-03-05T01:00:00+00:00"
+            },
+            {
+                "opponent": "clippers",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-03-08T01:00:00+00:00"
+            },
+            {
+                "opponent": "nets",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-03-09T23:30:00+00:00"
+            },
+            {
+                "opponent": "sixers",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-03-10T23:00:00+00:00"
+            },
+            {
+                "opponent": "pistons",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-03-13T23:30:00+00:00"
+            },
+            {
+                "opponent": "bulls",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-03-17T00:00:00+00:00"
+            },
+            {
+                "opponent": "knicks",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-03-19T00:00:00+00:00"
+            },
+            {
+                "opponent": "celtics",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-03-21T00:00:00+00:00"
+            },
+            {
+                "opponent": "hornets",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-03-21T23:00:00+00:00"
+            },
+            {
+                "opponent": "hawks",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-03-23T23:00:00+00:00"
+            },
+            {
+                "opponent": "spurs",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-03-26T00:00:00+00:00"
+            },
+            {
+                "opponent": "rockets",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-03-28T00:00:00+00:00"
+            },
+            {
+                "opponent": "bulls",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-03-29T00:00:00+00:00"
+            },
+            {
+                "opponent": "suns",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-03-31T00:00:00+00:00"
+            },
+            {
+                "opponent": "mavs",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-04-02T00:00:00+00:00"
+            },
+            {
+                "opponent": "raptors",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-04-04T00:00:00+00:00"
+            },
+            {
+                "opponent": "bucks",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-04-05T19:30:00+00:00"
+            },
+            {
+                "opponent": "cavs",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-04-07T00:00:00+00:00"
+            },
+            {
+                "opponent": "nuggets",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-04-09T01:00:00+00:00"
+            },
+            {
+                "opponent": "jazz",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-04-11T01:30:00+00:00"
+            },
+            {
+                "opponent": "rockets",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-04-13T00:30:00+00:00"
+            }
+        ]
+    },
+    "NOP": {
+        "name": "Pelicans",
+        "nameCasual": "pelicans",
+        "city": "New Orleans",
+        "color": "taupe",
+        "schedule": [
+            {
+                "opponent": "grizzlies",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-10-23T00:00:00+00:00"
+            },
+            {
+                "opponent": "spurs",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-10-25T00:00:00+00:00"
+            },
+            {
+                "opponent": "celtics",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-10-28T00:00:00+00:00"
+            },
+            {
+                "opponent": "nuggets",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-10-30T01:00:00+00:00"
+            },
+            {
+                "opponent": "clippers",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-11-01T02:30:00+00:00"
+            },
+            {
+                "opponent": "thunder",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-11-02T20:30:00+00:00"
+            },
+            {
+                "opponent": "hornets",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-11-05T01:00:00+00:00"
+            },
+            {
+                "opponent": "mavs",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-11-06T01:30:00+00:00"
+            },
+            {
+                "opponent": "spurs",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-11-09T01:00:00+00:00"
+            },
+            {
+                "opponent": "suns",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-11-11T02:00:00+00:00"
+            },
+            {
+                "opponent": "blazers",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-11-13T01:00:00+00:00"
+            },
+            {
+                "opponent": "lakers",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-11-15T01:00:00+00:00"
+            },
+            {
+                "opponent": "warriors",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-11-17T00:00:00+00:00"
+            },
+            {
+                "opponent": "thunder",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-11-18T01:00:00+00:00"
+            },
+            {
+                "opponent": "nuggets",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-11-20T01:00:00+00:00"
+            },
+            {
+                "opponent": "mavs",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-11-22T01:30:00+00:00"
+            },
+            {
+                "opponent": "hawks",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-11-23T00:00:00+00:00"
+            },
+            {
+                "opponent": "bulls",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-11-25T01:00:00+00:00"
+            },
+            {
+                "opponent": "grizzlies",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-11-27T01:00:00+00:00"
+            },
+            {
+                "opponent": "warriors",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-11-30T01:30:00+00:00"
+            },
+            {
+                "opponent": "lakers",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-12-01T02:30:00+00:00"
+            },
+            {
+                "opponent": "t-wolves",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-12-03T01:00:00+00:00"
+            },
+            {
+                "opponent": "t-wolves",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-12-05T01:00:00+00:00"
+            },
+            {
+                "opponent": "nets",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-12-06T22:00:00+00:00"
+            },
+            {
+                "opponent": "spurs",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-12-09T02:30:00+00:00"
+            },
+            {
+                "opponent": "rockets",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-12-19T01:00:00+00:00"
+            },
+            {
+                "opponent": "pacers",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-12-21T00:00:00+00:00"
+            },
+            {
+                "opponent": "mavs",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-12-23T01:00:00+00:00"
+            },
+            {
+                "opponent": "cavs",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-12-24T00:30:00+00:00"
+            },
+            {
+                "opponent": "suns",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-12-27T01:00:00+00:00"
+            },
+            {
+                "opponent": "suns",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-12-28T00:00:00+00:00"
+            },
+            {
+                "opponent": "knicks",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-12-30T01:00:00+00:00"
+            },
+            {
+                "opponent": "bulls",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-01-01T00:00:00+00:00"
+            },
+            {
+                "opponent": "blazers",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-01-03T01:00:00+00:00"
+            },
+            {
+                "opponent": "heat",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-01-04T23:00:00+00:00"
+            },
+            {
+                "opponent": "lakers",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-01-07T01:00:00+00:00"
+            },
+            {
+                "opponent": "hawks",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-01-08T00:30:00+00:00"
+            },
+            {
+                "opponent": "wizards",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-01-10T00:00:00+00:00"
+            },
+            {
+                "opponent": "magic",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-01-11T20:00:00+00:00"
+            },
+            {
+                "opponent": "nuggets",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-01-14T01:00:00+00:00"
+            },
+            {
+                "opponent": "nets",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-01-15T01:00:00+00:00"
+            },
+            {
+                "opponent": "pacers",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-01-17T00:00:00+00:00"
+            },
+            {
+                "opponent": "rockets",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-01-19T00:00:00+00:00"
+            },
+            {
+                "opponent": "pistons",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-01-22T01:00:00+00:00"
+            },
+            {
+                "opponent": "grizzlies",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-01-24T01:00:00+00:00"
+            },
+            {
+                "opponent": "spurs",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-01-26T00:00:00+00:00"
+            },
+            {
+                "opponent": "thunder",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-01-28T01:00:00+00:00"
+            },
+            {
+                "opponent": "grizzlies",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-01-31T00:30:00+00:00"
+            },
+            {
+                "opponent": "sixers",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-02-01T00:30:00+00:00"
+            },
+            {
+                "opponent": "hornets",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-02-03T00:00:00+00:00"
+            },
+            {
+                "opponent": "bucks",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-02-05T01:00:00+00:00"
+            },
+            {
+                "opponent": "t-wolves",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-02-07T01:00:00+00:00"
+            },
+            {
+                "opponent": "kings",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-02-10T01:00:00+00:00"
+            },
+            {
+                "opponent": "heat",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-02-12T01:00:00+00:00"
+            },
+            {
+                "opponent": "bucks",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-02-21T01:00:00+00:00"
+            },
+            {
+                "opponent": "sixers",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-02-22T00:00:00+00:00"
+            },
+            {
+                "opponent": "warriors",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-02-25T01:00:00+00:00"
+            },
+            {
+                "opponent": "jazz",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-02-27T02:00:00+00:00"
+            },
+            {
+                "opponent": "jazz",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-03-01T02:30:00+00:00"
+            },
+            {
+                "opponent": "clippers",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-03-02T02:00:00+00:00"
+            },
+            {
+                "opponent": "lakers",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-03-04T03:30:00+00:00"
+            },
+            {
+                "opponent": "kings",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-03-06T03:00:00+00:00"
+            },
+            {
+                "opponent": "suns",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-03-07T02:00:00+00:00"
+            },
+            {
+                "opponent": "wizards",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-03-08T23:00:00+00:00"
+            },
+            {
+                "opponent": "raptors",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-03-12T00:00:00+00:00"
+            },
+            {
+                "opponent": "rockets",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-03-14T00:00:00+00:00"
+            },
+            {
+                "opponent": "mavs",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-03-17T00:00:00+00:00"
+            },
+            {
+                "opponent": "clippers",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-03-19T00:00:00+00:00"
+            },
+            {
+                "opponent": "clippers",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-03-20T00:00:00+00:00"
+            },
+            {
+                "opponent": "cavs",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-03-21T23:00:00+00:00"
+            },
+            {
+                "opponent": "knicks",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-03-24T23:30:00+00:00"
+            },
+            {
+                "opponent": "pistons",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-03-26T23:00:00+00:00"
+            },
+            {
+                "opponent": "raptors",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-03-28T00:30:00+00:00"
+            },
+            {
+                "opponent": "rockets",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-03-29T23:00:00+00:00"
+            },
+            {
+                "opponent": "blazers",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-04-03T02:00:00+00:00"
+            },
+            {
+                "opponent": "kings",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-04-04T02:00:00+00:00"
+            },
+            {
+                "opponent": "magic",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-04-05T23:00:00+00:00"
+            },
+            {
+                "opponent": "jazz",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-04-08T00:00:00+00:00"
+            },
+            {
+                "opponent": "celtics",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-04-10T23:30:00+00:00"
+            },
+            {
+                "opponent": "t-wolves",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-04-13T00:30:00+00:00"
+            }
+        ]
+    },
+    "SAS": {
+        "name": "Spurs",
+        "nameCasual": "spurs",
+        "city": "San Antonio",
+        "color": "grey",
+        "schedule": [
+            {
+                "opponent": "mavs",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-10-23T01:30:00+00:00"
+            },
+            {
+                "opponent": "pelicans",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-10-25T00:00:00+00:00"
+            },
+            {
+                "opponent": "nets",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-10-26T18:00:00+00:00"
+            },
+            {
+                "opponent": "raptors",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-10-28T00:00:00+00:00"
+            },
+            {
+                "opponent": "heat",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-10-31T00:30:00+00:00"
+            },
+            {
+                "opponent": "suns",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-11-03T01:00:00+00:00"
+            },
+            {
+                "opponent": "lakers",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-11-06T03:00:00+00:00"
+            },
+            {
+                "opponent": "rockets",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-11-08T00:30:00+00:00"
+            },
+            {
+                "opponent": "pelicans",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-11-09T01:00:00+00:00"
+            },
+            {
+                "opponent": "bulls",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-11-11T01:00:00+00:00"
+            },
+            {
+                "opponent": "warriors",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-11-13T01:00:00+00:00"
+            },
+            {
+                "opponent": "warriors",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-11-15T02:30:00+00:00"
+            },
+            {
+                "opponent": "kings",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-11-16T21:00:00+00:00"
+            },
+            {
+                "opponent": "grizzlies",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-11-19T01:00:00+00:00"
+            },
+            {
+                "opponent": "hawks",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-11-21T01:00:00+00:00"
+            },
+            {
+                "opponent": "suns",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-11-24T01:00:00+00:00"
+            },
+            {
+                "opponent": "blazers",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-11-27T03:00:00+00:00"
+            },
+            {
+                "opponent": "nuggets",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-11-29T02:30:00+00:00"
+            },
+            {
+                "opponent": "t-wolves",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-12-01T00:00:00+00:00"
+            },
+            {
+                "opponent": "grizzlies",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-12-03T01:00:00+00:00"
+            },
+            {
+                "opponent": "magic",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-12-04T00:00:00+00:00"
+            },
+            {
+                "opponent": "cavs",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-12-06T00:30:00+00:00"
+            },
+            {
+                "opponent": "pelicans",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-12-09T02:30:00+00:00"
+            },
+            {
+                "opponent": "wizards",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-12-18T01:00:00+00:00"
+            },
+            {
+                "opponent": "hawks",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-12-20T00:30:00+00:00"
+            },
+            {
+                "opponent": "wizards",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-12-22T00:00:00+00:00"
+            },
+            {
+                "opponent": "thunder",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-12-24T01:30:00+00:00"
+            },
+            {
+                "opponent": "thunder",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2025-12-25T19:30:00+00:00"
+            },
+            {
+                "opponent": "jazz",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-12-28T01:00:00+00:00"
+            },
+            {
+                "opponent": "cavs",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2025-12-30T01:00:00+00:00"
+            },
+            {
+                "opponent": "knicks",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-01-01T00:00:00+00:00"
+            },
+            {
+                "opponent": "pacers",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-01-03T00:00:00+00:00"
+            },
+            {
+                "opponent": "blazers",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-01-04T01:00:00+00:00"
+            },
+            {
+                "opponent": "grizzlies",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-01-07T01:00:00+00:00"
+            },
+            {
+                "opponent": "lakers",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-01-08T00:30:00+00:00"
+            },
+            {
+                "opponent": "celtics",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-01-11T01:00:00+00:00"
+            },
+            {
+                "opponent": "t-wolves",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-01-12T00:00:00+00:00"
+            },
+            {
+                "opponent": "thunder",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-01-14T01:00:00+00:00"
+            },
+            {
+                "opponent": "bucks",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-01-16T01:00:00+00:00"
+            },
+            {
+                "opponent": "t-wolves",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-01-18T01:00:00+00:00"
+            },
+            {
+                "opponent": "jazz",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-01-20T01:00:00+00:00"
+            },
+            {
+                "opponent": "rockets",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-01-21T01:00:00+00:00"
+            },
+            {
+                "opponent": "jazz",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-01-23T02:00:00+00:00"
+            },
+            {
+                "opponent": "pelicans",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-01-26T00:00:00+00:00"
+            },
+            {
+                "opponent": "rockets",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-01-29T02:30:00+00:00"
+            },
+            {
+                "opponent": "hornets",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-01-31T20:00:00+00:00"
+            },
+            {
+                "opponent": "magic",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-02-01T21:00:00+00:00"
+            },
+            {
+                "opponent": "thunder",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-02-05T02:30:00+00:00"
+            },
+            {
+                "opponent": "mavs",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-02-06T01:30:00+00:00"
+            },
+            {
+                "opponent": "mavs",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-02-07T23:00:00+00:00"
+            },
+            {
+                "opponent": "lakers",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-02-11T03:30:00+00:00"
+            },
+            {
+                "opponent": "warriors",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-02-12T03:00:00+00:00"
+            },
+            {
+                "opponent": "suns",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-02-20T01:30:00+00:00"
+            },
+            {
+                "opponent": "kings",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-02-22T01:00:00+00:00"
+            },
+            {
+                "opponent": "pistons",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-02-24T00:00:00+00:00"
+            },
+            {
+                "opponent": "raptors",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-02-26T00:30:00+00:00"
+            },
+            {
+                "opponent": "nets",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-02-27T00:30:00+00:00"
+            },
+            {
+                "opponent": "knicks",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-03-01T18:00:00+00:00"
+            },
+            {
+                "opponent": "sixers",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-03-04T01:00:00+00:00"
+            },
+            {
+                "opponent": "pistons",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-03-06T01:00:00+00:00"
+            },
+            {
+                "opponent": "clippers",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-03-07T02:30:00+00:00"
+            },
+            {
+                "opponent": "rockets",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-03-09T00:00:00+00:00"
+            },
+            {
+                "opponent": "celtics",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-03-11T00:00:00+00:00"
+            },
+            {
+                "opponent": "nuggets",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-03-13T01:00:00+00:00"
+            },
+            {
+                "opponent": "hornets",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-03-15T00:00:00+00:00"
+            },
+            {
+                "opponent": "clippers",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-03-17T02:30:00+00:00"
+            },
+            {
+                "opponent": "kings",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-03-18T03:00:00+00:00"
+            },
+            {
+                "opponent": "suns",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-03-20T00:00:00+00:00"
+            },
+            {
+                "opponent": "pacers",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-03-22T00:00:00+00:00"
+            },
+            {
+                "opponent": "heat",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-03-23T23:30:00+00:00"
+            },
+            {
+                "opponent": "grizzlies",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-03-26T00:00:00+00:00"
+            },
+            {
+                "opponent": "bucks",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-03-28T19:00:00+00:00"
+            },
+            {
+                "opponent": "bulls",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-03-31T00:00:00+00:00"
+            },
+            {
+                "opponent": "warriors",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-04-02T02:00:00+00:00"
+            },
+            {
+                "opponent": "clippers",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-04-03T02:30:00+00:00"
+            },
+            {
+                "opponent": "nuggets",
+                "isHomeGame": false,
+                "gameTimeUtcIso8601": "2026-04-04T19:00:00+00:00"
+            },
+            {
+                "opponent": "sixers",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-04-07T00:00:00+00:00"
+            },
+            {
+                "opponent": "blazers",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-04-09T00:00:00+00:00"
+            },
+            {
+                "opponent": "mavs",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-04-11T00:00:00+00:00"
+            },
+            {
+                "opponent": "nuggets",
+                "isHomeGame": true,
+                "gameTimeUtcIso8601": "2026-04-13T00:30:00+00:00"
+            }
+        ]
     }
 }

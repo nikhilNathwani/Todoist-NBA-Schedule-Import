@@ -1,109 +1,109 @@
-from bs4 import BeautifulSoup
 import requests
-from ..game import Game
-from ..constants import teams, cityToTeamNamesCasual
-from datetime import datetime
-import pytz
-from .base_parser import TeamScheduleParser
+from bs4 import BeautifulSoup
+from typing import List
+from game import Game
+from .base_parser import BaseParser
 
+class CBSParser(BaseParser):
+    """Parser for CBS Sports NBA schedules."""
+    
+    # CBS Sports to canonical mapping (CBS-specific)
+    CBS_ABBREV_TO_CANONICAL = {
+        "BOS": "BOS", "BKN": "BKN", "NY": "NYK", "PHI": "PHI", "TOR": "TOR",
+        "CHI": "CHI", "CLE": "CLE", "DET": "DET", "IND": "IND", "MIL": "MIL",
+        "ATL": "ATL", "CHA": "CHA", "MIA": "MIA", "ORL": "ORL", "WAS": "WAS",
+        "DEN": "DEN", "MIN": "MIN", "OKC": "OKC", "POR": "POR", "UTA": "UTA",
+        "GS": "GSW", "LAC": "LAC", "LAL": "LAL", "PHO": "PHO", "SAC": "SAC",
+        "DAL": "DAL", "HOU": "HOU", "MEM": "MEM", "NO": "NOP", "SA": "SAS"
+    }
 
+    CBS_CITY_TO_CANONICAL = {
+        "Atlanta": "ATL", "Boston": "BOS", "Brooklyn": "BKN",
+        "Charlotte": "CHA", "Chicago": "CHI", "Cleveland": "CLE",
+        "Dallas": "DAL", "Denver": "DEN", "Detroit": "DET",
+        "Golden St.": "GSW", "Houston": "HOU", "Indiana": "IND",
+        "L.A. Clippers": "LAC", "L.A. Lakers": "LAL", "Memphis": "MEM",
+        "Miami": "MIA", "Milwaukee": "MIL", "Minnesota": "MIN",
+        "New Orleans": "NOP", "New York": "NYK", "Oklahoma City": "OKC",
+        "Orlando": "ORL", "Philadelphia": "PHI", "Phoenix": "PHO",
+        "Portland": "POR", "Sacramento": "SAC", "San Antonio": "SAS",
+        "Toronto": "TOR", "Utah": "UTA", "Washington": "WAS"
+    }
 
-class CBSScheduleParser(TeamScheduleParser):
-
-######################################################
-##  Class Methods                                   ##
-######################################################
-    url_root = "https://www.cbssports.com/nba/teams/"
-
-    @classmethod
-    def getTeamID(cls, link):
-        """
-        Extract the team ID from a CBS Sports team URL.
-        """
-        return link.split(cls.url_root)[-1].split("/")[0]
-
-    @classmethod
-    def getTeamScheduleLinks(cls):
-        response = requests.get(cls.url_root)
+    def getTeamScheduleLinks(self) -> List[str]:
+        """Get list of all team schedule URLs from CBS Sports."""
+        url = "https://www.cbssports.com/nba/teams/"
+        response = requests.get(url)
         soup = BeautifulSoup(response.content, "html.parser")
-        rows = soup.findAll('tr', class_='TableBase-bodyTr')
-
         links = []
-        for i, row in enumerate(rows):
-            linkCell = row.findAll("a")[-1]
-            link = linkCell["href"]
-            link = cls.url_root + link.split("/nba/teams/")[-1]
-            print(f"Link {i+1}: {link}")
-            links.append(link)
+        for a in soup.select(".TeamLogoNameLockup-name a"):
+            href = a.get("href")
+            links.append("https://www.cbssports.com" + href + "schedule/regular/")
         return links
 
+    def getTeamID(self, url: str) -> str:
+        """Extract team ID from CBS Sports URL."""
+        parts = url.split("/")
+        try:
+            idx = parts.index("teams")
+            cbs_abbr = parts[idx + 1]
+            canonical_id = self.CBS_ABBREV_TO_CANONICAL.get(cbs_abbr)
+            if not canonical_id:
+                raise ValueError(f"No canonical mapping for CBS abbr: {cbs_abbr}")
+            return canonical_id
+        except (ValueError, IndexError):
+            raise ValueError(f"Could not extract team ID from url: {url}")
 
-######################################################
-##  Instance Methods                                ##
-######################################################
-    def setTeamObject(self, teamID):
-        teamID = parser_class.getTeamID(link)
-        team_info = teams[teamID]
-        parser_instance = parser_class()
-        schedule = parser_instance.parse_team_schedule(link)
-        team_obj = Team(teamID, team_info, schedule)
+    def scrapeGames(self, url: str) -> List[Game]:
+        """Scrape all games from a team's CBS Sports schedule page."""
+        games = []
+        response = requests.get(url)
+        soup = BeautifulSoup(response.content, "html.parser")
+        schedule = soup.find("tbody")
+        if not schedule:
+            return games
+        
+        rows = schedule.findAll("tr")
+        for row in rows:
+            date = self._scrapeDate(row)
+            isHomeGame = self._scrapeIsHomeGame(row)
+            opponent = self._scrapeOpponent(row)
+            time = self._scrapeTime(row)
+            games.append(Game(opponent, isHomeGame, date, time))
+        return games
 
-    def scrapeOpponent(self, row):
-        opponentElement = row.find(class_ = "TeamName").find("a")
-        opponent = opponentElement.text
-        opponent = cityToTeamNamesCasual[opponent]
-        return opponent
-
-    def scrapeIsHomeGame(self, row):
-        opponentPrefixSpan = row.find(class_ = "CellLogoNameLockup-opposingPrefix")
+    def _scrapeIsHomeGame(self, row) -> bool:
+        """Helper method to determine if game is home or away."""
+        opponentPrefixSpan = row.find(class_="CellLogoNameLockup-opposingPrefix")
         opponentPrefixValue = opponentPrefixSpan.text.strip()
         if opponentPrefixValue == "@":
             return False
         elif opponentPrefixValue == "vs":
             return True
         else:
-            return "?"
+            raise ValueError(f"Unexpected opponent prefix: {opponentPrefixValue}")
 
-    def scrapeDate(self, row):
-        dateElement = row.find(class_ = "CellGameDate")
+    def _scrapeDate(self, row) -> str:
+        """Helper method to extract game date."""
+        dateElement = row.find(class_="CellGameDate")
         return dateElement.text.strip()
 
-    def scrapeTime(self, row):
-        timeElement = row.find(class_ = "CellGame").find("a")
-        return timeElement.text.replace(" ","")
+    def _scrapeTime(self, row) -> str:
+        """Helper method to extract game time."""
+        timeElement = row.find(class_="CellGame").find("a")
+        return timeElement.text.replace(" ", "")
 
-    def formatDateTime(self, date, time):
-        date_str = date + " " + time
-        date_format = "%b %d, %Y %I:%M%p"
-        naive_date = datetime.strptime(date_str, date_format)
-        eastern = pytz.timezone('America/New_York')
-        localized_date = eastern.localize(naive_date)
-        utc_date = localized_date.astimezone(pytz.utc)
-        rfc3339_format = utc_date.isoformat()
-        return rfc3339_format
-
-    def parse_team_schedule(self, team_url):
-        """
-        Fetch and parse the NBA team schedule page at team_url, returning a list of Game objects.
-        """
-        response = requests.get(team_url)
-        soup = BeautifulSoup(response.content, "html.parser")
-        games = []
-        upcoming_tables = soup.findAll(class_ = "TableBaseWrapper")
-        if not upcoming_tables:
-            print("No tables found in HTML")
-            return games
-        upcomingGames = upcoming_tables[-1]
-        schedule = upcomingGames.find("tbody")
-        if not schedule:
-            print("No schedule found")
-            return games
-        rows = schedule.findAll("tr")
-        for row in rows:
-            opponent = self.scrapeOpponent(row)
-            isHomeGame = self.scrapeIsHomeGame(row)
-            date = self.scrapeDate(row)
-            time = self.scrapeTime(row)
-            gameTimeUtcIso8601 = self.formatDateTime(date, time)
-            games.append(Game(opponent, isHomeGame, gameTimeUtcIso8601))
-        return games
+    def _scrapeOpponent(self, row) -> str:
+        """Helper method to extract opponent's canonical team ID."""
+        opponentElement = row.find(class_="TeamName").find("a")
+        href = opponentElement.get("href", "")
+        parts = href.split("/")
+        try:
+            idx = parts.index("teams")
+            cbs_abbr = parts[idx + 1]
+            canonical_id = self.CBS_ABBREV_TO_CANONICAL.get(cbs_abbr)
+            if not canonical_id:
+                raise ValueError(f"No canonical mapping found for CBS abbreviation: {cbs_abbr}")
+            return canonical_id
+        except (ValueError, IndexError):
+            raise ValueError(f"Could not extract canonical team ID from opponent element: {opponentElement}")
