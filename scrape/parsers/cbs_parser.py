@@ -17,19 +17,6 @@ class CBSParser(BaseParser):
         "DAL": "DAL", "HOU": "HOU", "MEM": "MEM", "NO": "NOP", "SA": "SAS"
     }
 
-    CBS_CITY_TO_CANONICAL = {
-        "Atlanta": "ATL", "Boston": "BOS", "Brooklyn": "BKN",
-        "Charlotte": "CHA", "Chicago": "CHI", "Cleveland": "CLE",
-        "Dallas": "DAL", "Denver": "DEN", "Detroit": "DET",
-        "Golden St.": "GSW", "Houston": "HOU", "Indiana": "IND",
-        "L.A. Clippers": "LAC", "L.A. Lakers": "LAL", "Memphis": "MEM",
-        "Miami": "MIA", "Milwaukee": "MIL", "Minnesota": "MIN",
-        "New Orleans": "NOP", "New York": "NYK", "Oklahoma City": "OKC",
-        "Orlando": "ORL", "Philadelphia": "PHI", "Phoenix": "PHO",
-        "Portland": "POR", "Sacramento": "SAC", "San Antonio": "SAS",
-        "Toronto": "TOR", "Utah": "UTA", "Washington": "WAS"
-    }
-
     def getTeamScheduleLinks(self) -> List[str]:
         """Get list of all team schedule URLs from CBS Sports."""
         url = "https://www.cbssports.com/nba/teams/"

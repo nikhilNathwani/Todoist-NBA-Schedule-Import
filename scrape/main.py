@@ -2,14 +2,14 @@ import os
 from parsers.cbs_parser import CBSParser
 from schedulesToJson import save_schedules_to_json
 
+# Define output json path
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+NBA_SCHEDULE_JSON_PATH = os.path.join(PROJECT_ROOT, "data", "nba_schedule.json")
+
 def main():
     parser = CBSParser()
     schedule_links = parser.getTeamScheduleLinks()
-    print(f"Found {len(schedule_links)} team schedule links.")  
-   
-    # Use absolute path relative to script location
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    scheduleJson_filename = os.path.join(os.path.dirname(script_dir), "data", "nba_schedule.json")
+    print(f"Found {len(schedule_links)} team schedule links.")
    
     # Collect all team schedules
     team_schedules = {}
@@ -21,9 +21,8 @@ def main():
         print(f"Scraped {team_id}: {len(games)} games")
     
     # Save all schedules at once
-    save_schedules_to_json(team_schedules, scheduleJson_filename)
-    processed_teams = len(team_schedules)
-    print(f"{'All' if processed_teams>=30 else 'Only'} {processed_teams} schedules saved to file.")
+    save_schedules_to_json(team_schedules, NBA_SCHEDULE_JSON_PATH)
+    print(f"{'All' if len(team_schedules)>=30 else 'Only'} {len(team_schedules)} schedules saved to file.")
 
 if __name__ == "__main__":
     main()
