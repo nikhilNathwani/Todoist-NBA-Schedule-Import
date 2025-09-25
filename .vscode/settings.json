@@ -1,0 +1,25 @@
+{
+	"files.exclude": {
+		"**/.git": true,
+		"**/.github": true,
+		"**/.vercel": true,
+		"**/node_modules": true,
+		"package.json": true,
+		"package-lock.json": true,
+		"vercel.json": true,
+		"**/__pycache__": true,
+		"**/demo": true
+	},
+	// Show these files when explicitly searching for them
+	"search.exclude": {
+		"**/.git": true,
+		"**/.github": true,
+		"**/.vercel": true,
+		"**/node_modules": true,
+		"package.json": true,
+		"package-lock.json": true,
+		"vercel.json": true,
+		"**/__pycache__": true,
+		"**/demo": true
+	}
+}
