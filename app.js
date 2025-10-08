@@ -4,10 +4,10 @@ const express = require("express");
 const cookieSession = require("cookie-session");
 const path = require("path");
 /* Internal imports */
-const teamsRoutes = require("./backend/routes/teams");
-const pagesRoutes = require("./backend/routes/pages");
-const { router: importGamesRoutes } = require("./backend/routes/importGames");
-const oauthRoutes = require("./backend/routes/oauth");
+const teamsRoutes = require("./app/routes/teams");
+const pagesRoutes = require("./app/routes/pages");
+const { router: importGamesRoutes } = require("./app/routes/importGames");
+const oauthRoutes = require("./app/routes/oauth");
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~ */
 /*                           */
