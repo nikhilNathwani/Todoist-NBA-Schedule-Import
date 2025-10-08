@@ -6,10 +6,6 @@ const PAGE_TITLE = "NBA Schedule Import";
 async function makeLandingPageHTML(forceSeasonOver = false) {
 	var { isSeasonOverBool, seasonEndYear } = await isSeasonOver();
 
-	// DEBUG: Log the values we got
-	console.log("DEBUG - isSeasonOverBool:", isSeasonOverBool);
-	console.log("DEBUG - seasonEndYear:", seasonEndYear);
-
 	// For testing: force season over state
 	if (forceSeasonOver) {
 		isSeasonOverBool = true;

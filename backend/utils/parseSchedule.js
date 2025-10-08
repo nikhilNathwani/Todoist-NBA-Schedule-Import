@@ -2,7 +2,7 @@ const fs = require("fs").promises;
 const path = require("path");
 
 // Path to the NBA schedule JSON file
-const schedulePath = path.join(__dirname, "../data/nba_schedule.json");
+const schedulePath = path.join(__dirname, "../../data/nba_schedule.json");
 
 //returns 1) true/false indicating whether season is over,
 //        2) the end-year of the season in question
@@ -16,7 +16,7 @@ async function isSeasonOver() {
 			seasonEndYear: seasonEndYear,
 		};
 	} catch (error) {
-		console.error("Failed to fetch team data:", error);
+		console.error("Failed to determine season status:", error);
 		return {
 			isSeasonOverBool: false,
 			seasonEndYear: 0,
