@@ -1,12 +1,13 @@
 /* External imports */
+require("dotenv").config({ path: ".env.local" });
 const express = require("express");
 const cookieSession = require("cookie-session");
 const path = require("path");
 /* Internal imports */
-const teamsRoutes = require("./routes/teams");
-const pagesRoutes = require("./routes/pages");
-const { router: importGamesRoutes } = require("./routes/importGames");
-const oauthRoutes = require("./routes/oauth");
+const teamsRoutes = require("./backend/routes/teams");
+const pagesRoutes = require("./backend/routes/pages");
+const { router: importGamesRoutes } = require("./backend/routes/importGames");
+const oauthRoutes = require("./backend/routes/oauth");
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~ */
 /*                           */

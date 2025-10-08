@@ -4,20 +4,12 @@ from schedulesToJson import save_schedules_to_json
 from verifySchedule import verify_schedule
 
 """
-Annual Update Instructions:
-1. Run this script in July/August when next season's schedule is released
-2. The script will:
-   a) Update data/nba_schedule.json with the new season's games
-   b) Automatically verify:
-      - All 30 NBA teams are present
-      - Each team has 80 games
-      - Game times are in proper UTC format
-3. If verification fails:
-   - Check if CBS Sports' website structure changed
-   - Update CBSParser accordingly or create new parser
-4. Once verification passes, commit and push the updated nba_schedule.json
+NBA Schedule Scraper
 
-Example: python3 main.py
+Scrapes NBA team schedules from CBS Sports and updates the data/nba_schedule.json file.
+For detailed annual update workflow, see YEARLY-WORKFLOW.md
+
+Usage: python3 main.py
 """
 
 # Define output json path

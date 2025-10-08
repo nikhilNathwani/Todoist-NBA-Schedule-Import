@@ -5,11 +5,18 @@ const router = express.Router();
 const { getSchedule } = require("../utils/parseSchedule.js");
 const { getAccessToken } = require("../utils/cookieSession.js");
 const { userReachedProjectLimit } = require("./importGames");
-const { makeLandingPageHTML } = require("../utils/renderLandingPage.js");
+const { makeLandingPageHTML } = require("../views/renderLandingPage.js");
 
 // Serve the landing page (login page)
 router.get("/", async (req, res) => {
 	const html = await makeLandingPageHTML();
+	res.send(html);
+});
+
+// TEST ROUTE: Force season over UI for testing
+router.get("/test-season-over", async (req, res) => {
+	console.log("DEBUG - /test-season-over route hit!");
+	const html = await makeLandingPageHTML(true);
 	res.send(html);
 });
 
