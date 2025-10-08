@@ -1,3 +1,5 @@
+// Local development server - NOT used in production
+// Production uses app.js directly (see vercel.json)
 require("dotenv").config({ path: ".env.local" });
 
 const app = require("./app");
