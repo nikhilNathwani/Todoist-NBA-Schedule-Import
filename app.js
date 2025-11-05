@@ -3,6 +3,7 @@ require("dotenv").config({ path: ".env.local" });
 const express = require("express");
 const cookieSession = require("cookie-session");
 const path = require("path");
+
 /* Internal imports */
 const teamsRoutes = require("./app/routes/teams");
 const pagesRoutes = require("./app/routes/pages");

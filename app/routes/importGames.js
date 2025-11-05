@@ -186,7 +186,7 @@ async function importYearlyReminder(api, projectID, teamName) {
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 async function getTeamData(team) {
 	try {
-		const filePath = path.join(__dirname, "../data/nba_schedule.json");
+		const filePath = path.join(__dirname, "../../data/nba_schedule.json");
 		const data = JSON.parse(await fs.promises.readFile(filePath, "utf8"));
 
 		const teamData = data[team];
