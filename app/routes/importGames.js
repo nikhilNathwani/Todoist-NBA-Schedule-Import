@@ -4,7 +4,11 @@ const router = express.Router();
 const fs = require("fs");
 const path = require("path");
 const { getAccessToken } = require("../utils/cookieSession");
-const { TodoistApi } = require("@doist/todoist-api-typescript");
+const {
+	TodoistApi,
+	getProjectUrl,
+	getSectionUrl,
+} = require("@doist/todoist-api-typescript");
 const projectLimits = {
 	FREE: 5,
 	PREMIUM: 300,
@@ -158,9 +162,9 @@ async function getProjectID(api, project, name, color) {
 //Returns deep link URL to project or section (in Inbox case)
 async function createDeepLink(api, isInbox, id) {
 	if (isInbox) {
-		return api.getSectionUrl(id);
+		return getSectionUrl(id);
 	} else {
-		return api.getProjectUrl(id);
+		return getProjectUrl(id);
 	}
 }
 
