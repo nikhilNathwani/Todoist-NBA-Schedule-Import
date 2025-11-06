@@ -14,3 +14,5 @@ server.js
 demo/
 
 .env*.local
+
+.DS_Store

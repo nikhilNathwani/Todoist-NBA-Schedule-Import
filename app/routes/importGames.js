@@ -36,15 +36,18 @@ router.post("/import-games", async (req, res) => {
 			color: teamColor,
 			schedule,
 		} = await getTeamData(teamID);
-		const projectID = await getProjectID(
+		const { projectId, projectName } = await getProjectID(
 			api,
 			project,
 			`${teamName} schedule`,
 			teamColor
 		);
-		await importSchedule(api, schedule, projectID, teamName);
-		await importYearlyReminder(api, projectID, teamName);
-		res.status(200).json({ projectID: projectID });
+		await importSchedule(api, schedule, projectId, teamName);
+		await importYearlyReminder(api, projectId, teamName);
+		res.status(200).json({
+			projectId: projectId,
+			projectName: projectName,
+		});
 	} catch (error) {
 		res.status(500).json({
 			success: false,
@@ -121,7 +124,10 @@ async function getProjectID(api, project, name, color) {
 			name: name,
 			color: color,
 		});
-		return newProjectResponse.id; // Return the ID of the newly created project
+		return {
+			projectId: newProjectResponse.id,
+			projectName: newProjectResponse.name,
+		}; // Return the ID of the newly created project
 	} else {
 		throw new Error(
 			`Invalid project type: ${project}. Expected 'inbox' or 'newProject'.`
@@ -129,8 +135,8 @@ async function getProjectID(api, project, name, color) {
 	}
 }
 
-async function importGame(api, game, projectID, teamName, taskOrder) {
-	const task = formatTask(game, projectID, teamName, taskOrder);
+async function importGame(api, game, projectId, teamName, taskOrder) {
+	const task = formatTask(game, projectId, teamName, taskOrder);
 	try {
 		await api.addTask(task);
 	} catch (error) {
@@ -138,36 +144,36 @@ async function importGame(api, game, projectID, teamName, taskOrder) {
 	}
 }
 
-async function importSchedule(api, schedule, projectID, teamName) {
+async function importSchedule(api, schedule, projectId, teamName) {
 	console.log(
-		`Importing ${schedule.length} games for ${teamName} into project ID ${projectID}`
+		`Importing ${schedule.length} games for ${teamName} into project ID ${projectId}`
 	);
 	// Use map to create an array of promises
 	const tasks = schedule.map(
-		(game, index) => importGame(api, game, projectID, teamName, index + 1) // Pass index + 1 because task order is non-zero
+		(game, index) => importGame(api, game, projectId, teamName, index + 1) // Pass index + 1 because task order is non-zero
 	);
 	return Promise.all(tasks); // Return the promise, don't await
 }
 
-function formatTask(game, projectID, teamName, taskOrder) {
+function formatTask(game, projectId, teamName, taskOrder) {
 	return {
 		content: `${teamName} ${game.isHomeGame ? "vs" : "at"} ${
 			game.opponent
 		}`,
 		dueDatetime: game.gameTimeUtcIso8601,
-		projectId: projectID,
+		projectId: projectId,
 		order: taskOrder,
 	};
 }
 
-async function importYearlyReminder(api, projectID, teamName) {
+async function importYearlyReminder(api, projectId, teamName) {
 	const siteURL =
 		"[NBA -> Todoist Schedule Import](https://nba-todoist-import.vercel.app)";
 
 	const task = {
 		content: `Import ${teamName} regular season schedule`,
 		description: siteURL,
-		projectId: projectID,
+		projectId: projectId,
 		dueString: "every October 10th",
 		dueLang: "en",
 		order: 120,

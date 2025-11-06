@@ -31,10 +31,14 @@ function startImport(team, project) {
 			return data;
 		})
 		.then(async (data) => {
-			showImportStatusUI(importStatus.SUCCESS, data.projectID);
+			showImportStatusUI(
+				importStatus.SUCCESS,
+				data.projectId,
+				data.projectName
+			);
 		})
 		.catch(async (error) => {
 			console.error("Import failed:", error);
-			showImportStatusUI(importStatus.ERROR, null, error);
+			showImportStatusUI(importStatus.ERROR, null, null, error);
 		});
 }

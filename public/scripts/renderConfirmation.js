@@ -19,7 +19,12 @@ async function waitForLoadingUI() {
 	}
 }
 
-function showImportStatusUI(status, projectID = null, errorMessage = null) {
+function showImportStatusUI(
+	status,
+	projectId = null,
+	projectName = null,
+	errorMessage = null
+) {
 	const arrow = document.getElementById("arrow");
 	arrow.innerHTML = getStatusArrow(status);
 
@@ -46,7 +51,7 @@ function showImportStatusUI(status, projectID = null, errorMessage = null) {
 			}
 		});
 	} else {
-		showNextStepsList(status, projectID, errorMessage);
+		showNextStepsList(status, projectId, projectName, errorMessage);
 		document.body.classList.remove("no-footer");
 	}
 }
@@ -101,8 +106,13 @@ function getStatusArrow(status) {
 //         NEXT STEP LINKS UI                //
 //                                           //
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-function showNextStepsList(status, projectID, errorMessage) {
-	const nextSteps = makeNextStepsList(status, projectID, errorMessage);
+function showNextStepsList(status, projectId, projectName, errorMessage) {
+	const nextSteps = makeNextStepsList(
+		status,
+		projectId,
+		projectName,
+		errorMessage
+	);
 	const appContent = document.querySelector(".app-content");
 	appContent.appendChild(nextSteps);
 	setTimeout(() => {
@@ -110,7 +120,7 @@ function showNextStepsList(status, projectID, errorMessage) {
 	}, delayNextStepsFadeIn);
 }
 
-function makeNextStepsList(status, projectID, errorMessage) {
+function makeNextStepsList(status, projectId, projectName, errorMessage) {
 	const list = document.createElement("ul");
 	list.classList.add("next-steps-list");
 
@@ -122,7 +132,10 @@ function makeNextStepsList(status, projectID, errorMessage) {
 				icon: `<i class="fa-solid fa-up-right-from-square"></i>`,
 				linkName: "Open Todoist",
 				desc: "to view schedule",
-				link: `todoist://project?id=${projectID}`,
+				link: `todoist://project?id=${projectId}`,
+				link: `https://app.todoist.com/app/project/${projectName
+					.replace(/\s+/g, "-")
+					.toLowerCase()}-${projectId}`,
 			},
 			{
 				icon: `<i class="fa-solid fa-arrow-left"></i>`,
