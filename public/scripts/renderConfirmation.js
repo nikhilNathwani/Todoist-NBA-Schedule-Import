@@ -23,6 +23,7 @@ function showImportStatusUI(
 	status,
 	projectId = null,
 	projectName = null,
+	isInbox = null,
 	errorMessage = null
 ) {
 	const arrow = document.getElementById("arrow");
@@ -51,7 +52,13 @@ function showImportStatusUI(
 			}
 		});
 	} else {
-		showNextStepsList(status, projectId, projectName, errorMessage);
+		showNextStepsList(
+			status,
+			projectId,
+			projectName,
+			isInbox,
+			errorMessage
+		);
 		document.body.classList.remove("no-footer");
 	}
 }
@@ -106,11 +113,18 @@ function getStatusArrow(status) {
 //         NEXT STEP LINKS UI                //
 //                                           //
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-function showNextStepsList(status, projectId, projectName, errorMessage) {
+function showNextStepsList(
+	status,
+	projectId,
+	projectName,
+	isInbox,
+	errorMessage
+) {
 	const nextSteps = makeNextStepsList(
 		status,
 		projectId,
 		projectName,
+		isInbox,
 		errorMessage
 	);
 	const appContent = document.querySelector(".app-content");
@@ -120,7 +134,13 @@ function showNextStepsList(status, projectId, projectName, errorMessage) {
 	}, delayNextStepsFadeIn);
 }
 
-function makeNextStepsList(status, projectId, projectName, errorMessage) {
+function makeNextStepsList(
+	status,
+	projectId,
+	projectName,
+	isInbox,
+	errorMessage
+) {
 	const list = document.createElement("ul");
 	list.classList.add("next-steps-list");
 

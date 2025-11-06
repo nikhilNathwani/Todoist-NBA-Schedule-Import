@@ -36,7 +36,7 @@ router.post("/import-games", async (req, res) => {
 			color: teamColor,
 			schedule,
 		} = await getTeamData(teamID);
-		const { projectId, projectName } = await getProjectID(
+		const { projectId, projectName, isInbox } = await getProjectID(
 			api,
 			project,
 			`${teamName} schedule`,
@@ -47,6 +47,7 @@ router.post("/import-games", async (req, res) => {
 		res.status(200).json({
 			projectId: projectId,
 			projectName: projectName,
+			isInbox: isInbox,
 		});
 	} catch (error) {
 		res.status(500).json({
@@ -109,7 +110,16 @@ async function getProjectID(api, project, name, color) {
 		const projects = await api.getProjects();
 		const inboxProject = projects.find((project) => project.isInboxProject);
 		if (inboxProject) {
-			return inboxProject.id; // Return the ID of the Inbox project
+			// Create section within Inbox project
+			const newSectionResponse = await api.addSection({
+				name: name,
+				projectId: inboxProject.id,
+			});
+			return {
+				projectId: newSectionResponse.id,
+				projectName: newSectionResponse.name,
+				isInbox: true,
+			};
 		} else {
 			throw new Error("Inbox project not found");
 		}
@@ -127,6 +137,7 @@ async function getProjectID(api, project, name, color) {
 		return {
 			projectId: newProjectResponse.id,
 			projectName: newProjectResponse.name,
+			isInbox: false,
 		}; // Return the ID of the newly created project
 	} else {
 		throw new Error(

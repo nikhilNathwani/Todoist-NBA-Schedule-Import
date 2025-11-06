@@ -34,11 +34,12 @@ function startImport(team, project) {
 			showImportStatusUI(
 				importStatus.SUCCESS,
 				data.projectId,
-				data.projectName
+				data.projectName,
+				data.isInbox
 			);
 		})
 		.catch(async (error) => {
 			console.error("Import failed:", error);
-			showImportStatusUI(importStatus.ERROR, null, null, error);
+			showImportStatusUI(importStatus.ERROR, null, null, null, error);
 		});
 }
