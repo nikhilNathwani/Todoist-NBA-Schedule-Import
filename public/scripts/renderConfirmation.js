@@ -24,6 +24,7 @@ function showImportStatusUI(
 	projectId = null,
 	projectName = null,
 	isInbox = null,
+	sectionId = null,
 	errorMessage = null
 ) {
 	const arrow = document.getElementById("arrow");
@@ -57,6 +58,7 @@ function showImportStatusUI(
 			projectId,
 			projectName,
 			isInbox,
+			sectionId,
 			errorMessage
 		);
 		document.body.classList.remove("no-footer");
@@ -118,6 +120,7 @@ function showNextStepsList(
 	projectId,
 	projectName,
 	isInbox,
+	sectionId,
 	errorMessage
 ) {
 	const nextSteps = makeNextStepsList(
@@ -125,6 +128,7 @@ function showNextStepsList(
 		projectId,
 		projectName,
 		isInbox,
+		sectionId,
 		errorMessage
 	);
 	const appContent = document.querySelector(".app-content");
@@ -139,6 +143,7 @@ function makeNextStepsList(
 	projectId,
 	projectName,
 	isInbox,
+	sectionId,
 	errorMessage
 ) {
 	const list = document.createElement("ul");

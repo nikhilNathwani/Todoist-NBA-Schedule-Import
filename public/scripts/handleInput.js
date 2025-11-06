@@ -41,6 +41,13 @@ function startImport(team, project) {
 		})
 		.catch(async (error) => {
 			console.error("Import failed:", error);
-			showImportStatusUI(importStatus.ERROR, null, null, null, error);
+			showImportStatusUI(
+				importStatus.ERROR,
+				null,
+				null,
+				null,
+				null,
+				error
+			);
 		});
 }
