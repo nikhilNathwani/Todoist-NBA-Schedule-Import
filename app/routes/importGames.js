@@ -203,7 +203,7 @@ async function importSchedule(
 	return Promise.all(tasks); // Return the promise, don't await
 }
 
-function formatTask(game, projectId, isInbox, teamName, taskOrder) {
+function formatTask(game, teamName, taskOrder, projectId, isInbox, sectionId) {
 	var task = {
 		content: `${teamName} ${game.isHomeGame ? "vs" : "at"} ${
 			game.opponent
@@ -213,7 +213,7 @@ function formatTask(game, projectId, isInbox, teamName, taskOrder) {
 		order: taskOrder,
 	};
 	if (isInbox) {
-		task.sectionId = projectId; // For inbox, projectId is actually sectionId
+		task.sectionId = sectionId; // For inbox, deeplink into sectionId
 	}
 	return task;
 }
