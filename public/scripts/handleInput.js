@@ -31,23 +31,10 @@ function startImport(team, project) {
 			return data;
 		})
 		.then(async (data) => {
-			showImportStatusUI(
-				importStatus.SUCCESS,
-				data.projectId,
-				data.projectName,
-				data.isInbox,
-				data.sectionId
-			);
+			showImportStatusUI(importStatus.SUCCESS, data.deepLink);
 		})
 		.catch(async (error) => {
 			console.error("Import failed:", error);
-			showImportStatusUI(
-				importStatus.ERROR,
-				null,
-				null,
-				null,
-				null,
-				error
-			);
+			showImportStatusUI(importStatus.ERROR, null, error);
 		});
 }

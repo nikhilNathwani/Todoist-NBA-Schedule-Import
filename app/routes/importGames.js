@@ -36,8 +36,12 @@ router.post("/import-games", async (req, res) => {
 			color: teamColor,
 			schedule,
 		} = await getTeamData(teamID);
-		const { projectId, projectName, isInbox, sectionId } =
-			await getProjectID(api, project, `${teamName} schedule`, teamColor);
+		const { projectId, isInbox, sectionId } = await getProjectID(
+			api,
+			project,
+			`${teamName} schedule`,
+			teamColor
+		);
 		await importSchedule(
 			api,
 			schedule,
@@ -47,11 +51,11 @@ router.post("/import-games", async (req, res) => {
 			sectionId
 		);
 		await importYearlyReminder(api, projectId, teamName);
+		const deepLinkId = isInbox ? sectionId : projectId;
+		const deepLink = await createDeepLink(api, isInbox, deepLinkId);
+		console.log("Link to imported schedule:", deepLink);
 		res.status(200).json({
-			projectId: projectId,
-			projectName: projectName,
-			isInbox: isInbox,
-			sectionId: sectionId,
+			deepLink: deepLink,
 		});
 	} catch (error) {
 		res.status(500).json({
@@ -121,7 +125,6 @@ async function getProjectID(api, project, name, color) {
 			});
 			return {
 				projectId: newSectionResponse.projectId,
-				projectName: newSectionResponse.name,
 				isInbox: true,
 				sectionId: newSectionResponse.id,
 			};
@@ -149,6 +152,15 @@ async function getProjectID(api, project, name, color) {
 		throw new Error(
 			`Invalid project type: ${project}. Expected 'inbox' or 'newProject'.`
 		);
+	}
+}
+
+//Returns deep link URL to project or section (in Inbox case)
+async function createDeepLink(api, isInbox, id) {
+	if (isInbox) {
+		return api.getSectionUrl(id);
+	} else {
+		return api.getProjectUrl(id);
 	}
 }
 
@@ -215,7 +227,6 @@ function formatTask(game, teamName, taskOrder, projectId, isInbox, sectionId) {
 	if (isInbox) {
 		task.sectionId = sectionId; // For inbox, deeplink into sectionId
 	}
-	console.log("Formatted task:", task);
 	return task;
 }
 

@@ -19,14 +19,7 @@ async function waitForLoadingUI() {
 	}
 }
 
-function showImportStatusUI(
-	status,
-	projectId = null,
-	projectName = null,
-	isInbox = null,
-	sectionId = null,
-	errorMessage = null
-) {
+function showImportStatusUI(status, deepLink = null, errorMessage = null) {
 	const arrow = document.getElementById("arrow");
 	arrow.innerHTML = getStatusArrow(status);
 
