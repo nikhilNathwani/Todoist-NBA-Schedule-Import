@@ -132,8 +132,8 @@ function makeNextStepsList(status, projectId, projectName, errorMessage) {
 				icon: `<i class="fa-solid fa-up-right-from-square"></i>`,
 				linkName: "Open Todoist",
 				desc: "to view schedule",
-				link: `todoist://project?id=${projectId}`,
-				link: `https://app.todoist.com/app/project/${projectName
+				// link: `todoist://project?id=${projectId}`,
+				link: `todoist://app.todoist.com/app/project/${projectName
 					.replace(/\s+/g, "-")
 					.toLowerCase()}-${projectId}`,
 			},
