@@ -215,6 +215,7 @@ function formatTask(game, teamName, taskOrder, projectId, isInbox, sectionId) {
 	if (isInbox) {
 		task.sectionId = sectionId; // For inbox, deeplink into sectionId
 	}
+	console.log("Formatted task:", task);
 	return task;
 }
 
