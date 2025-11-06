@@ -36,18 +36,22 @@ router.post("/import-games", async (req, res) => {
 			color: teamColor,
 			schedule,
 		} = await getTeamData(teamID);
-		const { projectId, projectName, isInbox } = await getProjectID(
+		const { projectId, projectName, isInbox, sectionId } =
+			await getProjectID(api, project, `${teamName} schedule`, teamColor);
+		await importSchedule(
 			api,
-			project,
-			`${teamName} schedule`,
-			teamColor
+			schedule,
+			teamName,
+			projectId,
+			isInbox,
+			sectionId
 		);
-		await importSchedule(api, schedule, projectId, teamName);
 		await importYearlyReminder(api, projectId, teamName);
 		res.status(200).json({
 			projectId: projectId,
 			projectName: projectName,
 			isInbox: isInbox,
+			sectionId: sectionId,
 		});
 	} catch (error) {
 		res.status(500).json({
@@ -116,9 +120,10 @@ async function getProjectID(api, project, name, color) {
 				projectId: inboxProject.id,
 			});
 			return {
-				projectId: newSectionResponse.id,
+				projectId: newSectionResponse.projectId,
 				projectName: newSectionResponse.name,
 				isInbox: true,
+				sectionId: newSectionResponse.id,
 			};
 		} else {
 			throw new Error("Inbox project not found");
@@ -138,6 +143,7 @@ async function getProjectID(api, project, name, color) {
 			projectId: newProjectResponse.id,
 			projectName: newProjectResponse.name,
 			isInbox: false,
+			sectionId: null,
 		}; // Return the ID of the newly created project
 	} else {
 		throw new Error(
@@ -146,8 +152,23 @@ async function getProjectID(api, project, name, color) {
 	}
 }
 
-async function importGame(api, game, projectId, teamName, taskOrder) {
-	const task = formatTask(game, projectId, teamName, taskOrder);
+async function importGame(
+	api,
+	game,
+	teamName,
+	taskOrder,
+	projectId,
+	isInbox,
+	sectionId = null
+) {
+	const task = formatTask(
+		game,
+		teamName,
+		taskOrder,
+		projectId,
+		isInbox,
+		sectionId
+	);
 	try {
 		await api.addTask(task);
 	} catch (error) {
@@ -155,19 +176,35 @@ async function importGame(api, game, projectId, teamName, taskOrder) {
 	}
 }
 
-async function importSchedule(api, schedule, projectId, teamName) {
+async function importSchedule(
+	api,
+	schedule,
+	teamName,
+	projectId,
+	isInbox,
+	sectionId = null
+) {
 	console.log(
 		`Importing ${schedule.length} games for ${teamName} into project ID ${projectId}`
 	);
 	// Use map to create an array of promises
 	const tasks = schedule.map(
-		(game, index) => importGame(api, game, projectId, teamName, index + 1) // Pass index + 1 because task order is non-zero
+		(game, index) =>
+			importGame(
+				api,
+				game,
+				teamName,
+				index + 1,
+				projectId,
+				isInbox,
+				sectionId
+			) // Pass index + 1 because task order is non-zero
 	);
 	return Promise.all(tasks); // Return the promise, don't await
 }
 
-function formatTask(game, projectId, teamName, taskOrder) {
-	return {
+function formatTask(game, projectId, isInbox, teamName, taskOrder) {
+	var task = {
 		content: `${teamName} ${game.isHomeGame ? "vs" : "at"} ${
 			game.opponent
 		}`,
@@ -175,6 +212,10 @@ function formatTask(game, projectId, teamName, taskOrder) {
 		projectId: projectId,
 		order: taskOrder,
 	};
+	if (isInbox) {
+		task.sectionId = projectId; // For inbox, projectId is actually sectionId
+	}
+	return task;
 }
 
 async function importYearlyReminder(api, projectId, teamName) {

@@ -35,7 +35,8 @@ function startImport(team, project) {
 				importStatus.SUCCESS,
 				data.projectId,
 				data.projectName,
-				data.isInbox
+				data.isInbox,
+				data.sectionId
 			);
 		})
 		.catch(async (error) => {
