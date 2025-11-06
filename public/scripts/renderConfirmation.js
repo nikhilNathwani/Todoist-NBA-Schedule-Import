@@ -155,9 +155,9 @@ function makeNextStepsList(
 				// link: `todoist://project?id=${projectId}`,
 				link: `todoist://app.todoist.com/app/${
 					isInbox ? "section" : "project"
-				}/${projectName
-					.replace(/\s+/g, "-")
-					.toLowerCase()}-${projectId}`,
+				}/${projectName.replace(/\s+/g, "-").toLowerCase()}-${
+					isInbox ? sectionId : projectId
+				}`,
 			},
 			{
 				icon: `<i class="fa-solid fa-arrow-left"></i>`,
