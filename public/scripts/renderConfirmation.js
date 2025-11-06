@@ -153,7 +153,9 @@ function makeNextStepsList(
 				linkName: "Open Todoist",
 				desc: "to view schedule",
 				// link: `todoist://project?id=${projectId}`,
-				link: `todoist://app.todoist.com/app/project/${projectName
+				link: `todoist://app.todoist.com/app/${
+					isInbox ? "section" : "project"
+				}/${projectName
 					.replace(/\s+/g, "-")
 					.toLowerCase()}-${projectId}`,
 			},
