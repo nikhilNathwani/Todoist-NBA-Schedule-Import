@@ -11,7 +11,6 @@ function showNextStepsList(status, deepLink, errorMessage) {
 	});
 
 	const list = document.createElement("ul");
-	list.classList.add("next-steps-list");
 
 	if (status === importStatus.SUCCESS) {
 		list.innerHTML = getSuccessNextSteps(deepLink);
@@ -23,6 +22,9 @@ function showNextStepsList(status, deepLink, errorMessage) {
 	console.log("appContent element:", appContent);
 	console.log("list element:", list);
 	appContent.appendChild(list);
+
+	// Trigger fade-in animation (handled by transitions.js)
+	fadeInNextSteps();
 }
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //

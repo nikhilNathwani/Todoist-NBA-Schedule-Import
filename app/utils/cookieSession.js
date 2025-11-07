@@ -21,6 +21,7 @@ function getAccessToken(req) {
 	return decrypt(encryptedToken);
 }
 
+// NOTE: If you uncomment printReqSession below, add it back to the export statement
 // function printReqSession(req) {
 // 	console.log(
 // 		"ACCESS TOKEN:",
