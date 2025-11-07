@@ -46,14 +46,7 @@ function showImportStatusUI(status, deepLink = null, errorMessage = null) {
 			}
 		});
 	} else {
-		showNextStepsList(
-			status,
-			projectId,
-			projectName,
-			isInbox,
-			sectionId,
-			errorMessage
-		);
+		showNextStepsList(status, deepLink, errorMessage);
 		document.body.classList.remove("no-footer");
 	}
 }
@@ -108,22 +101,8 @@ function getStatusArrow(status) {
 //         NEXT STEP LINKS UI                //
 //                                           //
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-function showNextStepsList(
-	status,
-	projectId,
-	projectName,
-	isInbox,
-	sectionId,
-	errorMessage
-) {
-	const nextSteps = makeNextStepsList(
-		status,
-		projectId,
-		projectName,
-		isInbox,
-		sectionId,
-		errorMessage
-	);
+function showNextStepsList(status, deepLink, errorMessage) {
+	const nextSteps = makeNextStepsList(status, deepLink, errorMessage);
 	const appContent = document.querySelector(".app-content");
 	appContent.appendChild(nextSteps);
 	setTimeout(() => {
@@ -131,14 +110,7 @@ function showNextStepsList(
 	}, delayNextStepsFadeIn);
 }
 
-function makeNextStepsList(
-	status,
-	projectId,
-	projectName,
-	isInbox,
-	sectionId,
-	errorMessage
-) {
+function makeNextStepsList(status, deepLink, errorMessage) {
 	const list = document.createElement("ul");
 	list.classList.add("next-steps-list");
 
@@ -150,12 +122,7 @@ function makeNextStepsList(
 				icon: `<i class="fa-solid fa-up-right-from-square"></i>`,
 				linkName: "Open Todoist",
 				desc: "to view schedule",
-				// link: `todoist://project?id=${projectId}`,
-				link: `todoist://app.todoist.com/app/${
-					isInbox ? "section" : "project"
-				}/${projectName.replace(/\s+/g, "-").toLowerCase()}-${
-					isInbox ? sectionId : projectId
-				}`,
+				link: deepLink,
 			},
 			{
 				icon: `<i class="fa-solid fa-arrow-left"></i>`,
