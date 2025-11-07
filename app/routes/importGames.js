@@ -124,7 +124,8 @@ async function userReachedProjectLimit(accessToken) {
 async function getProjectID(api, project, name, color) {
 	if (project === "inbox") {
 		// Query the Todoist API for the Inbox project ID
-		const projects = await api.getProjects();
+		const projectsResponse = await api.getProjects();
+		const projects = projectsResponse.results; // v6+ returns { results, nextCursor }
 		const inboxProject = projects.find((project) => project.isInboxProject);
 		if (inboxProject) {
 			// Create section within Inbox project
