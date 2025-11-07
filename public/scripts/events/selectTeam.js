@@ -13,22 +13,37 @@ const newProjectSubtitle = document
 
 // Set up event listener for team selection
 teamSelect.addEventListener("change", function () {
-	handleTeamSelection(teamSelect.value);
+	const selectedOption = teamSelect.options[teamSelect.selectedIndex];
+	const teamID = selectedOption.value;
+	const teamName = selectedOption.dataset.teamName;
+
+	handleTeamSelection(teamID, teamName);
 });
 
-function handleTeamSelection(selectedTeam) {
-	updateTeamLogo(selectedTeam); // Calls appHeader.js
-	updateNewProjectSubtitle(selectedTeam);
+function handleTeamSelection(teamID, teamName) {
+	console.log("handleTeamSelection called", {
+		teamID,
+		teamName,
+		submitButton,
+	});
+	updateTeamLogo(teamID); // Calls teamLogo.js
+	updateNewProjectSubtitle(teamName);
 	enableSubmitButton();
 }
 
-function updateNewProjectSubtitle(selectedTeam) {
-	const teamData = getTeamData(); // Get from picker.js
-	if (!newProjectInput.disabled && teamData) {
-		newProjectSubtitle.textContent = `Import games into a new Todoist project called "${teamData[selectedTeam].nameCasual} schedule"`;
+function updateNewProjectSubtitle(teamName) {
+	if (!newProjectInput.disabled && teamName) {
+		newProjectSubtitle.textContent = `Import games into a new Todoist project called "${teamName} schedule"`;
 	}
 }
 
 function enableSubmitButton() {
+	console.log("enableSubmitButton called", {
+		submitButton,
+		disabled: submitButton?.disabled,
+	});
 	submitButton.disabled = false;
+	console.log("after setting disabled = false", {
+		disabled: submitButton?.disabled,
+	});
 }

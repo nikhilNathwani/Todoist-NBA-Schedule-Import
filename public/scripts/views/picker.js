@@ -22,6 +22,7 @@ function populateTeamDropdown(teams) {
 	sortedTeams.forEach(([teamID, team]) => {
 		const option = document.createElement("option");
 		option.value = teamID;
+		option.dataset.teamName = `${team.city} ${team.name}`; // Store full name
 		option.textContent = `${team.city} ${team.name}`;
 		teamSelect.appendChild(option);
 	});
