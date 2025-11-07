@@ -1,6 +1,6 @@
 import express from "express";
 import { getAccessToken } from "../../utils/cookieSession.js";
-import { userReachedProjectLimit } from "../api/importSchedule.js";
+import { userReachedProjectLimit } from "../../utils/todoist.js";
 import { makePickerPageHTML } from "../../views/picker.js";
 
 const router = express.Router();
