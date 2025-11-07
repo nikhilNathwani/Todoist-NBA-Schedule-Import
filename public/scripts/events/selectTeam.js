@@ -4,8 +4,8 @@
  * Updates logo, project subtitle, and enables submit button
  */
 
+// Note: teamSelect, form, and projectSelect are defined in submitForm.js
 const submitButton = document.getElementById("submitButton");
-const teamSelect = document.querySelector('select[name="team"]');
 const newProjectInput = document.querySelector('input[value="newProject"]');
 const newProjectSubtitle = document
 	.getElementById("newProject")
@@ -13,7 +13,6 @@ const newProjectSubtitle = document
 
 console.log("selectTeam.js loaded", {
 	submitButton,
-	teamSelect,
 	newProjectInput,
 	newProjectSubtitle,
 });
