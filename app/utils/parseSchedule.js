@@ -1,5 +1,10 @@
-const fs = require("fs").promises;
-const path = require("path");
+import { promises as fs } from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+// __dirname replacement for ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Path to the NBA schedule JSON file
 const schedulePath = path.join(__dirname, "../../data/nba_schedule.json");
@@ -76,4 +81,4 @@ async function getFinalGameTime() {
 	}
 }
 
-module.exports = { getSchedule, getTeams, isSeasonOver };
+export { getSchedule, getTeams, isSeasonOver };

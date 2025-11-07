@@ -1,14 +1,15 @@
 /* External imports */
-require("dotenv").config({ path: ".env.local" });
-const express = require("express");
-const cookieSession = require("cookie-session");
-const path = require("path");
-
+import dotenv from "dotenv";
+dotenv.config({ path: ".env.local" });
+import express from "express";
+import cookieSession from "cookie-session";
+import path from "path";
+import { fileURLToPath } from "url";
 /* Internal imports */
-const teamsRoutes = require("./app/routes/teams");
-const pagesRoutes = require("./app/routes/pages");
-const { router: importGamesRoutes } = require("./app/routes/importGames");
-const oauthRoutes = require("./app/routes/oauth");
+import teamsRoutes from "./app/routes/teams.js";
+import pagesRoutes from "./app/routes/pages.js";
+import { router as importGamesRoutes } from "./app/routes/importGames.js";
+import oauthRoutes from "./app/routes/oauth.js";
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~ */
 /*                           */
@@ -32,6 +33,8 @@ app.use(
 );
 
 // Serve static files from public folder
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const staticPathRoot = path.join(__dirname, "public");
 app.use(express.static(staticPathRoot));
 
@@ -45,4 +48,4 @@ app.use("/api/teams", teamsRoutes);
 app.use("/api", importGamesRoutes);
 app.use("/", pagesRoutes);
 
-module.exports = app;
+export default app;

@@ -2,6 +2,7 @@
 	"name": "todoist-nba-schedule-saver",
 	"version": "1.0.0",
 	"description": "An app to import NBA schedules into Todoist.",
+	"type": "module",
 	"main": "app.js",
 	"scripts": {
 		"start": "node server.js",

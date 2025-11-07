@@ -1,14 +1,16 @@
-const express = require("express");
-const axios = require("axios");
+import express from "express";
+import axios from "axios";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+import { getAccessToken } from "../utils/cookieSession.js";
+import todoistPkg from "@doist/todoist-api-typescript";
+const { TodoistApi, getProjectUrl, getSectionUrl } = todoistPkg;
+
 const router = express.Router();
-const fs = require("fs");
-const path = require("path");
-const { getAccessToken } = require("../utils/cookieSession");
-const {
-	TodoistApi,
-	getProjectUrl,
-	getSectionUrl,
-} = require("@doist/todoist-api-typescript");
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const projectLimits = {
 	FREE: 5,
 	PREMIUM: 300,
@@ -69,7 +71,7 @@ router.post("/import-games", async (req, res) => {
 	}
 });
 
-module.exports = { router, userReachedProjectLimit };
+export { router, userReachedProjectLimit };
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 //                                           //

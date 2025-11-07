@@ -1,11 +1,12 @@
-const express = require("express");
-const fs = require("fs").promises;
-const path = require("path");
+import express from "express";
+import { promises as fs } from "fs";
+import path from "path";
+import { getSchedule } from "../utils/parseSchedule.js";
+import { getAccessToken } from "../utils/cookieSession.js";
+import { userReachedProjectLimit } from "./importGames.js";
+import { makeLandingPageHTML } from "../views/renderLandingPage.js";
+
 const router = express.Router();
-const { getSchedule } = require("../utils/parseSchedule.js");
-const { getAccessToken } = require("../utils/cookieSession.js");
-const { userReachedProjectLimit } = require("./importGames");
-const { makeLandingPageHTML } = require("../views/renderLandingPage.js");
 
 // Serve the landing page (login page)
 router.get("/", async (req, res) => {
@@ -50,7 +51,7 @@ router.get("*", async (req, res) => {
 	res.send(html);
 });
 
-module.exports = router;
+export default router;
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 //                                           //

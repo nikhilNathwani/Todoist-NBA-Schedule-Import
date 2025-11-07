@@ -64,4 +64,4 @@ function makeLogoBanner() {
 		</div>`;
 }
 
-module.exports = { makeHead, makeFooter, makeLogoBanner };
+export { makeHead, makeFooter, makeLogoBanner };

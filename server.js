@@ -1,8 +1,9 @@
 // Local development server - NOT used in production
 // Production uses app.js directly (see vercel.json)
-require("dotenv").config({ path: ".env.local" });
+import dotenv from "dotenv";
+dotenv.config({ path: ".env.local" });
 
-const app = require("./app");
+import app from "./app.js";
 const PORT = process.env.PORT || 3000;
 
 // Start the server

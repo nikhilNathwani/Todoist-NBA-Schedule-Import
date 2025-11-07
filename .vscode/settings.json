@@ -4,7 +4,7 @@
 		"**/.github": true,
 		"**/.vercel": true,
 		"**/node_modules": true,
-		"package.json": true,
+		"package.json": false,
 		"package-lock.json": true,
 		"vercel.json": true,
 		"**/__pycache__": true,

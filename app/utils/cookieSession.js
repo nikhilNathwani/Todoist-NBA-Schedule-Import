@@ -1,4 +1,4 @@
-const { encrypt, decrypt } = require("./encryption");
+import { encrypt, decrypt } from "./encryption.js";
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 //                                           //
@@ -30,4 +30,4 @@ function printReqSession(req) {
 	);
 }
 
-module.exports = { saveAccessToken, getAccessToken, printReqSession };
+export { saveAccessToken, getAccessToken, printReqSession };

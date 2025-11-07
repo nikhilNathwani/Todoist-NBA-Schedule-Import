@@ -1,5 +1,5 @@
-const { isSeasonOver } = require("../utils/parseSchedule");
-const { makeHead, makeFooter, makeLogoBanner } = require("./htmlComponents");
+import { isSeasonOver } from "../utils/parseSchedule.js";
+import { makeHead, makeFooter, makeLogoBanner } from "./htmlComponents.js";
 
 const PAGE_TITLE = "NBA Schedule Import";
 
@@ -81,4 +81,4 @@ function makeSeasonOverAppFrame(seasonEndYear) {
 		</div>`;
 }
 
-module.exports = { makeLandingPageHTML };
+export { makeLandingPageHTML };

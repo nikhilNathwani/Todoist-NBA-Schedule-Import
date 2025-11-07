@@ -1,8 +1,8 @@
-const express = require("express");
-const router = express.Router();
-const axios = require("axios");
-const { saveAccessToken } = require("../utils/cookieSession");
+import express from "express";
+import axios from "axios";
+import { saveAccessToken } from "../utils/cookieSession.js";
 
+const router = express.Router();
 const { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, STATE_SECRET } = process.env;
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
@@ -33,7 +33,7 @@ router.get("/callback", async (req, res) => {
 	res.redirect(`/configure-import`);
 });
 
-module.exports = router;
+export default router;
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 //                                           //

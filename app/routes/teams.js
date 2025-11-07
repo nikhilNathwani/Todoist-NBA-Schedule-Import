@@ -1,6 +1,7 @@
-const express = require("express");
+import express from "express";
+import { getTeams } from "../utils/parseSchedule.js";
+
 const router = express.Router();
-const { getTeams } = require("../utils/parseSchedule");
 
 router.get("/", async (req, res) => {
 	try {
@@ -12,4 +13,4 @@ router.get("/", async (req, res) => {
 	}
 });
 
-module.exports = router;
+export default router;
