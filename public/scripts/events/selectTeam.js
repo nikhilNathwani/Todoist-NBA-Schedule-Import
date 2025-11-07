@@ -23,8 +23,8 @@ function handleTeamSelection(selectedTeam) {
 }
 
 function updateNewProjectSubtitle(selectedTeam) {
-	if (!newProjectInput.disabled && teamData) {
-		newProjectSubtitle.textContent = `Import games into a new Todoist project called "${teamData[selectedTeam].nameCasual} schedule"`;
+	if (!newProjectInput.disabled && window.teamData) {
+		newProjectSubtitle.textContent = `Import games into a new Todoist project called "${window.teamData[selectedTeam].nameCasual} schedule"`;
 	}
 }
 

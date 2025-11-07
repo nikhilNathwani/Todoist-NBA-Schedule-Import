@@ -4,12 +4,13 @@
  */
 
 const teamSelect = document.querySelector('select[name="team"]');
-let teamData = null; // Shared with events/selectTeam.js
 
 // Initialize picker page: fetch team data and populate dropdown
 async function initializePickerPage() {
-	teamData = await fetchTeamData();
+	const teamData = await fetchTeamData();
 	populateTeamDropdown(teamData);
+	// Make teamData globally accessible for other scripts
+	window.teamData = teamData;
 }
 
 function populateTeamDropdown(teams) {
