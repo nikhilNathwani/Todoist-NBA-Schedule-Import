@@ -46,9 +46,10 @@ function makeFooter() {
 		</footer>`;
 }
 
-function makeLogoBanner() {
+function makeLogoBanner(isLarge = false) {
+	const sizeClass = isLarge ? "logo-banner-large" : "";
 	return `
-		<div class="logo-banner">
+		<div class="logo-banner ${sizeClass}">
 			<div class="logo-container" id="nbaLogoContainer">
 				<img src="/images/nba-logo.png" alt="NBA Logo" />
 			</div>

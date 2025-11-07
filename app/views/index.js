@@ -32,7 +32,7 @@ function makeActiveSeasonAppFrame() {
 	return `
 		<div class="app-frame" id="appFrameLanding">
 			<div class="app-header">
-				${makeLogoBanner()}
+				${makeLogoBanner(true)}
 				<h1>${PAGE_TITLE}</h1>
 				<h3>
 					Log in with Todoist to import your favorite NBA team's regular season schedule.
@@ -62,7 +62,7 @@ function makeSeasonOverAppFrame(seasonEndYear) {
 	return `
 		<div class="app-frame season-over" id="appFrameLanding">
 			<div class="app-header">
-				${makeLogoBanner()}
+				${makeLogoBanner(true)}
 				<h1>${PAGE_TITLE}</h1>
 				<h3>
 					<b>Come back in October</b> when the ${seasonEndYear}-${
