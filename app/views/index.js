@@ -1,5 +1,5 @@
 import { isSeasonOver } from "../utils/parseSchedule.js";
-import { makeHead, makeFooter, makeLogoBanner } from "./htmlComponents.js";
+import { makeHead, makeFooter, makeLogoBanner } from "./shared.js";
 
 const PAGE_TITLE = "NBA Schedule Import";
 

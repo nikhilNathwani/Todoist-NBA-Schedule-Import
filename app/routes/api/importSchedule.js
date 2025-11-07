@@ -3,7 +3,7 @@ import axios from "axios";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { getAccessToken } from "../utils/cookieSession.js";
+import { getAccessToken } from "../../utils/cookieSession.js";
 import {
 	TodoistApi,
 	getProjectUrl,
@@ -39,7 +39,7 @@ const projectLimits = {
  * 6. Add a yearly reminder task to re-import next season
  * 7. Generate a deep link to the destination for the "Open Todoist" button
  */
-router.post("/import-games", async (req, res) => {
+router.post("/import-schedule", async (req, res) => {
 	// Step 1: Extract user selections from request
 	const { team: teamID, project: destinationType } = req.body;
 
@@ -95,14 +95,11 @@ router.post("/import-games", async (req, res) => {
 	}
 });
 
-export { router, userReachedProjectLimit };
-
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 //                                           //
 //       TODOIST CRUD FUNCTIONS              //
 //                                           //
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-
 // Initialize API with the user's token
 function initializeTodoistAPI(req) {
 	// Initialize Todoist API with the access token
@@ -142,7 +139,7 @@ async function userReachedProjectLimit(accessToken) {
 	}
 }
 
-async function getDestinationIds(api, destination, name, color) {
+async function createDestination(api, destination, name, color) {
 	if (destination === "inbox") {
 		// Query the Todoist API for the Inbox project ID
 		try {
@@ -167,7 +164,7 @@ async function getDestinationIds(api, destination, name, color) {
 				throw new Error("Inbox project not found");
 			}
 		} catch (error) {
-			console.error("Error in getDestinationIds (inbox):", error);
+			console.error("Error in createDestination (inbox):", error);
 			throw error;
 		}
 	} else if (destination === "newProject") {
@@ -234,7 +231,7 @@ function formatTask(game, teamName, taskOrder, destinationIds) {
 	return task;
 }
 
-async function importYearlyReminder(api, teamName, destinationIds) {
+async function addYearlyReminder(api, teamName, destinationIds) {
 	const siteURL =
 		"[NBA -> Todoist Schedule Import](https://nba-todoist-import.vercel.app)";
 
@@ -266,7 +263,10 @@ async function importYearlyReminder(api, teamName, destinationIds) {
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 async function getTeamData(team) {
 	try {
-		const filePath = path.join(__dirname, "../../data/nba_schedule.json");
+		const filePath = path.join(
+			__dirname,
+			"../../../data/nba_schedule.json"
+		);
 		const data = JSON.parse(await fs.promises.readFile(filePath, "utf8"));
 
 		const teamData = data[team];
@@ -300,3 +300,5 @@ function isLaterThanNow(dateTime) {
 	const now = new Date();
 	return gameDateTime > now;
 }
+
+export { router, userReachedProjectLimit };

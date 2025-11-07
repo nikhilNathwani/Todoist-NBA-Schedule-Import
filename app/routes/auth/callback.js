@@ -1,21 +1,9 @@
 import express from "express";
 import axios from "axios";
-import { saveAccessToken } from "../utils/cookieSession.js";
+import { saveAccessToken } from "../../utils/cookieSession.js";
 
 const router = express.Router();
 const { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, STATE_SECRET } = process.env;
-
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-//                                           //
-//           ROUTES                          //
-//                                           //
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-
-// Redirect to Todoist for OAuth authorization
-router.get("/login", (req, res) => {
-	const authUrl = `https://todoist.com/oauth/authorize?client_id=${CLIENT_ID}&scope=data:read_write&state=${STATE_SECRET}&redirect_uri=${REDIRECT_URI}`;
-	res.redirect(authUrl);
-});
 
 // Handle the OAuth callback from Todoist
 router.get("/callback", async (req, res) => {

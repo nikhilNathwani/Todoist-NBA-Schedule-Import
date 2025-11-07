@@ -6,10 +6,15 @@ import cookieSession from "cookie-session";
 import path from "path";
 import { fileURLToPath } from "url";
 /* Internal imports */
-import teamsRoutes from "./app/routes/teams.js";
-import pagesRoutes from "./app/routes/pages.js";
-import { router as importGamesRoutes } from "./app/routes/importGames.js";
-import oauthRoutes from "./app/routes/oauth.js";
+// API routes
+import getTeamsRoute from "./app/routes/api/getTeams.js";
+import { router as importScheduleRoute } from "./app/routes/api/importSchedule.js";
+// Page routes
+import indexPageRoute from "./app/routes/pages/index.js";
+import pickerPageRoute from "./app/routes/pages/picker.js";
+// Auth routes
+import loginRoute from "./app/routes/auth/login.js";
+import callbackRoute from "./app/routes/auth/callback.js";
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~ */
 /*                           */
@@ -42,10 +47,15 @@ app.use(express.static(staticPathRoot));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Use the routes I defined
-app.use("/api/auth", oauthRoutes);
-app.use("/api/teams", teamsRoutes);
-app.use("/api", importGamesRoutes);
-app.use("/", pagesRoutes);
+// Mount routes
+// API routes
+app.use("/api", getTeamsRoute);
+app.use("/api", importScheduleRoute);
+// Auth routes
+app.use("/api/auth", loginRoute);
+app.use("/api/auth", callbackRoute);
+// Page routes
+app.use("/", pickerPageRoute);
+app.use("/", indexPageRoute); // Must be last (has catch-all route)
 
 export default app;

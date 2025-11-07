@@ -1,9 +1,9 @@
 import express from "express";
-import { getTeams } from "../utils/parseSchedule.js";
+import { getTeams } from "../../utils/parseSchedule.js";
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.get("/get-teams", async (req, res) => {
 	try {
 		const teamNames = await getTeams();
 		res.json(teamNames);

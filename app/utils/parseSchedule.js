@@ -43,11 +43,15 @@ async function getSchedule() {
 async function getTeams() {
 	try {
 		const nbaSchedule = await getSchedule();
-		const teamNames = {};
+		const teams = {};
 		for (const [teamId, teamData] of Object.entries(nbaSchedule)) {
-			teamNames[teamId] = teamData.name;
+			teams[teamId] = {
+				name: teamData.name,
+				city: teamData.city,
+				nameCasual: teamData.nameCasual,
+			};
 		}
-		return teamNames;
+		return teams;
 	} catch (err) {
 		console.error("Error reading nba_schedule.json for team names:", err);
 		throw new Error("Failed to get team names");
