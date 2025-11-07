@@ -4,8 +4,11 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { getAccessToken } from "../utils/cookieSession.js";
-import todoistPkg from "@doist/todoist-api-typescript";
-const { TodoistApi, getProjectUrl, getSectionUrl } = todoistPkg;
+import {
+	TodoistApi,
+	getProjectUrl,
+	getSectionUrl,
+} from "@doist/todoist-api-typescript";
 
 const router = express.Router();
 

@@ -6,10 +6,10 @@ This project imports NBA team schedules into Todoist as tasks.
 
 ```
 ├── package.json           # Node.js dependencies
-├── server.js              # Express server entry point
-├── app.js                 # Main application logic
+├── server.js              # Local development server (boots `app.js`)
+├── app.js                 # Main application logic (used by production)
 ├── vercel.json            # Vercel deployment config
-├── backend/               # Backend server code
+├── app/                   # Server-side application code
 │   ├── routes/            # Express route handlers
 │   ├── utils/             # Server utilities
 │   └── views/             # HTML rendering/templates
@@ -35,8 +35,10 @@ npm start
 python3 scrape/main.py
 ```
 
-For detailed annual update workflow, see [YEARLY-WORKFLOW.md](YEARLY-WORKFLOW.md).
+For detailed annual update workflow, see [scrape-instructions.md](scrape-instructions.md).
 
 ## Development
 
-The main application files are at the root level following Node.js conventions. The `backend/` folder contains all backend web application code, `scrape/` contains standalone data scraping tools, and `public/` contains frontend assets.
+The main application files are at the root level following Node.js conventions. The `app/` folder contains all server-side application code, `scrape/` contains standalone data scraping tools, and `public/` contains frontend assets.
+
+Note: This project uses ESM modules (package.json contains `"type": "module"`). For local development run `node server.js` (this file is a thin wrapper that starts `app.js`). In production (Vercel) `app.js` is used directly as the server entry.
