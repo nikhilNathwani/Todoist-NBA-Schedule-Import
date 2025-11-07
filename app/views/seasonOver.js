@@ -1,7 +1,5 @@
 import { makeHead, makeFooter, makeLogoBanner } from "./shared.js";
 
-const PAGE_TITLE = "NBA Schedule Import";
-
 function makeSeasonOverHTML(seasonEndYear) {
 	return `
 	<!DOCTYPE html>
@@ -12,7 +10,7 @@ function makeSeasonOverHTML(seasonEndYear) {
 				<div class="app-frame season-over" id="appFrameLanding">
 					<div class="app-header">
 						${makeLogoBanner(true)}
-						<h1>${PAGE_TITLE}</h1>
+						<h1>NBA Schedule Import</h1>
 						<h3>
 							<b>Come back in October</b> when the ${seasonEndYear}-${
 		(seasonEndYear + 1) % 100

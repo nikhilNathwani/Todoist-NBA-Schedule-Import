@@ -1,7 +1,5 @@
 import { makeHead, makeFooter, makeLogoBanner } from "./shared.js";
 
-const PAGE_TITLE = "NBA Schedule Import";
-
 function makeLandingPageHTML() {
 	return `
 	<!DOCTYPE html>
@@ -12,7 +10,7 @@ function makeLandingPageHTML() {
 				<div class="app-frame" id="appFrameLanding">
 					<div class="app-header">
 						${makeLogoBanner(true)}
-						<h1>${PAGE_TITLE}</h1>
+						<h1>NBA Schedule Import</h1>
 						<h3>
 							Log in with Todoist to import your favorite NBA team's regular season schedule.
 						</h3>
