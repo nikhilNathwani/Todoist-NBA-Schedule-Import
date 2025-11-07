@@ -101,6 +101,7 @@ function getStatusArrow(status) {
 //         NEXT STEP LINKS UI                //
 //                                           //
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
 function showNextStepsList(status, deepLink, errorMessage) {
 	const nextSteps = makeNextStepsList(status, deepLink, errorMessage);
 	const appContent = document.querySelector(".app-content");

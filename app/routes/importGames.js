@@ -53,11 +53,9 @@ router.post("/import-games", async (req, res) => {
 		);
 		await importSchedule(api, schedule, teamName, destinationIds);
 		await importYearlyReminder(api, teamName, destinationIds);
-		const deepLink = await createDeepLink(api, destinationIds);
+		const deepLink = createDeepLink(destinationIds);
 		console.log("Link to imported schedule:", deepLink);
-		res.status(200).json({
-			deepLink: deepLink,
-		});
+		res.status(200).json({ deepLink });
 	} catch (error) {
 		res.status(500).json({
 			success: false,
@@ -162,8 +160,7 @@ async function getDestinationIds(api, destination, name, color) {
 	}
 }
 
-//Returns deep link URL to project or section (in Inbox case)
-async function createDeepLink(api, destinationIds) {
+function createDeepLink(destinationIds) {
 	if (destinationIds.sectionId) {
 		return getSectionUrl(destinationIds.sectionId);
 	} else {
