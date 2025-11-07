@@ -5,11 +5,8 @@
 
 // Note: form, teamSelect, projectSelect are defined in picker.js
 
-console.log("submitForm.js loaded", { form, teamSelect, projectSelect });
-
 // Set up event listener for form submission
 form.addEventListener("submit", async function (event) {
-	console.log("form submit event fired!");
 	event.preventDefault();
 
 	// Show loading state
