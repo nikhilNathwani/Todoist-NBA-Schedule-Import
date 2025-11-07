@@ -25,13 +25,28 @@ const projectLimits = {
 //                                           //
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-// Process user's team/project selections and import schedule into the destination project/inbox
+/**
+ * Imports NBA schedule into Todoist
+ *
+ * Flow:
+ * 1. Read user's selected team and destination (project/inbox) from request
+ * 2. Initialize Todoist API client with user's auth token
+ * 3. Fetch team data (name, color, schedule) from local JSON file
+ * 4. Create destination in Todoist:
+ *    - If "newProject": create a new project with team name and color
+ *    - If "inbox": create a section within user's Inbox project
+ * 5. Import all upcoming games as tasks into the destination
+ * 6. Add a yearly reminder task to re-import next season
+ * 7. Generate a deep link to the destination for the "Open Todoist" button
+ */
 router.post("/import-games", async (req, res) => {
-	const { team: teamID, project } = req.body;
+	// Step 1: Extract user selections from request
+	const { team: teamID, project: destinationType } = req.body;
 
-	let api;
+	// Step 2: Initialize Todoist API client
+	let todoistApi;
 	try {
-		api = initializeTodoistAPI(req);
+		todoistApi = initializeTodoistAPI(req);
 	} catch (error) {
 		console.error("Failed to initialize Todoist API:", error.message);
 		return res.status(401).json({
@@ -39,23 +54,39 @@ router.post("/import-games", async (req, res) => {
 			message: "Failed to initialize Todoist API: " + error.message,
 		});
 	}
+
 	try {
+		// Step 3: Fetch team data from local JSON
 		const {
 			name: teamName,
 			color: teamColor,
-			schedule,
+			schedule: upcomingGames,
 		} = await getTeamData(teamID);
-		const destinationIds = await getDestinationIds(
-			api,
-			project,
+
+		// Step 4: Create destination (new project or inbox section)
+		const destinationIds = await createDestination(
+			todoistApi,
+			destinationType,
 			`${teamName} schedule`,
 			teamColor
 		);
-		await importSchedule(api, schedule, teamName, destinationIds);
-		await importYearlyReminder(api, teamName, destinationIds);
-		const deepLink = createDeepLink(destinationIds);
-		console.log("Link to imported schedule:", deepLink);
-		res.status(200).json({ deepLink });
+
+		// Step 5: Import all games as tasks
+		await importSchedule(
+			todoistApi,
+			upcomingGames,
+			teamName,
+			destinationIds
+		);
+
+		// Step 6: Add yearly reminder to re-import next season
+		await addYearlyReminder(todoistApi, teamName, destinationIds);
+
+		// Step 7: Generate deep link for "Open Todoist" button
+		const todoistDeepLink = createDeepLink(destinationIds);
+		console.log("Link to imported schedule:", todoistDeepLink);
+
+		res.status(200).json({ deepLink: todoistDeepLink });
 	} catch (error) {
 		res.status(500).json({
 			success: false,
