@@ -5,15 +5,17 @@
 
 // Form elements - shared with event handlers
 const form = document.querySelector("form");
-const teamSelect = form.elements["team"];
-const projectSelect = form.elements["project"];
+const teamSelect = form?.elements["team"];
+const projectSelect = form?.elements["project"];
 const submitButton = document.getElementById("submitButton");
 const newProjectInput = document.querySelector('input[value="newProject"]');
 const newProjectSubtitle = document
 	.getElementById("newProject")
-	.querySelector("small");
+	?.querySelector("small");
 
 let teamData = null;
+
+console.log('picker.js loaded', { form, teamSelect, projectSelect, submitButton, newProjectInput, newProjectSubtitle });
 
 // Initialize picker page: fetch team data and populate dropdown
 async function initializePickerPage() {
