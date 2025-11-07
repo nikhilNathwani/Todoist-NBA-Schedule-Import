@@ -48,7 +48,7 @@ function makeFooter() {
 
 function makeLogoBanner() {
 	return `
-		<div class="logo-banner logo-banner-large">
+		<div class="logo-banner">
 			<div class="logo-container" id="nbaLogoContainer">
 				<img src="/images/nba-logo.png" alt="NBA Logo" />
 			</div>
