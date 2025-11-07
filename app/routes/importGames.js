@@ -25,7 +25,7 @@ const projectLimits = {
 //                                           //
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-// Process user's team/project selections and import schedule
+// Process user's team/project selections and import schedule into the destination project/inbox
 router.post("/import-games", async (req, res) => {
 	const { team: teamID, project } = req.body;
 
@@ -45,23 +45,15 @@ router.post("/import-games", async (req, res) => {
 			color: teamColor,
 			schedule,
 		} = await getTeamData(teamID);
-		const { projectId, isInbox, sectionId } = await getProjectID(
+		const destinationIds = await getDestinationIds(
 			api,
 			project,
 			`${teamName} schedule`,
 			teamColor
 		);
-		await importSchedule(
-			api,
-			schedule,
-			teamName,
-			projectId,
-			isInbox,
-			sectionId
-		);
-		await importYearlyReminder(api, projectId, teamName);
-		const deepLinkId = isInbox ? sectionId : projectId;
-		const deepLink = await createDeepLink(api, isInbox, deepLinkId);
+		await importSchedule(api, schedule, teamName, destinationIds);
+		await importYearlyReminder(api, teamName, destinationIds);
+		const deepLink = await createDeepLink(api, destinationIds);
 		console.log("Link to imported schedule:", deepLink);
 		res.status(200).json({
 			deepLink: deepLink,
@@ -121,8 +113,8 @@ async function userReachedProjectLimit(accessToken) {
 	}
 }
 
-async function getProjectID(api, project, name, color) {
-	if (project === "inbox") {
+async function getDestinationIds(api, destination, name, color) {
+	if (destination === "inbox") {
 		// Query the Todoist API for the Inbox project ID
 		try {
 			const projectsResponse = await api.getProjects();
@@ -139,18 +131,17 @@ async function getProjectID(api, project, name, color) {
 					projectId: inboxProject.id,
 				});
 				return {
-					projectId: newSectionResponse.projectId,
-					isInbox: true,
+					projectId: inboxProject.id,
 					sectionId: newSectionResponse.id,
 				};
 			} else {
 				throw new Error("Inbox project not found");
 			}
 		} catch (error) {
-			console.error("Error in getProjectID (inbox):", error);
+			console.error("Error in getDestinationIds (inbox):", error);
 			throw error;
 		}
-	} else if (project === "newProject") {
+	} else if (destination === "newProject") {
 		// Check if a color exists for the given team name
 		if (!color) {
 			throw new Error(`No color defined for team: ${name}`);
@@ -163,43 +154,25 @@ async function getProjectID(api, project, name, color) {
 		});
 		return {
 			projectId: newProjectResponse.id,
-			projectName: newProjectResponse.name,
-			isInbox: false,
-			sectionId: null,
-		}; // Return the ID of the newly created project
+		};
 	} else {
 		throw new Error(
-			`Invalid project type: ${project}. Expected 'inbox' or 'newProject'.`
+			`Invalid destination type: ${destination}. Expected 'inbox' or 'newProject'.`
 		);
 	}
 }
 
 //Returns deep link URL to project or section (in Inbox case)
-async function createDeepLink(api, isInbox, id) {
-	if (isInbox) {
-		return getSectionUrl(id);
+async function createDeepLink(api, destinationIds) {
+	if (destinationIds.sectionId) {
+		return getSectionUrl(destinationIds.sectionId);
 	} else {
-		return getProjectUrl(id);
+		return getProjectUrl(destinationIds.projectId);
 	}
 }
 
-async function importGame(
-	api,
-	game,
-	teamName,
-	taskOrder,
-	projectId,
-	isInbox,
-	sectionId = null
-) {
-	const task = formatTask(
-		game,
-		teamName,
-		taskOrder,
-		projectId,
-		isInbox,
-		sectionId
-	);
+async function importGame(api, game, teamName, taskOrder, destinationIds) {
+	const task = formatTask(game, teamName, taskOrder, destinationIds);
 	try {
 		await api.addTask(task);
 	} catch (error) {
@@ -207,60 +180,50 @@ async function importGame(
 	}
 }
 
-async function importSchedule(
-	api,
-	schedule,
-	teamName,
-	projectId,
-	isInbox,
-	sectionId = null
-) {
+async function importSchedule(api, schedule, teamName, destinationIds) {
 	console.log(
-		`Importing ${schedule.length} games for ${teamName} into project ID ${projectId}`
+		`Importing ${schedule.length} games for ${teamName} into project ID ${destinationIds.projectId}`
 	);
 	// Use map to create an array of promises
-	const tasks = schedule.map(
-		(game, index) =>
-			importGame(
-				api,
-				game,
-				teamName,
-				index + 1,
-				projectId,
-				isInbox,
-				sectionId
-			) // Pass index + 1 because task order is non-zero
+	const tasks = schedule.map((game, index) =>
+		importGame(api, game, teamName, index + 1, destinationIds)
 	);
 	return Promise.all(tasks); // Return the promise, don't await
 }
 
-function formatTask(game, teamName, taskOrder, projectId, isInbox, sectionId) {
-	var task = {
+function formatTask(game, teamName, taskOrder, destinationIds) {
+	const task = {
 		content: `${teamName} ${game.isHomeGame ? "vs" : "at"} ${
 			game.opponent
 		}`,
 		dueDatetime: game.gameTimeUtcIso8601,
-		projectId: projectId,
+		projectId: destinationIds.projectId,
 		order: taskOrder,
 	};
-	if (isInbox) {
-		task.sectionId = sectionId; // For inbox, deeplink into sectionId
+	if (destinationIds.sectionId) {
+		task.sectionId = destinationIds.sectionId;
 	}
 	return task;
 }
 
-async function importYearlyReminder(api, projectId, teamName) {
+async function importYearlyReminder(api, teamName, destinationIds) {
 	const siteURL =
 		"[NBA -> Todoist Schedule Import](https://nba-todoist-import.vercel.app)";
 
 	const task = {
 		content: `Import ${teamName} regular season schedule`,
 		description: siteURL,
-		projectId: projectId,
+		projectId: destinationIds.projectId,
 		dueString: "every October 10th",
 		dueLang: "en",
 		order: 120,
 	};
+
+	// If importing to Inbox section, add the task to that section
+	if (destinationIds.sectionId) {
+		task.sectionId = destinationIds.sectionId;
+	}
+
 	try {
 		await api.addTask(task);
 	} catch (error) {
