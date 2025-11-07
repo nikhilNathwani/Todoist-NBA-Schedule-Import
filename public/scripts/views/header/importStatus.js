@@ -13,11 +13,16 @@ const importStatus = {
 };
 
 const minDurationLoadingUI = 3000;
-let showingLoadingUI = true;
+let loadingStartTime = null;
 
 async function waitForLoadingUI() {
-	while (showingLoadingUI) {
-		await new Promise((resolve) => setTimeout(resolve, 100));
+	if (!loadingStartTime) return;
+
+	const elapsed = Date.now() - loadingStartTime;
+	const remaining = minDurationLoadingUI - elapsed;
+
+	if (remaining > 0) {
+		await new Promise((resolve) => setTimeout(resolve, remaining));
 	}
 }
 
@@ -32,6 +37,9 @@ function showImportStatusUI(status) {
 	updateHeaderStatus(status);
 
 	if (status == importStatus.LOADING) {
+		// Record when loading started
+		loadingStartTime = Date.now();
+
 		// Fade out form
 		const form = document.querySelector("form");
 		form.classList.add("fade-out");
@@ -42,9 +50,6 @@ function showImportStatusUI(status) {
 				growLogoBanner();
 				const statusContainer = document.querySelector(".app-status");
 				statusContainer.classList.add("fade-in");
-				setTimeout(() => {
-					showingLoadingUI = false;
-				}, minDurationLoadingUI);
 			}
 		});
 	} else {
