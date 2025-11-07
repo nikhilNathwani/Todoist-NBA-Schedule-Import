@@ -1,5 +1,8 @@
 /**
  * Fetches the list of NBA teams from the backend API
+ */
+
+/**
  * @returns {Promise<Object>} Object mapping team IDs to team data
  */
 async function fetchTeamData() {

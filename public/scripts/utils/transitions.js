@@ -36,8 +36,9 @@ async function transitionToResult(status) {
 
 	// Update status header
 	updateHeaderStatus(status);
-	// Show footer for success/error states
-	document.body.classList.remove("no-footer");
+
+	// Delay before showing next steps for smoother UX
+	await new Promise((resolve) => setTimeout(resolve, 1200));
 }
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //

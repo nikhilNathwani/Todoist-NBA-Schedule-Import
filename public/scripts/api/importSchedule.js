@@ -1,5 +1,8 @@
 /**
  * Imports NBA schedule to Todoist via the backend API
+ */
+
+/**
  * @param {string} team - Team ID (e.g., "BOS")
  * @param {string} project - Destination type ("newProject" or "inbox")
  * @returns {Promise<Object>} Response data containing deepLink

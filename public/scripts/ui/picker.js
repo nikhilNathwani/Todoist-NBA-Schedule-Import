@@ -3,17 +3,28 @@
  * Fetches data and populates the team dropdown on page load
  */
 
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+//                                           //
+//       FORM ELEMENTS                       //
+//                                           //
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
 // Form elements - shared with event handlers
 const form = document.querySelector("form");
 const teamSelect = form.elements["team"];
 const projectSelect = form.elements["project"];
-const submitButton = document.getElementById("submitButton");
-const newProjectInput = document.querySelector('input[value="newProject"]');
-const newProjectSubtitle = document
-	.getElementById("newProject")
-	.querySelector("small");
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+//                                           //
+//       INITIALIZATION                      //
+//                                           //
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
 let teamData = null;
+
+function getTeamData() {
+	return teamData;
+}
 
 // Initialize picker page: fetch team data and populate dropdown
 async function initializePickerPage() {
@@ -37,10 +48,6 @@ function populateTeamDropdown(teams) {
 	});
 }
 
-function getTeamData() {
-	return teamData;
-}
-
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 //                                           //
 //       PICKER VIEW UPDATES                 //
@@ -48,14 +55,26 @@ function getTeamData() {
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
 function updateNewProjectSubtitle(teamName) {
+	const newProjectInput = document.querySelector('input[value="newProject"]');
+	const newProjectSubtitle = document
+		.getElementById("newProject")
+		.querySelector("small");
+
 	if (!newProjectInput.disabled && teamName) {
 		newProjectSubtitle.textContent = `Import games into a new Todoist project called "${teamName} schedule"`;
 	}
 }
 
 function enableSubmitButton() {
+	const submitButton = document.getElementById("submitButton");
 	submitButton.disabled = false;
 }
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+//                                           //
+//       MAIN                                //
+//                                           //
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
 // Initialize on page load
 initializePickerPage();
