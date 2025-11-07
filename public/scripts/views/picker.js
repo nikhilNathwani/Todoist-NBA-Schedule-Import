@@ -3,7 +3,16 @@
  * Fetches data and populates the team dropdown on page load
  */
 
-const teamSelect = document.querySelector('select[name="team"]');
+// Form elements - shared with event handlers
+const form = document.querySelector("form");
+const teamSelect = form.elements["team"];
+const projectSelect = form.elements["project"];
+const submitButton = document.getElementById("submitButton");
+const newProjectInput = document.querySelector('input[value="newProject"]');
+const newProjectSubtitle = document
+	.getElementById("newProject")
+	.querySelector("small");
+
 let teamData = null;
 
 // Initialize picker page: fetch team data and populate dropdown
@@ -30,6 +39,22 @@ function populateTeamDropdown(teams) {
 
 function getTeamData() {
 	return teamData;
+}
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+//                                           //
+//       PICKER VIEW UPDATES                 //
+//                                           //
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
+function updateNewProjectSubtitle(teamName) {
+	if (!newProjectInput.disabled && teamName) {
+		newProjectSubtitle.textContent = `Import games into a new Todoist project called "${teamName} schedule"`;
+	}
+}
+
+function enableSubmitButton() {
+	submitButton.disabled = false;
 }
 
 // Initialize on page load
