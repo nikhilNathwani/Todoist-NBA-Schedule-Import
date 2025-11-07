@@ -8,7 +8,7 @@ import { fileURLToPath } from "url";
 /* Internal imports */
 // API routes
 import getTeamsRoute from "./app/routes/api/getTeams.js";
-import { router as importScheduleRoute } from "./app/routes/api/importSchedule.js";
+import importScheduleRoute from "./app/routes/api/importSchedule.js";
 // Page routes
 import indexPageRoute from "./app/routes/pages/index.js";
 import pickerPageRoute from "./app/routes/pages/picker.js";
