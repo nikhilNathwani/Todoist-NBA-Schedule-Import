@@ -30,4 +30,4 @@ function getAccessToken(req) {
 // 	);
 // }
 
-export { saveAccessToken, getAccessToken, printReqSession };
+export { saveAccessToken, getAccessToken };
