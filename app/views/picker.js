@@ -1,4 +1,4 @@
-import { makeHead, makeFooter, makeLogoBanner } from "./shared.js";
+import { makeHead, makeFooter, makeLogoBanner } from "./components.js";
 
 async function makePickerPageHTML(isInboxDefault) {
 	const teamPickerHTML = makeTeamPickerHTML();
