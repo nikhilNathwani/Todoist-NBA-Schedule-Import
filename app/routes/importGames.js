@@ -124,10 +124,16 @@ async function userReachedProjectLimit(accessToken) {
 async function getProjectID(api, project, name, color) {
 	if (project === "inbox") {
 		// Query the Todoist API for the Inbox project ID
-		const projectsResponse = await api.getProjects();
-		const projects = projectsResponse.results; // v6+ returns { results, nextCursor }
-		const inboxProject = projects.find((project) => project.isInboxProject);
-		if (inboxProject) {
+		try {
+			const projectsResponse = await api.getProjects();
+			console.log("DEBUG - projectsResponse type:", typeof projectsResponse);
+			console.log("DEBUG - projectsResponse keys:", Object.keys(projectsResponse || {}));
+			
+			const projects = projectsResponse.results; // v6+ returns { results, nextCursor }
+			console.log("DEBUG - projects is array:", Array.isArray(projects));
+			
+			const inboxProject = projects.find((project) => project.isInboxProject);
+			if (inboxProject) {
 			// Create section within Inbox project
 			const newSectionResponse = await api.addSection({
 				name: name,
@@ -140,6 +146,10 @@ async function getProjectID(api, project, name, color) {
 			};
 		} else {
 			throw new Error("Inbox project not found");
+		}
+		} catch (error) {
+			console.error("Error in getProjectID (inbox):", error);
+			throw error;
 		}
 	} else if (project === "newProject") {
 		// Check if a color exists for the given team name
