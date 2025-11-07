@@ -126,27 +126,10 @@ async function getProjectID(api, project, name, color) {
 		// Query the Todoist API for the Inbox project ID
 		try {
 			const projectsResponse = await api.getProjects();
-			console.log(
-				"DEBUG - projectsResponse:",
-				JSON.stringify(projectsResponse, null, 2)
-			);
-
 			const projects = projectsResponse.results; // v6+ returns { results, nextCursor }
-			console.log("DEBUG - projects count:", projects?.length);
-
-			if (projects && projects.length > 0) {
-				console.log(
-					"DEBUG - first project keys:",
-					Object.keys(projects[0])
-				);
-				console.log(
-					"DEBUG - first project:",
-					JSON.stringify(projects[0], null, 2)
-				);
-			}
 
 			const inboxProject = projects.find(
-				(project) => project.isInboxProject
+				(project) => project.inboxProject
 			);
 
 			if (inboxProject) {
@@ -161,10 +144,6 @@ async function getProjectID(api, project, name, color) {
 					sectionId: newSectionResponse.id,
 				};
 			} else {
-				console.error(
-					"DEBUG - All projects:",
-					JSON.stringify(projects, null, 2)
-				);
 				throw new Error("Inbox project not found");
 			}
 		} catch (error) {
