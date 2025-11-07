@@ -4,13 +4,12 @@
  */
 
 const teamSelect = document.querySelector('select[name="team"]');
+let teamData = null;
 
 // Initialize picker page: fetch team data and populate dropdown
 async function initializePickerPage() {
-	const teamData = await fetchTeamData();
+	teamData = await fetchTeamData();
 	populateTeamDropdown(teamData);
-	// Make teamData globally accessible for other scripts
-	window.teamData = teamData;
 }
 
 function populateTeamDropdown(teams) {
@@ -26,6 +25,10 @@ function populateTeamDropdown(teams) {
 		option.textContent = `${team.city} ${team.name}`;
 		teamSelect.appendChild(option);
 	});
+}
+
+function getTeamData() {
+	return teamData;
 }
 
 // Initialize on page load
