@@ -11,14 +11,26 @@ const newProjectSubtitle = document
 	.getElementById("newProject")
 	.querySelector("small");
 
-// Set up event listener for team selection
-teamSelect.addEventListener("change", function () {
-	const selectedOption = teamSelect.options[teamSelect.selectedIndex];
-	const teamID = selectedOption.value;
-	const teamName = selectedOption.dataset.teamName;
-
-	handleTeamSelection(teamID, teamName);
+console.log("selectTeam.js loaded", {
+	submitButton,
+	teamSelect,
+	newProjectInput,
+	newProjectSubtitle,
 });
+
+// Set up event listener for team selection
+if (teamSelect) {
+	teamSelect.addEventListener("change", function () {
+		console.log("change event fired!");
+		const selectedOption = teamSelect.options[teamSelect.selectedIndex];
+		const teamID = selectedOption.value;
+		const teamName = selectedOption.dataset.teamName;
+
+		handleTeamSelection(teamID, teamName);
+	});
+} else {
+	console.error("teamSelect not found!");
+}
 
 function handleTeamSelection(teamID, teamName) {
 	console.log("handleTeamSelection called", {
