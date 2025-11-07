@@ -1,9 +1,9 @@
 import express from "express";
-import axios from "axios";
 import { saveAccessToken } from "../../utils/cookieSession.js";
+import { retrieveAccessToken } from "../../utils/todoist.js";
 
 const router = express.Router();
-const { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, STATE_SECRET } = process.env;
+const { STATE_SECRET } = process.env;
 
 // Handle the OAuth callback from Todoist
 router.get("/callback", async (req, res) => {
@@ -14,11 +14,15 @@ router.get("/callback", async (req, res) => {
 		return res.status(403).send("State mismatch! Potential CSRF attack.");
 	}
 
-	// Store encrypted access token in session cookie for later api usage
-	const accessToken = await retrieveAccessToken(res, code);
-	saveAccessToken(req, accessToken);
-	// Redirect to the team selection page
-	res.redirect(`/configure-import`);
+	try {
+		// Retrieve and store encrypted access token in session cookie
+		const accessToken = await retrieveAccessToken(code);
+		saveAccessToken(req, accessToken);
+		// Redirect to the team selection page
+		res.redirect(`/configure-import`);
+	} catch (error) {
+		handleOAuthError(error, res);
+	}
 });
 
 export default router;
@@ -28,29 +32,6 @@ export default router;
 //          HELPER FUNCTIONS                 //
 //                                           //
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-
-// Retrive access token from Todoist API
-async function retrieveAccessToken(res, code) {
-	try {
-		const response = await axios.post(
-			"https://todoist.com/oauth/access_token",
-			{
-				client_id: CLIENT_ID,
-				client_secret: CLIENT_SECRET,
-				code: code,
-				redirect_uri: REDIRECT_URI,
-			}
-		);
-		const { access_token } = response.data;
-		return access_token;
-	} catch (error) {
-		console.error(
-			"OAuth error:",
-			error.response ? error.response.data : error
-		);
-		handleOAuthError(error, res);
-	}
-}
 
 // Handle OAuth token exchange errors
 const handleOAuthError = (error, res) => {

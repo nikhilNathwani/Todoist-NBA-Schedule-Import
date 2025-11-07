@@ -85,4 +85,46 @@ async function getFinalGameTime() {
 	}
 }
 
-export { getSchedule, getTeams, isSeasonOver };
+export { getSchedule, getTeams, isSeasonOver, getTeamData };
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+//                                           //
+//       TEAM DATA FUNCTIONS                 //
+//                                           //
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
+async function getTeamData(teamID) {
+	try {
+		const data = await getSchedule();
+		const teamData = data[teamID];
+
+		if (!teamData) {
+			throw new Error(`Schedule not found for team: ${teamID}`);
+		}
+
+		// Filter schedule for upcoming games only
+		const upcomingGames = getUpcomingGames(teamData.schedule);
+
+		// Return teamData with the filtered schedule
+		return { ...teamData, schedule: upcomingGames };
+	} catch (error) {
+		console.error("Error getting team data:", error);
+		throw error;
+	}
+}
+
+function getUpcomingGames(schedule) {
+	const upcomingGames = [];
+	for (const game of schedule) {
+		if (isLaterThanNow(game.gameTimeUtcIso8601)) {
+			upcomingGames.push(game);
+		}
+	}
+	return upcomingGames;
+}
+
+function isLaterThanNow(dateTime) {
+	const gameDateTime = new Date(dateTime);
+	const now = new Date();
+	return gameDateTime > now;
+}
