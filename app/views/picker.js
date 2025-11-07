@@ -37,6 +37,7 @@ async function makePickerPageHTML(isInboxDefault) {
 	<script src="/scripts/views/header/importStatus.js"></script>
 	<script src="/scripts/views/header/teamLogo.js"></script>
 	<script src="/scripts/views/picker.js"></script>
+	<script src="/scripts/utils/transitions.js"></script>
 	<script src="/scripts/views/confirmation.js"></script>
 	<script src="/scripts/events/selectTeam.js"></script>
 	<script src="/scripts/events/submitForm.js"></script>

@@ -1,7 +1,6 @@
 /**
  * Import Status Management
- * Handles the entire import status flow:
- * - Loading UI timing and state
+ * Handles the import status UI flow:
  * - Status arrow, title, subtitle updates
  * - Coordinating UI transitions during import
  */
@@ -12,51 +11,11 @@ const importStatus = {
 	ERROR: 2,
 };
 
-const minDurationLoadingUI = 3000;
-let loadingStartTime = null;
-
-async function waitForLoadingUI() {
-	if (!loadingStartTime) return;
-
-	const elapsed = Date.now() - loadingStartTime;
-	const remaining = minDurationLoadingUI - elapsed;
-
-	if (remaining > 0) {
-		await new Promise((resolve) => setTimeout(resolve, remaining));
-	}
-}
-
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 //                                           //
 //       IMPORT STATUS UI FLOW               //
 //                                           //
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-
-function showImportStatusUI(status) {
-	// Update header (arrow, title, subtitle)
-	updateHeaderStatus(status);
-
-	if (status == importStatus.LOADING) {
-		// Record when loading started
-		loadingStartTime = Date.now();
-
-		// Fade out form
-		const form = document.querySelector("form");
-		form.classList.add("fade-out");
-		form.addEventListener("transitionend", (event) => {
-			if (event.propertyName === "opacity") {
-				form.remove();
-				// Grow logo banner and show loading status
-				growLogoBanner();
-				const statusContainer = document.querySelector(".app-status");
-				statusContainer.classList.add("fade-in");
-			}
-		});
-	} else {
-		// Show footer for success/error states
-		document.body.classList.remove("no-footer");
-	}
-}
 
 /**
  * Updates all status elements (arrow, title, subtitle)

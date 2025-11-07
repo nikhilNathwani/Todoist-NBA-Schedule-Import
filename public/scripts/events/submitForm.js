@@ -10,7 +10,7 @@ form.addEventListener("submit", async function (event) {
 	event.preventDefault();
 
 	// Show loading state
-	showImportStatusUI(importStatus.LOADING);
+	transitionToLoading();
 
 	try {
 		// Call import API
@@ -19,20 +19,14 @@ form.addEventListener("submit", async function (event) {
 			projectSelect.value
 		);
 
-		// Wait for loading UI minimum duration
-		await waitForLoadingUI();
-
 		// Show success state with deep link
-		showImportStatusUI(importStatus.SUCCESS);
+		await transitionToResult(importStatus.SUCCESS);
 		showNextStepsList(importStatus.SUCCESS, data.deepLink);
 	} catch (error) {
 		console.error("Import failed:", error);
 
-		// Wait for loading UI minimum duration
-		await waitForLoadingUI();
-
 		// Show error state
-		showImportStatusUI(importStatus.ERROR);
+		await transitionToResult(importStatus.ERROR);
 		showNextStepsList(importStatus.ERROR, null, error);
 	}
 });
