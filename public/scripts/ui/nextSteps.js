@@ -4,6 +4,12 @@
  */
 
 function showNextStepsList(status, deepLink, errorMessage) {
+	console.log("showNextStepsList called:", {
+		status,
+		deepLink,
+		errorMessage,
+	});
+
 	const list = document.createElement("ul");
 	list.classList.add("next-steps-list");
 
@@ -14,6 +20,8 @@ function showNextStepsList(status, deepLink, errorMessage) {
 	}
 
 	const appContent = document.querySelector(".app-content");
+	console.log("appContent element:", appContent);
+	console.log("list element:", list);
 	appContent.appendChild(list);
 }
 

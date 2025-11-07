@@ -21,13 +21,13 @@ function getAccessToken(req) {
 	return decrypt(encryptedToken);
 }
 
-function printReqSession(req) {
-	console.log(
-		"ACCESS TOKEN:",
-		req.session.accessTokenEncrypted,
-		"REQ.SESSION:",
-		req.session
-	);
-}
+// function printReqSession(req) {
+// 	console.log(
+// 		"ACCESS TOKEN:",
+// 		req.session.accessTokenEncrypted,
+// 		"REQ.SESSION:",
+// 		req.session
+// 	);
+// }
 
 export { saveAccessToken, getAccessToken, printReqSession };
