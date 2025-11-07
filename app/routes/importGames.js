@@ -126,27 +126,35 @@ async function getProjectID(api, project, name, color) {
 		// Query the Todoist API for the Inbox project ID
 		try {
 			const projectsResponse = await api.getProjects();
-			console.log("DEBUG - projectsResponse type:", typeof projectsResponse);
-			console.log("DEBUG - projectsResponse keys:", Object.keys(projectsResponse || {}));
-			
+			console.log(
+				"DEBUG - projectsResponse type:",
+				typeof projectsResponse
+			);
+			console.log(
+				"DEBUG - projectsResponse keys:",
+				Object.keys(projectsResponse || {})
+			);
+
 			const projects = projectsResponse.results; // v6+ returns { results, nextCursor }
 			console.log("DEBUG - projects is array:", Array.isArray(projects));
-			
-			const inboxProject = projects.find((project) => project.isInboxProject);
+
+			const inboxProject = projects.find(
+				(project) => project.isInboxProject
+			);
 			if (inboxProject) {
-			// Create section within Inbox project
-			const newSectionResponse = await api.addSection({
-				name: name,
-				projectId: inboxProject.id,
-			});
-			return {
-				projectId: newSectionResponse.projectId,
-				isInbox: true,
-				sectionId: newSectionResponse.id,
-			};
-		} else {
-			throw new Error("Inbox project not found");
-		}
+				// Create section within Inbox project
+				const newSectionResponse = await api.addSection({
+					name: name,
+					projectId: inboxProject.id,
+				});
+				return {
+					projectId: newSectionResponse.projectId,
+					isInbox: true,
+					sectionId: newSectionResponse.id,
+				};
+			} else {
+				throw new Error("Inbox project not found");
+			}
 		} catch (error) {
 			console.error("Error in getProjectID (inbox):", error);
 			throw error;
