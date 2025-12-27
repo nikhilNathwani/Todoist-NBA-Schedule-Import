@@ -22,10 +22,6 @@ const projectSelect = form.elements["project"];
 
 let teamData = null;
 
-function getTeamData() {
-	return teamData;
-}
-
 // Initialize picker page: fetch team data and populate dropdown
 async function initializePickerPage() {
 	teamData = await fetchTeamData();
