@@ -11,72 +11,44 @@ const importStatus = {
 	ERROR: 2,
 };
 
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+//                                           //
+//       STATUS CONFIGURATION                //
+//                                           //
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
+const STATUS_CONFIG = {
+	[importStatus.LOADING]: {
+		arrow: '<i class="fa-solid fa-arrow-rotate-right spinner" aria-hidden="true"></i>',
+		title: "Importing schedule",
+		subtitle: "Please keep this window open",
+	},
+	[importStatus.SUCCESS]: {
+		arrow: '<i class="fa-solid fa-check" aria-hidden="true"></i>',
+		title: "Import complete!",
+		subtitle: "Schedule added to Todoist",
+	},
+	[importStatus.ERROR]: {
+		arrow: '<i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>',
+		title: "An error occurred",
+		subtitle: "",
+	},
+};
+
 /**
  * Updates all status elements (arrow, title, subtitle)
  * @param {number} status - importStatus enum value
  */
 function updateHeaderStatus(status) {
-	updateStatusArrow(status);
-	updateStatusTitle(status);
-	updateStatusSubtitle(status);
-}
+	const config = STATUS_CONFIG[status];
 
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-//                                           //
-//       HELPER FUNCTIONS               //
-//                                           //
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-
-function updateStatusArrow(status) {
-	const arrow = document.getElementById("arrow");
-
-	switch (status) {
-		case importStatus.LOADING:
-			arrow.innerHTML = `<i class="fa-solid fa-arrow-rotate-right spinner" aria-hidden="true"></i>`;
-			break;
-		case importStatus.SUCCESS:
-			arrow.innerHTML = `<i class="fa-solid fa-check" aria-hidden="true"></i>`;
-			break;
-		case importStatus.ERROR:
-			arrow.innerHTML = `<i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>`;
-			break;
-		default:
-			arrow.innerHTML = `<i class="fa-solid fa-arrow-right" aria-hidden="true"></i>`;
-	}
-}
-
-function updateStatusTitle(status) {
-	const statusTitle = document.querySelector("h1");
-
-	switch (status) {
-		case importStatus.LOADING:
-			statusTitle.textContent = "Importing schedule";
-			break;
-		case importStatus.SUCCESS:
-			statusTitle.textContent = "Import complete!";
-			break;
-		case importStatus.ERROR:
-			statusTitle.textContent = "An error occurred";
-			break;
-		default:
-			statusTitle.textContent = "An error occurred";
-	}
-}
-
-function updateStatusSubtitle(status) {
-	const subtitle = document.querySelector("h3");
-
-	switch (status) {
-		case importStatus.LOADING:
-			subtitle.textContent = "Please keep this window open";
-			break;
-		case importStatus.SUCCESS:
-			subtitle.textContent = "Schedule added to Todoist";
-			break;
-		case importStatus.ERROR:
-			subtitle.textContent = "";
-			break;
-		default:
-			subtitle.textContent = "Unknown error";
+	if (config) {
+		document.getElementById("arrow").innerHTML = config.arrow;
+		document.querySelector("h1").textContent = config.title;
+		document.querySelector("h3").textContent = config.subtitle;
+	} else {
+		console.warn(
+			`Invalid status: ${status}. Expected 0 (LOADING), 1 (SUCCESS), or 2 (ERROR).`
+		);
 	}
 }
