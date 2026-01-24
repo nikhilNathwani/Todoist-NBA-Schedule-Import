@@ -4,8 +4,8 @@
 		"**/.github": true,
 		"**/.vercel": true,
 		"**/node_modules": true,
-		"package.json": true,
-		"package-lock.json": true,
+		// "package.json": true,
+		// "package-lock.json": true,
 		"vercel.json": true,
 		"**/__pycache__": true,
 		"**/demo": true
@@ -16,8 +16,8 @@
 		"**/.github": true,
 		"**/.vercel": true,
 		"**/node_modules": true,
-		"package.json": true,
-		"package-lock.json": true,
+		// "package.json": true,
+		// "package-lock.json": true,
 		"vercel.json": true,
 		"**/__pycache__": true,
 		"**/demo": true
