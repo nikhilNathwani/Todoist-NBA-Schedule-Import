@@ -1,6 +1,4 @@
 /* External imports */
-import dotenv from "dotenv";
-dotenv.config({ path: ".env.local" });
 import express from "express";
 import cookieSession from "cookie-session";
 import path from "path";
@@ -34,7 +32,7 @@ app.use(
 		secure: true, // Only HTTPS not HTTP
 		// sameSite: "Strict", // Mitigates CSRF attacks
 		sameSite: "Lax", // Necessary because Strict blocks cookie from getting passed to configure-import as part of the redirect chain from todoist's auth flow
-	})
+	}),
 );
 
 // Serve static files from public folder
