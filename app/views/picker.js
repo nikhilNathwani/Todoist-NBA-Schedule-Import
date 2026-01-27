@@ -1,8 +1,8 @@
 import { makeHead, makeFooter, makeLogoBanner } from "./components.js";
 
-async function makePickerPageHTML(isInboxDefault) {
+async function makePickerPageHTML(canCreateProjects) {
 	const teamPickerHTML = makeTeamPickerHTML();
-	const projectPickerHTML = makeProjectPickerHTML(isInboxDefault);
+	const projectPickerHTML = makeProjectPickerHTML(canCreateProjects);
 
 	const form = `
 		<form>
@@ -59,7 +59,7 @@ function makeTeamPickerHTML() {
 		</fieldset>`;
 }
 
-function makeProjectPickerHTML(isInboxDefault) {
+function makeProjectPickerHTML(canCreateProjects) {
 	const intro = `
 		<fieldset id="projectPicker">
 			<legend>
@@ -68,16 +68,16 @@ function makeProjectPickerHTML(isInboxDefault) {
 	const outro = `</fieldset>`;
 
 	const newProjectOption = `
-		<label id="newProject" class="radio-button ${isInboxDefault ? "disabled" : ""}">
+		<label id="newProject" class="radio-button ${canCreateProjects ? "" : "disabled"}">
 			<input type="radio" name="project" value="newProject" ${
-				isInboxDefault ? "disabled" : "checked"
+				canCreateProjects ? "checked" : "disabled"
 			}>
 			<span>
 				<strong>Create New Project</strong><br>
 				<small aria-live="polite">${
-					isInboxDefault
-						? "Project limit reached. Can't create more Todoist projects."
-						: "Import games into a new Todoist project"
+					canCreateProjects
+						? "Import games into a new Todoist project"
+						: "Project limit reached. Can't create more Todoist projects."
 				}</small>
 			</span>
 		</label>`;
@@ -85,7 +85,7 @@ function makeProjectPickerHTML(isInboxDefault) {
 	const inboxOption = `
 		<label id="inbox" class="radio-button">
 			<input type="radio" name="project" value="inbox" ${
-				isInboxDefault ? "checked" : ""
+				canCreateProjects ? "" : "checked"
 			}>
 			<span>
 				<strong>Inbox</strong><br>

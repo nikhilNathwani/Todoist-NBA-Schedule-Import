@@ -9,8 +9,8 @@ const router = express.Router();
 router.get("/configure-import", async (req, res) => {
 	try {
 		const accessToken = getAccessToken(req);
-		const isInboxDefault = await userReachedProjectLimit(accessToken);
-		const html = await makePickerPageHTML(isInboxDefault);
+		const canCreateProjects = !(await userReachedProjectLimit(accessToken));
+		const html = await makePickerPageHTML(canCreateProjects);
 		res.send(html);
 	} catch (error) {
 		console.error("Error rendering picker page:", error);
