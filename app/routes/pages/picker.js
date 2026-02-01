@@ -8,7 +8,7 @@ const router = express.Router();
 // Serve the team/project picker page
 router.get("/configure-import", async (req, res) => {
 	try {
-		const accessToken = getAccessToken(req);
+		const accessToken = await getAccessToken(req);
 		const canCreateProjects = !(await userReachedProjectLimit(accessToken));
 		const html = await makePickerPageHTML(canCreateProjects);
 		res.send(html);

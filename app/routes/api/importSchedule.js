@@ -33,7 +33,7 @@ router.post("/import-schedule", async (req, res) => {
 	// Step 2: Initialize Todoist API client
 	let todoistApi, accessToken;
 	try {
-		accessToken = getAccessToken(req);
+		accessToken = await getAccessToken(req);
 		todoistApi = initializeTodoistAPI(accessToken);
 	} catch (error) {
 		console.error("Failed to initialize Todoist API:", error.message);
