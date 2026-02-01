@@ -17,7 +17,7 @@ router.get("/callback", async (req, res) => {
 	try {
 		// Retrieve and store encrypted access token in session cookie
 		const accessToken = await retrieveAccessToken(code);
-		saveAccessToken(req, accessToken);
+		await saveAccessToken(req, accessToken);
 		// Redirect to the team selection page
 		res.redirect(`/configure-import`);
 	} catch (error) {
