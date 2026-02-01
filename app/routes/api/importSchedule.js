@@ -7,6 +7,7 @@ import {
 	importSchedule,
 	addYearlyReminder,
 	createDeepLink,
+	userReachedProjectLimit,
 } from "../../utils/todoist.js";
 
 const router = express.Router();
@@ -30,9 +31,9 @@ router.post("/import-schedule", async (req, res) => {
 	const { team: teamID, project: destinationType } = req.body;
 
 	// Step 2: Initialize Todoist API client
-	let todoistApi;
+	let todoistApi, accessToken;
 	try {
-		const accessToken = getAccessToken(req);
+		accessToken = getAccessToken(req);
 		todoistApi = initializeTodoistAPI(accessToken);
 	} catch (error) {
 		console.error("Failed to initialize Todoist API:", error.message);
@@ -40,6 +41,26 @@ router.post("/import-schedule", async (req, res) => {
 			success: false,
 			message: "Failed to initialize Todoist API: " + error.message,
 		});
+	}
+
+	// Step 2.5: Validate permissions if user wants to create a new project
+	if (destinationType === "newProject") {
+		try {
+			const reachedLimit = await userReachedProjectLimit(accessToken);
+			if (reachedLimit) {
+				return res.status(403).json({
+					success: false,
+					message:
+						"Cannot create new project: you've reached your project limit. Please use your Inbox instead.",
+				});
+			}
+		} catch (error) {
+			console.error("Failed to check project limit:", error.message);
+			return res.status(500).json({
+				success: false,
+				message: "Failed to validate permissions: " + error.message,
+			});
+		}
 	}
 
 	try {
@@ -55,7 +76,7 @@ router.post("/import-schedule", async (req, res) => {
 			todoistApi,
 			destinationType,
 			`${teamName} schedule`,
-			teamColor
+			teamColor,
 		);
 
 		// Step 5: Import all games as tasks
@@ -63,7 +84,7 @@ router.post("/import-schedule", async (req, res) => {
 			todoistApi,
 			upcomingGames,
 			teamName,
-			destinationIds
+			destinationIds,
 		);
 
 		// Step 6: Add yearly reminder to re-import next season

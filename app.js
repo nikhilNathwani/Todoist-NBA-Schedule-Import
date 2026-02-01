@@ -27,7 +27,7 @@ app.use(
 	cookieSession({
 		name: "session",
 		secret: process.env.COOKIE_SECRET,
-		maxAge: 24 * 60 * 60 * 1000, // 24 hours
+		maxAge: 60 * 60 * 1000, // 1 hour
 		httpOnly: true, // Prevents client-side JS from accessing the cookie
 		secure: true, // Only HTTPS not HTTP
 		// sameSite: "Strict", // Mitigates CSRF attacks

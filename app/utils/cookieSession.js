@@ -7,18 +7,18 @@ import { encrypt, decrypt } from "./encryption.js";
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
 //Saves encrypted accessToken to cookie-session
-function saveAccessToken(req, accessToken) {
-	const encryptedToken = encrypt(accessToken);
+async function saveAccessToken(req, accessToken) {
+	const encryptedToken = await encrypt(accessToken);
 	req.session.accessTokenEncrypted = encryptedToken;
 }
 
 //Decrypts accessToken from cookie-session
-function getAccessToken(req) {
+async function getAccessToken(req) {
 	const encryptedToken = req.session.accessTokenEncrypted;
 	if (!encryptedToken) {
 		throw new Error("Access token is not set in the session.");
 	}
-	return decrypt(encryptedToken);
+	return await decrypt(encryptedToken);
 }
 
 // NOTE: If you uncomment printReqSession below, add it back to the export statement
