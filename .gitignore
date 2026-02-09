@@ -18,3 +18,4 @@ demo/
 .env*.local
 
 .DS_Store
+INTERVIEW_STORIES.md
