@@ -55,26 +55,25 @@ function initializeTodoistAPI(accessToken) {
 // Returns bool. Determines if user has reached project limit
 async function userReachedProjectLimit(accessToken) {
 	try {
-		// Fetch projects via the REST API v2
-		const response = await axios.get(
-			"https://api.todoist.com/rest/v2/projects",
+		// Fetch user resources via the Sync API
+		const response = await axios.post(
+			"https://api.todoist.com/sync/v9/sync",
+			{
+				sync_token: "*",
+				resource_types: ["user", "projects"],
+			},
 			{
 				headers: {
 					Authorization: `Bearer ${accessToken}`,
 				},
 			},
 		);
-		const projects = response.data;
-
-		// Count non-inbox projects
+		const { user, projects } = response.data;
+		const isPremium = user.is_premium; // Check if the user is premium
 		const projectCount = projects.reduce(
-			(count, project) => count + (!project.is_inbox_project ? 1 : 0),
+			(count, project) => count + (!project.inbox_project ? 1 : 0),
 			0,
 		);
-
-		// If user has more than 5 projects, they must be premium
-		// (free users are limited to 5 projects)
-		const isPremium = projectCount > projectLimits.FREE;
 
 		return isPremium
 			? projectCount >= projectLimits.PREMIUM
