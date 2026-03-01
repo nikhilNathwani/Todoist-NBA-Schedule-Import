@@ -28,14 +28,14 @@ async function retrieveAccessToken(code) {
 				client_secret: CLIENT_SECRET,
 				code: code,
 				redirect_uri: REDIRECT_URI,
-			}
+			},
 		);
 		const { access_token } = response.data;
 		return access_token;
 	} catch (error) {
 		console.error(
 			"OAuth error:",
-			error.response ? error.response.data : error
+			error.response ? error.response.data : error,
 		);
 		throw error; // Re-throw to let route handler deal with it
 	}
@@ -55,25 +55,26 @@ function initializeTodoistAPI(accessToken) {
 // Returns bool. Determines if user has reached project limit
 async function userReachedProjectLimit(accessToken) {
 	try {
-		// Fetch user resources via the Sync API
-		const response = await axios.post(
-			"https://api.todoist.com/sync/v9/sync",
-			{
-				sync_token: "*",
-				resource_types: ["user", "projects"],
-			},
+		// Fetch projects via the REST API v2
+		const response = await axios.get(
+			"https://api.todoist.com/rest/v2/projects",
 			{
 				headers: {
 					Authorization: `Bearer ${accessToken}`,
 				},
-			}
+			},
 		);
-		const { user, projects } = response.data;
-		const isPremium = user.is_premium; // Check if the user is premium
+		const projects = response.data;
+
+		// Count non-inbox projects
 		const projectCount = projects.reduce(
-			(count, project) => count + (!project.inbox_project ? 1 : 0),
-			0
+			(count, project) => count + (!project.is_inbox_project ? 1 : 0),
+			0,
 		);
+
+		// If user has more than 5 projects, they must be premium
+		// (free users are limited to 5 projects)
+		const isPremium = projectCount > projectLimits.FREE;
 
 		return isPremium
 			? projectCount >= projectLimits.PREMIUM
@@ -92,7 +93,7 @@ async function createDestination(api, destination, name, color) {
 			const projects = projectsResponse.results; // v6+ returns { results, nextCursor }
 
 			const inboxProject = projects.find(
-				(project) => project.inboxProject
+				(project) => project.inboxProject || project.is_inbox_project,
 			);
 
 			if (inboxProject) {
@@ -128,7 +129,7 @@ async function createDestination(api, destination, name, color) {
 		};
 	} else {
 		throw new Error(
-			`Invalid destination type: ${destination}. Expected 'inbox' or 'newProject'.`
+			`Invalid destination type: ${destination}. Expected 'inbox' or 'newProject'.`,
 		);
 	}
 }
@@ -152,11 +153,11 @@ async function importGame(api, game, teamName, taskOrder, destinationIds) {
 
 async function importSchedule(api, schedule, teamName, destinationIds) {
 	console.log(
-		`Importing ${schedule.length} games for ${teamName} into project ID ${destinationIds.projectId}`
+		`Importing ${schedule.length} games for ${teamName} into project ID ${destinationIds.projectId}`,
 	);
 	// Use map to create an array of promises
 	const tasks = schedule.map((game, index) =>
-		importGame(api, game, teamName, index + 1, destinationIds)
+		importGame(api, game, teamName, index + 1, destinationIds),
 	);
 	return Promise.all(tasks); // Return the promise, don't await
 }
