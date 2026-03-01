@@ -3,10 +3,12 @@
 
 // Load env vars first (local-only since .env.local isn't tracked in git)
 if (process.env.NODE_ENV !== "production") {
-	import("dotenv").then((dotenv) => dotenv.config({ path: ".env.local" }));
+	const dotenv = await import("dotenv");
+	dotenv.config({ path: ".env.local" });
 }
 
-import app from "./app.js";
+const appModule = await import("./app.js");
+const app = appModule.default;
 const PORT = process.env.PORT || 3000;
 
 // Start the server
