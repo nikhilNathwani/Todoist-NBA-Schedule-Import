@@ -64,6 +64,17 @@ async function userReachedProjectLimit(accessToken) {
 			? response
 			: response.results || [];
 
+		// Debug: log first project to identify inbox property name
+		if (projects.length > 0) {
+			console.log("First project keys:", Object.keys(projects[0]));
+			console.log("Inbox-related properties:", {
+				isInboxProject: projects[0].isInboxProject,
+				is_inbox_project: projects[0].is_inbox_project,
+				inboxProject: projects[0].inboxProject,
+				inbox_project: projects[0].inbox_project,
+			});
+		}
+
 		// Count non-inbox projects
 		const projectCount = projects.reduce(
 			(count, project) =>
@@ -102,6 +113,17 @@ async function createDestination(api, destination, name, color) {
 			const projects = Array.isArray(response)
 				? response
 				: response.results || [];
+
+			// Debug: log first project to identify inbox property name
+			if (projects.length > 0) {
+				console.log("First project keys:", Object.keys(projects[0]));
+				console.log("Inbox-related properties:", {
+					isInboxProject: projects[0].isInboxProject,
+					is_inbox_project: projects[0].is_inbox_project,
+					inboxProject: projects[0].inboxProject,
+					inbox_project: projects[0].inbox_project,
+				});
+			}
 
 			// Try multiple property names for inbox project (API variations)
 			const inboxProject = projects.find(
