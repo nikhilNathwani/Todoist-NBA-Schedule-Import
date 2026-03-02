@@ -47,7 +47,7 @@ function getSuccessNextSteps(deepLink) {
 		</li>
 		<li>
 			<a class="project project-game" href="mailto:nnathwani36@gmail.com?subject=${encodeURIComponent(
-				"Regarding NBA Todoist Import"
+				"Regarding NBA Todoist Import",
 			)}" target="_blank">
 				<i class="fa-regular fa-envelope"></i> Contact me
 			</a>
@@ -57,10 +57,10 @@ function getSuccessNextSteps(deepLink) {
 
 function getErrorNextSteps(errorMessage) {
 	const errorReportLink = `mailto:nnathwani36@gmail.com?subject=${encodeURIComponent(
-		"Issue with NBA Todoist Import"
+		"Issue with NBA Todoist Import",
 	)}&body=${encodeURIComponent(
 		"I encountered the following error when trying to import an NBA schedule into Todoist:\n\n" +
-			errorMessage
+			errorMessage,
 	)}`;
 
 	return `
@@ -70,7 +70,7 @@ function getErrorNextSteps(errorMessage) {
 			</a>
 		</li>
 		<li>
-			<a class="project project-game" href="https://nba-todoist-import.vercel.app/">
+			<a class="project project-game" href="/configure-import">
 				<i class="fa-solid fa-arrow-left"></i> Try again
 			</a>
 		</li>

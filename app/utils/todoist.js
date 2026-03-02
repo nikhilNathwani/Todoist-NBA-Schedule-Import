@@ -66,7 +66,14 @@ async function userReachedProjectLimit(accessToken) {
 
 		// Count non-inbox projects
 		const projectCount = projects.reduce(
-			(count, project) => count + (!project.isInboxProject ? 1 : 0),
+			(count, project) =>
+				count +
+				(!project.isInboxProject &&
+				!project.is_inbox_project &&
+				!project.inboxProject &&
+				!project.inbox_project
+					? 1
+					: 0),
 			0,
 		);
 
