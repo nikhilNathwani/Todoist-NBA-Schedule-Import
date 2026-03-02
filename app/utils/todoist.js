@@ -89,7 +89,9 @@ async function createDestination(api, destination, name, color) {
 	if (destination === "inbox") {
 		// Query the Todoist API for the Inbox project ID
 		try {
-			const projects = await api.getProjects();
+			// Request up to 200 projects to ensure we get the inbox even for power users
+			// (Inbox is typically first, but this covers users with 50-200 projects)
+			const projects = await api.getProjects({ limit: 200 });
 
 			const inboxProject = projects.find(
 				(project) => project.isInboxProject,
