@@ -41,7 +41,7 @@ function getSuccessNextSteps(deepLink) {
 			</a> to view schedule
 		</li>
 		<li>
-			<a class="project project-game" href="https://nba-todoist-import.vercel.app/configure-import">
+			<a class="project project-game" href="/configure-import">
 				<i class="fa-solid fa-arrow-left"></i> Import another
 			</a> schedule
 		</li>

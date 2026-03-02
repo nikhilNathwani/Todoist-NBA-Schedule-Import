@@ -103,10 +103,6 @@ async function createDestination(api, destination, name, color) {
 				? response
 				: response.results || [];
 
-			console.log(
-				`Fetched ${projects.length} projects, looking for inbox...`,
-			);
-
 			// Try multiple property names for inbox project (API variations)
 			const inboxProject = projects.find(
 				(project) =>
@@ -117,7 +113,6 @@ async function createDestination(api, destination, name, color) {
 			);
 
 			if (inboxProject) {
-				console.log(`Found inbox project with ID: ${inboxProject.id}`);
 				// Create section within Inbox project
 				const newSectionResponse = await api.addSection({
 					name: name,
