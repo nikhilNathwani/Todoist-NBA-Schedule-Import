@@ -64,27 +64,9 @@ async function userReachedProjectLimit(accessToken) {
 			? response
 			: response.results || [];
 
-		// Debug: log first project to identify inbox property name
-		if (projects.length > 0) {
-			console.log("First project keys:", Object.keys(projects[0]));
-			console.log("Inbox-related properties:", {
-				isInboxProject: projects[0].isInboxProject,
-				is_inbox_project: projects[0].is_inbox_project,
-				inboxProject: projects[0].inboxProject,
-				inbox_project: projects[0].inbox_project,
-			});
-		}
-
 		// Count non-inbox projects
 		const projectCount = projects.reduce(
-			(count, project) =>
-				count +
-				(!project.isInboxProject &&
-				!project.is_inbox_project &&
-				!project.inboxProject &&
-				!project.inbox_project
-					? 1
-					: 0),
+			(count, project) => count + (!project.inboxProject ? 1 : 0),
 			0,
 		);
 
@@ -114,24 +96,9 @@ async function createDestination(api, destination, name, color) {
 				? response
 				: response.results || [];
 
-			// Debug: log first project to identify inbox property name
-			if (projects.length > 0) {
-				console.log("First project keys:", Object.keys(projects[0]));
-				console.log("Inbox-related properties:", {
-					isInboxProject: projects[0].isInboxProject,
-					is_inbox_project: projects[0].is_inbox_project,
-					inboxProject: projects[0].inboxProject,
-					inbox_project: projects[0].inbox_project,
-				});
-			}
-
-			// Try multiple property names for inbox project (API variations)
+			// Find the inbox project
 			const inboxProject = projects.find(
-				(project) =>
-					project.isInboxProject ||
-					project.is_inbox_project ||
-					project.inboxProject ||
-					project.inbox_project,
+				(project) => project.inboxProject,
 			);
 
 			if (inboxProject) {
