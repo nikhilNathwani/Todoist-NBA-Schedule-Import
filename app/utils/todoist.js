@@ -96,11 +96,21 @@ async function createDestination(api, destination, name, color) {
 				? response
 				: response.results || [];
 
+			console.log(
+				`Fetched ${projects.length} projects, looking for inbox...`,
+			);
+
+			// Try multiple property names for inbox project (API variations)
 			const inboxProject = projects.find(
-				(project) => project.isInboxProject,
+				(project) =>
+					project.isInboxProject ||
+					project.is_inbox_project ||
+					project.inboxProject ||
+					project.inbox_project,
 			);
 
 			if (inboxProject) {
+				console.log(`Found inbox project with ID: ${inboxProject.id}`);
 				// Create section within Inbox project
 				const newSectionResponse = await api.addSection({
 					name: name,
@@ -111,6 +121,13 @@ async function createDestination(api, destination, name, color) {
 					sectionId: newSectionResponse.id,
 				};
 			} else {
+				// Debug: log first project structure to see property names
+				if (projects.length > 0) {
+					console.error(
+						"First project structure:",
+						JSON.stringify(projects[0], null, 2),
+					);
+				}
 				throw new Error("Inbox project not found");
 			}
 		} catch (error) {
