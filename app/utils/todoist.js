@@ -57,7 +57,12 @@ async function userReachedProjectLimit(accessToken) {
 	try {
 		// Use the TypeScript library to fetch projects (it handles API versioning)
 		const api = new TodoistApi(accessToken);
-		const projects = await api.getProjects({ limit: 200 });
+		const response = await api.getProjects({ limit: 200 });
+
+		// Handle both array response and paginated response format
+		const projects = Array.isArray(response)
+			? response
+			: response.results || [];
 
 		// Count non-inbox projects
 		const projectCount = projects.reduce(
@@ -84,7 +89,12 @@ async function createDestination(api, destination, name, color) {
 		try {
 			// Request up to 200 projects to ensure we get the inbox even for power users
 			// (Inbox is typically first, but this covers users with 50-200 projects)
-			const projects = await api.getProjects({ limit: 200 });
+			const response = await api.getProjects({ limit: 200 });
+
+			// Handle both array response and paginated response format
+			const projects = Array.isArray(response)
+				? response
+				: response.results || [];
 
 			const inboxProject = projects.find(
 				(project) => project.isInboxProject,
