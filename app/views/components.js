@@ -5,6 +5,15 @@ function makeHead(title = "NBA -> Todoist Schedule Import") {
 			<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 			<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 			<title>${title}</title>
+			<meta property="og:type" content="website" />
+			<meta property="og:url" content="https://nba-todoist-import.vercel.app/" />
+			<meta property="og:title" content="NBA Schedule Import" />
+			<meta property="og:description" content="Import your favorite NBA team's regular season schedule into Todoist as tasks." />
+			<meta property="og:image" content="https://nba-todoist-import.vercel.app/og-image.png" />
+			<meta property="og:image:width" content="1200" />
+			<meta property="og:image:height" content="630" />
+			<meta name="twitter:card" content="summary_large_image" />
+			<meta name="twitter:image" content="https://nba-todoist-import.vercel.app/og-image.png" />
 			<link rel="stylesheet" href="/style.css" />
 			<link
 				rel="apple-touch-icon"
