@@ -14,6 +14,13 @@ router.get("/", async (req, res) => {
 	res.send(html);
 });
 
+// TEST ROUTE: Force season on UI for testing
+router.get("/test-season-on", async (req, res) => {
+	console.log("DEBUG - /test-season-on route hit!");
+	const html = makeLandingPageHTML();
+	res.send(html);
+});
+
 // TEST ROUTE: Force season over UI for testing
 router.get("/test-season-over", async (req, res) => {
 	console.log("DEBUG - /test-season-over route hit!");
