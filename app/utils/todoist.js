@@ -20,23 +20,22 @@ async function retrieveAccessToken(code) {
 	const { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI } = process.env;
 
 	try {
-		const response = await fetch(
-			"https://todoist.com/oauth/access_token",
-			{
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({
-					client_id: CLIENT_ID,
-					client_secret: CLIENT_SECRET,
-					code: code,
-					redirect_uri: REDIRECT_URI,
-				}),
-			},
-		);
+		const response = await fetch("https://todoist.com/oauth/access_token", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({
+				client_id: CLIENT_ID,
+				client_secret: CLIENT_SECRET,
+				code: code,
+				redirect_uri: REDIRECT_URI,
+			}),
+		});
 		if (!response.ok) {
 			const errorData = await response.json().catch(() => ({}));
 			console.error("OAuth error:", errorData);
-			throw new Error(`OAuth request failed with status ${response.status}`);
+			throw new Error(
+				`OAuth request failed with status ${response.status}`,
+			);
 		}
 		const { access_token } = await response.json();
 		return access_token;
