@@ -1,4 +1,4 @@
-# Copilot Instructions for Todoist NBA Schedule Saver
+# Copilot Instructions for Todoist NBA Schedule Import
 
 ## Project Overview
 

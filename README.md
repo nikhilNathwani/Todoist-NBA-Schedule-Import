@@ -1,10 +1,10 @@
-# Todoist NBA Schedule Saver
+# Todoist NBA Schedule Import
 
 OAuth-enabled web app that imports an NBA team's schedule into Todoist as tasks.
 
 ## Overview
 
-Todoist NBA Schedule Saver connects to a user's Todoist account, lets them choose an NBA team, and imports upcoming games into either a new project or an Inbox section. It handles OAuth, session security, schedule parsing, Todoist API writes, and season lifecycle behavior.
+Todoist NBA Schedule Import connects to a user's Todoist account, lets them choose an NBA team, and imports upcoming games into either a new project or an Inbox section. It handles OAuth, session security, schedule parsing, Todoist API writes, and season lifecycle behavior.
 
 ## Highlights
 

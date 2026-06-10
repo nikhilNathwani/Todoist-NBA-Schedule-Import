@@ -1,7 +1,7 @@
 {
 	"files.exclude": {
 		"**/.git": true,
-		"**/.github": true,
+		// "**/.github": true,
 		"**/.vercel": true,
 		"**/node_modules": true,
 		// "package.json": true,
