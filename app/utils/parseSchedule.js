@@ -79,13 +79,11 @@ async function getFinalGameTime() {
 	} catch (err) {
 		console.error(
 			"Error reading nba_schedule.json for final game time:",
-			err
+			err,
 		);
 		throw new Error("Failed to get finalGameTime data");
 	}
 }
-
-export { getSchedule, getTeams, isSeasonOver, getTeamData };
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 //                                           //
@@ -93,7 +91,7 @@ export { getSchedule, getTeams, isSeasonOver, getTeamData };
 //                                           //
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-async function getTeamData(teamID) {
+async function getTeamData(teamID, now = new Date()) {
 	try {
 		const data = await getSchedule();
 		const teamData = data[teamID];
@@ -103,7 +101,7 @@ async function getTeamData(teamID) {
 		}
 
 		// Filter schedule for upcoming games only
-		const upcomingGames = getUpcomingGames(teamData.schedule);
+		const upcomingGames = getUpcomingGames(teamData.schedule, now);
 
 		// Return teamData with the filtered schedule
 		return { ...teamData, schedule: upcomingGames };
@@ -113,18 +111,27 @@ async function getTeamData(teamID) {
 	}
 }
 
-function getUpcomingGames(schedule) {
+function getUpcomingGames(schedule, now = new Date()) {
 	const upcomingGames = [];
 	for (const game of schedule) {
-		if (isLaterThanNow(game.gameTimeUtcIso8601)) {
+		if (isLaterThanNow(game.gameTimeUtcIso8601, now)) {
 			upcomingGames.push(game);
 		}
 	}
 	return upcomingGames;
 }
 
-function isLaterThanNow(dateTime) {
+function isLaterThanNow(dateTime, now = new Date()) {
 	const gameDateTime = new Date(dateTime);
-	const now = new Date();
 	return gameDateTime > now;
 }
+
+export {
+	getSchedule,
+	getTeams,
+	isSeasonOver,
+	getTeamData,
+	getFinalGameTime,
+	getUpcomingGames,
+	isLaterThanNow,
+};
