@@ -5,7 +5,9 @@
     - Update `data/nba_schedule.json` with the new season's games
     - Automatically verify:
         - All 30 NBA teams are present
-        - Each team has 82 games
+        - Each team has 80 games (regular-season games only; the 2 In-Season
+          Tournament games per team aren't scheduled until partway through
+          the season)
         - Game times are in proper UTC format
 3. If verification fails:
     - Check if CBS Sports' website structure changed
