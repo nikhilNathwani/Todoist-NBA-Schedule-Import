@@ -108,7 +108,15 @@ export default function PickerForm({
 
 	async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
 		event.preventDefault();
-		if (!selectedTeam) return;
+		// state.phase !== "form" guards against a double-submit (double-click,
+		// or a duplicate form-submit event) firing importScheduleAction twice
+		// concurrently -- found by testing exactly this against a real account
+		// near its project limit: the first call fully succeeded (created the
+		// project + imported games) while a second, later-resolving call's own
+		// pre-check correctly saw the now-updated count and returned "limit
+		// reached" -- and that second, misleading result was what displayed,
+		// even though the import had actually worked.
+		if (!selectedTeam || state.phase !== "form") return;
 
 		const submitStart = Date.now();
 		dispatch({ type: "SUBMIT_START" });
@@ -207,7 +215,7 @@ export default function PickerForm({
 							id="submitButton"
 							className="button"
 							type="submit"
-							disabled={!selectedTeam}
+							disabled={!selectedTeam || state.phase !== "form"}
 						>
 							Import schedule
 						</button>
