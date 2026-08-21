@@ -21,3 +21,8 @@ demo/
 INTERVIEW_STORIES.md
 
 coverage/
+
+# Next.js
+.next/
+next-env.d.ts
+*.tsbuildinfo
