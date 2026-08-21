@@ -1,8 +1,13 @@
-"use client";
-
-import { useEffect, useState } from "react";
-
 // Ported from public/scripts/ui/nextSteps.js (now removed).
+//
+// The original needed a requestAnimationFrame-after-mount dance (and this
+// file needed "use client" + useEffect/useState to replicate it) because
+// style.css's fade-in used to be a CSS *transition*, which only animates on
+// a state change after the initial paint. style.css now uses a @keyframes
+// *animation* on `ul` instead, which plays automatically on mount with no
+// JS trigger needed -- see KNOWN_ISSUES.md's former item #4 for the before/
+// after. That's what let both the effect and the client boundary go away
+// here entirely.
 export default function NextStepsList({
 	status,
 	deepLink,
@@ -12,18 +17,8 @@ export default function NextStepsList({
 	deepLink?: string;
 	errorMessage?: string;
 }) {
-	// Mirrors the original's fadeInNextSteps(), which used
-	// requestAnimationFrame after the <ul> was appended to the DOM so the
-	// opacity transition (ul.fade-in in style.css) actually plays instead of
-	// snapping straight to visible.
-	const [visible, setVisible] = useState(false);
-	useEffect(() => {
-		const frame = requestAnimationFrame(() => setVisible(true));
-		return () => cancelAnimationFrame(frame);
-	}, []);
-
 	return (
-		<ul className={visible ? "fade-in" : ""}>
+		<ul>
 			{status === "success" ? (
 				<SuccessSteps deepLink={deepLink ?? ""} />
 			) : (

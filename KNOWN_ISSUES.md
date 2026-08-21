@@ -36,18 +36,6 @@ Findings from a post-migration audit of the `nextjs-migration` branch, deliberat
 
 ---
 
-## 4. Candidate: `NextStepsList`'s fade-in could drop its `useEffect` entirely
-
-**Where:** `app/configure-import/_components/NextStepsList.tsx`, `public/style.css:405-414`
-
-**What:** The current fade-in relies on `style.css`'s `ul { opacity: 0; transition: opacity 1s ease; } ul.fade-in { opacity: 1; }` -- a **transition**, which only animates on a *state change after the initial paint*, hence the `useEffect(() => requestAnimationFrame(() => setVisible(true)), [])` dance to render once without the class, then add it a frame later.
-
-A CSS **`@keyframes`** animation instead of a transition would play automatically on mount with no JS trigger needed at all -- e.g. `@keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }` + `ul { animation: fadeIn 1s ease; }`, always rendered with the animation class from the start. This codebase already uses `@keyframes` elsewhere (`.spinner { animation: spin 2s linear infinite; }`), so it'd be the more consistent choice, not a new pattern.
-
-This would eliminate the `useEffect`, the `visible` state, and the cancel-on-unmount cleanup in `NextStepsList.tsx` -- genuinely simpler, not just "no effect for its own sake." Not applied yet since it touches shared CSS -- flagged as a candidate, not done.
-
----
-
 ## Not an issue, but worth understanding cold if asked
 
 **`LogoBanner`'s Server/Client Component boundary.** It has no `"use client"` directive, but it's imported and rendered directly inside `PickerForm.tsx` (a Client Component). Under the App Router's composition rules, a Server Component only stays server-rendered when passed down *as children* from a Server Component parent -- directly importing and rendering it from inside client code pulls it into the client bundle regardless of its own directive. No actual bug (LogoBanner has no server-only code), just a nuance worth being able to explain.
