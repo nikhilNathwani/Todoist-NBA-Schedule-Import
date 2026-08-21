@@ -3,6 +3,7 @@ import {
 	getProjectUrl,
 	getSectionUrl,
 } from "@doist/todoist-api-typescript";
+import { toClassifiedError, createMockTodoistError } from "./todoistErrors.js";
 
 const projectLimits = {
 	FREE: 5,
@@ -33,15 +34,20 @@ async function retrieveAccessToken(code) {
 		if (!response.ok) {
 			const errorData = await response.json().catch(() => ({}));
 			console.error("OAuth error:", errorData);
-			throw new Error(
+			// Shaped to match the SDK's TodoistRequestError (.httpStatusCode +
+			// .responseData) so this flows through the same classifier as
+			// every other Todoist API failure in this app.
+			const error = new Error(
 				`OAuth request failed with status ${response.status}`,
 			);
+			error.httpStatusCode = response.status;
+			error.responseData = errorData;
+			throw error;
 		}
 		const { access_token } = await response.json();
 		return access_token;
 	} catch (error) {
-		console.error("OAuth error:", error);
-		throw error; // Re-throw to let route handler deal with it
+		throw toClassifiedError(error, "retrieveAccessToken");
 	}
 }
 
@@ -56,9 +62,17 @@ function initializeTodoistAPI(accessToken) {
 	return new TodoistApi(accessToken);
 }
 
-// Returns bool. Determines if user has reached project limit
-async function userReachedProjectLimit(accessToken) {
+// Returns bool. Determines if user has reached project limit.
+// mockErrorCode (optional): one of MOCKABLE_ERROR_CODES in todoistErrors.js.
+// When set, simulates that Todoist API failure instead of making a real
+// call, so the classification/handling below can be demoed on demand --
+// see ?mockTodoistError= on /configure-import.
+async function userReachedProjectLimit(accessToken, mockErrorCode) {
 	try {
+		if (mockErrorCode) {
+			throw createMockTodoistError(mockErrorCode);
+		}
+
 		// Use the TypeScript library to fetch projects (it handles API versioning)
 		const api = new TodoistApi(accessToken);
 		const response = await api.getProjects({ limit: 200 });
@@ -82,12 +96,17 @@ async function userReachedProjectLimit(accessToken) {
 			? projectCount >= projectLimits.PREMIUM
 			: projectCount >= projectLimits.FREE;
 	} catch (error) {
-		console.error("Error fetching user data:", error);
-		throw new Error("Failed to fetch user metadata");
+		throw toClassifiedError(error, "userReachedProjectLimit");
 	}
 }
 
-async function createDestination(api, destination, name, color) {
+// mockErrorCode (optional): see userReachedProjectLimit above -- same
+// simulation mechanism, applied at this API call site instead.
+async function createDestination(api, destination, name, color, mockErrorCode) {
+	if (mockErrorCode) {
+		throw toClassifiedError(createMockTodoistError(mockErrorCode), "createDestination");
+	}
+
 	if (destination === "inbox") {
 		// Query the Todoist API for the Inbox project ID
 		try {
@@ -127,7 +146,7 @@ async function createDestination(api, destination, name, color) {
 			}
 		} catch (error) {
 			console.error("Error in createDestination (inbox):", error);
-			throw error;
+			throw toClassifiedError(error, "createDestination:inbox");
 		}
 	} else if (destination === "newProject") {
 		// Check if a color exists for the given team name
@@ -136,13 +155,18 @@ async function createDestination(api, destination, name, color) {
 		}
 
 		// Create a new Todoist project
-		const newProjectResponse = await api.addProject({
-			name: name,
-			color: color,
-		});
-		return {
-			projectId: newProjectResponse.id,
-		};
+		try {
+			const newProjectResponse = await api.addProject({
+				name: name,
+				color: color,
+			});
+			return {
+				projectId: newProjectResponse.id,
+			};
+		} catch (error) {
+			console.error("Error in createDestination (newProject):", error);
+			throw toClassifiedError(error, "createDestination:newProject");
+		}
 	} else {
 		throw new Error(
 			`Invalid destination type: ${destination}. Expected 'inbox' or 'newProject'.`,

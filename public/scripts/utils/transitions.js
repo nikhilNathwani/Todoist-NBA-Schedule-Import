@@ -30,12 +30,12 @@ function transitionToLoading() {
 	});
 }
 
-async function transitionToResult(status) {
+async function transitionToResult(status, subtitleOverride) {
 	// Wait for minimum loading duration
 	await waitForLoadingUI();
 
 	// Update status header
-	updateHeaderStatus(status);
+	updateHeaderStatus(status, subtitleOverride);
 
 	// Delay before showing next steps for smoother UX
 	await new Promise((resolve) => setTimeout(resolve, 1200));

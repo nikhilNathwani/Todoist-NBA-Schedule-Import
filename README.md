@@ -106,6 +106,25 @@ For annual workflow and verification details, see `SCRAPE_INSTRUCTIONS.md`.
 - Access tokens are encrypted before session storage
 - Cookies are configured for HTTPS production usage
 
+## Possible Future Improvements
+
+Deliberately not done now, but worth revisiting if the constraints below change:
+
+- **Schedule data / team logos are static (JSON file + SVGs), not a database.**
+  This is a deliberate choice, not a placeholder: the schedule is read-only at
+  request time, updated once a year via a batch pipeline (never written to
+  during a request), and small enough (~400KB) to fit trivially in memory.
+  A database would add write-consistency and query machinery this data has
+  no use for. Reconsider if the app ever needs runtime writes to this data
+  (e.g. live in-season score/date updates, or user-customized schedules).
+- **Dependency updates.** `npm audit`/Dependabot currently flags ~20
+  transitive vulnerabilities (mostly `express`'s bundled `path-to-regexp`/
+  `qs`, a couple in the Todoist SDK's own dependencies, and several in
+  dev-only tooling that never ships to production). None are realistically
+  exploitable in this app's threat model today, but a periodic `npm update`
+  / `pip install -U -r scrape/requirements.txt` pass (bumping Express to a
+  current minor version in particular) would clear most of them cheaply.
+
 ## Why This Project
 
 This project demonstrates practical product engineering: third-party OAuth integration, secure token/session handling, API reliability under external platform constraints, and a complete user-facing workflow from authentication to task creation.

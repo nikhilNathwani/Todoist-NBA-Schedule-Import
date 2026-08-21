@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import express from "express";
 import request from "supertest";
 
@@ -89,6 +89,7 @@ describe("POST /api/import-schedule", () => {
 			"newProject",
 			"Boston Celtics schedule",
 			"red",
+			undefined,
 		);
 		expect(importScheduleMock).toHaveBeenCalled();
 		expect(addYearlyReminderMock).toHaveBeenCalled();
@@ -152,5 +153,135 @@ describe("POST /api/import-schedule", () => {
 		expect(response.body.message).toContain(
 			"Error importing games: bad team",
 		);
+	});
+
+	describe("classified Todoist error responses", () => {
+		it("maps a rate-limited createDestination failure to 429 with error details", async () => {
+			getAccessTokenMock.mockResolvedValue("token");
+			initializeTodoistAPIMock.mockReturnValue({});
+			userReachedProjectLimitMock.mockResolvedValue(false);
+			getTeamDataMock.mockResolvedValue({
+				name: "Boston Celtics",
+				color: "red",
+				schedule: [],
+			});
+			createDestinationMock.mockRejectedValue(
+				Object.assign(new Error("Todoist is rate-limiting requests right now. Please wait about 12s and try again."), {
+					todoistErrorType: "RATE_LIMITED",
+					retryable: true,
+					retryAfterSeconds: 12,
+				}),
+			);
+
+			const response = await request(createApp())
+				.post("/api/import-schedule")
+				.send({ team: "BOS", project: "inbox" });
+
+			expect(response.status).toBe(429);
+			expect(response.body).toMatchObject({
+				success: false,
+				errorType: "RATE_LIMITED",
+				retryable: true,
+				retryAfterSeconds: 12,
+			});
+		});
+
+		it("maps an expired-auth failure from the project-limit check to 401", async () => {
+			getAccessTokenMock.mockResolvedValue("token");
+			initializeTodoistAPIMock.mockReturnValue({});
+			userReachedProjectLimitMock.mockRejectedValue(
+				Object.assign(new Error("Your Todoist session has expired or was revoked. Please log in again."), {
+					todoistErrorType: "AUTH_EXPIRED",
+					retryable: false,
+				}),
+			);
+
+			const response = await request(createApp())
+				.post("/api/import-schedule")
+				.send({ team: "BOS", project: "newProject" });
+
+			expect(response.status).toBe(401);
+			expect(response.body.errorType).toBe("AUTH_EXPIRED");
+		});
+
+		it("maps an outage-shaped failure to 502 Bad Gateway", async () => {
+			getAccessTokenMock.mockResolvedValue("token");
+			initializeTodoistAPIMock.mockReturnValue({});
+			userReachedProjectLimitMock.mockResolvedValue(false);
+			getTeamDataMock.mockResolvedValue({
+				name: "Boston Celtics",
+				color: "red",
+				schedule: [],
+			});
+			createDestinationMock.mockRejectedValue(
+				Object.assign(new Error("Todoist is having a server-side issue right now."), {
+					todoistErrorType: "SERVER_ERROR",
+					retryable: true,
+					retryAfterSeconds: 10,
+				}),
+			);
+
+			const response = await request(createApp())
+				.post("/api/import-schedule")
+				.send({ team: "BOS", project: "inbox" });
+
+			expect(response.status).toBe(502);
+		});
+	});
+
+	describe("error-demo gating (ENABLE_ERROR_DEMO)", () => {
+		const originalEnv = process.env.ENABLE_ERROR_DEMO;
+
+		afterEach(() => {
+			process.env.ENABLE_ERROR_DEMO = originalEnv;
+		});
+
+		it("does not forward mockError to todoist.js when demo mode is disabled", async () => {
+			delete process.env.ENABLE_ERROR_DEMO;
+			vi.resetModules();
+			const { default: freshRoute } = await import(
+				"../../../app/routes/api/importSchedule.js"
+			);
+			const app = express();
+			app.use(express.json());
+			app.use("/api", freshRoute);
+
+			getAccessTokenMock.mockResolvedValue("token");
+			initializeTodoistAPIMock.mockReturnValue({});
+			userReachedProjectLimitMock.mockResolvedValue(false);
+
+			await request(app)
+				.post("/api/import-schedule")
+				.send({ team: "BOS", project: "newProject", mockError: "500" });
+
+			expect(userReachedProjectLimitMock).toHaveBeenCalledWith(
+				"token",
+				undefined,
+			);
+		});
+
+		it("forwards mockError to todoist.js when demo mode is enabled", async () => {
+			process.env.ENABLE_ERROR_DEMO = "true";
+			vi.resetModules();
+			const { default: freshRoute } = await import(
+				"../../../app/routes/api/importSchedule.js"
+			);
+			const app = express();
+			app.use(express.json());
+			app.use("/api", freshRoute);
+
+			getAccessTokenMock.mockResolvedValue("token");
+			initializeTodoistAPIMock.mockReturnValue({});
+			userReachedProjectLimitMock.mockResolvedValue(false);
+
+			await request(app)
+				.post("/api/import-schedule")
+				.send({ team: "BOS", project: "newProject", mockError: "500" });
+
+			expect(userReachedProjectLimitMock).toHaveBeenCalledWith(
+				"token",
+				"500",
+			);
+		});
 	});
 });

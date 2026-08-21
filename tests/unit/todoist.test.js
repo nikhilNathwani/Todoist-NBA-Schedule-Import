@@ -46,6 +46,39 @@ describe("todoist utilities", () => {
 		await expect(userReachedProjectLimit("token")).resolves.toBe(true);
 	});
 
+	it("simulates a classified Todoist error via mockErrorCode instead of calling the API", async () => {
+		const getProjects = vi.fn();
+		TodoistApiMock.mockImplementation(function TodoistApiCtor() {
+			return { getProjects };
+		});
+
+		await expect(
+			userReachedProjectLimit("token", "503"),
+		).rejects.toMatchObject({
+			todoistErrorType: "SERVICE_UNAVAILABLE",
+			httpStatusCode: 503,
+			retryable: true,
+		});
+		expect(getProjects).not.toHaveBeenCalled();
+	});
+
+	it("classifies a real SDK failure from userReachedProjectLimit", async () => {
+		const rateLimitError = Object.assign(new Error("Too Many Requests"), {
+			httpStatusCode: 429,
+			responseData: { retry_after: 15 },
+		});
+		TodoistApiMock.mockImplementation(function TodoistApiCtor() {
+			return { getProjects: vi.fn().mockRejectedValue(rateLimitError) };
+		});
+
+		await expect(
+			userReachedProjectLimit("token"),
+		).rejects.toMatchObject({
+			todoistErrorType: "RATE_LIMITED",
+			retryAfterSeconds: 15,
+		});
+	});
+
 	it("creates inbox section destination", async () => {
 		const api = {
 			getProjects: vi.fn().mockResolvedValue([
@@ -95,6 +128,46 @@ describe("todoist utilities", () => {
 		await expect(
 			createDestination({}, "bad", "BOS schedule", "red"),
 		).rejects.toThrow("Invalid destination type: bad");
+	});
+
+	it("simulates a classified Todoist error via mockErrorCode instead of calling the API", async () => {
+		const api = {
+			getProjects: vi.fn(),
+			addProject: vi.fn(),
+			addSection: vi.fn(),
+		};
+
+		await expect(
+			createDestination(api, "newProject", "BOS schedule", "red", "429"),
+		).rejects.toMatchObject({
+			todoistErrorType: "RATE_LIMITED",
+			httpStatusCode: 429,
+			retryable: true,
+		});
+		expect(api.getProjects).not.toHaveBeenCalled();
+		expect(api.addProject).not.toHaveBeenCalled();
+	});
+
+	it("classifies a real SDK failure from createDestination (inbox)", async () => {
+		const authError = Object.assign(new Error("Unauthorized"), {
+			httpStatusCode: 401,
+		});
+		const api = { getProjects: vi.fn().mockRejectedValue(authError) };
+
+		await expect(
+			createDestination(api, "inbox", "BOS schedule", "red"),
+		).rejects.toMatchObject({ todoistErrorType: "AUTH_EXPIRED" });
+	});
+
+	it("classifies a real SDK failure from createDestination (newProject)", async () => {
+		const serverError = Object.assign(new Error("Server error"), {
+			httpStatusCode: 500,
+		});
+		const api = { addProject: vi.fn().mockRejectedValue(serverError) };
+
+		await expect(
+			createDestination(api, "newProject", "BOS schedule", "red"),
+		).rejects.toMatchObject({ todoistErrorType: "SERVER_ERROR", retryable: true });
 	});
 
 	it("creates deep link to section when section id exists", () => {

@@ -37,11 +37,12 @@ async function makePickerPageHTML(canCreateProjects) {
 	<script src="/scripts/ui/header/importStatus.js"></script>
 	<script src="/scripts/ui/header/teamLogo.js"></script>
 	<script src="/scripts/ui/picker.js"></script>
+	<script src="/scripts/ui/demoBanner.js"></script>
 	<script src="/scripts/utils/transitions.js"></script>
 	<script src="/scripts/ui/nextSteps.js"></script>
 	<script src="/scripts/events/selectTeam.js"></script>
 	<script src="/scripts/events/submitForm.js"></script>
-		</body>			
+		</body>
 	</html>
 	`;
 }

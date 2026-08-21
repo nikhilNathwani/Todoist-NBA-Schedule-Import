@@ -76,6 +76,28 @@ footer a {
 	color: var(--clr-bg);
 }
 
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+/*                                         */
+/*      ERROR-HANDLING DEMO BANNER         */
+/*      (see public/scripts/ui/demoBanner.js) */
+/*                                         */
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+.demo-banner {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 1000;
+
+	padding: 0.5rem 1rem;
+	text-align: center;
+	font-size: 0.85rem;
+	font-weight: bold;
+
+	color: var(--clr-light);
+	background-color: var(--clr-accent-dark);
+}
+
 .app-frame {
 	width: fit-content;
 	max-width: 350px;

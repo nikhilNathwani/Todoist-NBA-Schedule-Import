@@ -9,8 +9,14 @@ import {
 	createDeepLink,
 	userReachedProjectLimit,
 } from "../../utils/todoist.js";
+import { mapTodoistErrorTypeToHttpStatus } from "../../utils/todoistErrors.js";
 
 const router = express.Router();
+
+// Gate: mockError in the request body is only honored when this is
+// explicitly enabled (see .env.example) -- disabled by default so it can't
+// be triggered on a real deployment unless deliberately turned on for a demo.
+const ERROR_DEMO_ENABLED = process.env.ENABLE_ERROR_DEMO === "true";
 
 /**
  * Imports NBA schedule into Todoist
@@ -28,7 +34,8 @@ const router = express.Router();
  */
 router.post("/import-schedule", async (req, res) => {
 	// Step 1: Extract user selections from request
-	const { team: teamID, project: destinationType } = req.body;
+	const { team: teamID, project: destinationType, mockError } = req.body;
+	const mockErrorCode = ERROR_DEMO_ENABLED ? mockError : undefined;
 
 	// Step 2: Initialize Todoist API client
 	let todoistApi, accessToken;
@@ -46,7 +53,10 @@ router.post("/import-schedule", async (req, res) => {
 	// Step 2.5: Validate permissions if user wants to create a new project
 	if (destinationType === "newProject") {
 		try {
-			const reachedLimit = await userReachedProjectLimit(accessToken);
+			const reachedLimit = await userReachedProjectLimit(
+				accessToken,
+				mockErrorCode,
+			);
 			if (reachedLimit) {
 				return res.status(403).json({
 					success: false,
@@ -55,11 +65,11 @@ router.post("/import-schedule", async (req, res) => {
 				});
 			}
 		} catch (error) {
-			console.error("Failed to check project limit:", error.message);
-			return res.status(500).json({
-				success: false,
-				message: "Failed to validate permissions: " + error.message,
-			});
+			return respondWithClassifiedError(
+				res,
+				error,
+				"Failed to validate permissions",
+			);
 		}
 	}
 
@@ -77,6 +87,7 @@ router.post("/import-schedule", async (req, res) => {
 			destinationType,
 			`${teamName} schedule`,
 			teamColor,
+			mockErrorCode,
 		);
 
 		// Step 5: Import all games as tasks
@@ -96,11 +107,37 @@ router.post("/import-schedule", async (req, res) => {
 
 		res.status(200).json({ deepLink: todoistDeepLink });
 	} catch (error) {
-		res.status(500).json({
-			success: false,
-			message: `Error importing games: ${error.message}`,
-		});
+		respondWithClassifiedError(res, error, "Error importing games");
 	}
 });
 
 export default router;
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+//                                           //
+//       ERROR RESPONSE MAPPING              //
+//                                           //
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
+// Errors thrown by app/utils/todoist.js are classified (see todoistErrors.js)
+// and carry `.todoistErrorType`. Anything without that tag is an
+// unclassified local error (a real bug, not a Todoist API response) and
+// keeps the original generic 500 behavior.
+function respondWithClassifiedError(res, error, fallbackPrefix) {
+	if (!error.todoistErrorType) {
+		console.error(`${fallbackPrefix}:`, error.message);
+		return res.status(500).json({
+			success: false,
+			message: `${fallbackPrefix}: ${error.message}`,
+		});
+	}
+
+	console.error(`${fallbackPrefix} [${error.todoistErrorType}]:`, error.message);
+	return res.status(mapTodoistErrorTypeToHttpStatus(error.todoistErrorType)).json({
+		success: false,
+		errorType: error.todoistErrorType,
+		message: error.message,
+		retryable: error.retryable,
+		retryAfterSeconds: error.retryAfterSeconds,
+	});
+}

@@ -28,8 +28,9 @@ form.addEventListener("submit", async function (event) {
 	} catch (error) {
 		console.error("Import failed:", error);
 
-		// Show error state
-		await transitionToResult(importStatus.ERROR);
+		// Show error state, with the backend's classified message (e.g.
+		// "Todoist is rate-limiting requests...") if one was provided
+		await transitionToResult(importStatus.ERROR, error.message);
 		showNextStepsList(importStatus.ERROR, null, error);
 	}
 });
