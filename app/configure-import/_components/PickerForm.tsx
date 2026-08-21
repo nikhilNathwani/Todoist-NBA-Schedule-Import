@@ -5,10 +5,10 @@
 // events/submitForm.js, and utils/transitions.js (all now removed). Those
 // files coordinated through global `let`/`const` bindings and
 // comment-convention ("Note: teamSelect is defined in picker.js") rather
-// than imports; here `selectedTeam`, `selectedProject`, and `importStatus`
+// than imports; here `selectedTeam`, `selectedProject`, and the submit flow
 // are plain React state owned by one component and passed down as typed
 // props, per the task brief.
-import { useState } from "react";
+import { useReducer, useState } from "react";
 import LogoBanner from "@/components/LogoBanner";
 import TeamSelector from "./TeamSelector";
 import ProjectSelector from "./ProjectSelector";
@@ -29,7 +29,62 @@ function sleep(ms: number) {
 	return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-type Phase = "form" | "submitting" | "loading" | "result";
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// Submit flow as a reducer, not five separate useState calls.
+//
+// The earlier version had `phase`, `resultStatus`, `deepLink`, `errorMessage`,
+// and `showNextSteps` as independent useState -- nothing stopped, say, a
+// "result" render with resultStatus still null, or deepLink set while
+// resultStatus was "error". In practice every call site happened to set the
+// related ones together in the same batch, so it never actually misfired --
+// but that was a habit to maintain, not something the types enforced.
+//
+// This mirrors the auth state machine in the Slidemoji project (see its
+// INTERVIEW_STORIES.md, Story 2): a discriminated union + reducer makes the
+// impossible combinations un-representable instead of just currently-true.
+// Team/project selection below stays as plain useState deliberately -- it's
+// simple, independent input state with no interdependent-transition risk,
+// so folding it into this reducer too would just be mixing unrelated concerns.
+type SubmitState =
+	| { phase: "form" }
+	| { phase: "submitting" }
+	| { phase: "loading" }
+	| { phase: "result"; status: "success"; deepLink: string; showNextSteps: boolean }
+	| { phase: "result"; status: "error"; errorMessage: string; showNextSteps: boolean };
+
+type SubmitAction =
+	| { type: "SUBMIT_START" }
+	| { type: "FADE_OUT_COMPLETE" }
+	| { type: "RESULT_SUCCESS"; deepLink: string }
+	| { type: "RESULT_ERROR"; message: string }
+	| { type: "SHOW_NEXT_STEPS" };
+
+function submitReducer(state: SubmitState, action: SubmitAction): SubmitState {
+	switch (action.type) {
+		case "SUBMIT_START":
+			return { phase: "submitting" };
+		case "FADE_OUT_COMPLETE":
+			// Only a real transition, not a stray transitionend firing after
+			// we've already moved on, should advance the phase.
+			return state.phase === "submitting" ? { phase: "loading" } : state;
+		case "RESULT_SUCCESS":
+			return {
+				phase: "result",
+				status: "success",
+				deepLink: action.deepLink,
+				showNextSteps: false,
+			};
+		case "RESULT_ERROR":
+			return {
+				phase: "result",
+				status: "error",
+				errorMessage: action.message,
+				showNextSteps: false,
+			};
+		case "SHOW_NEXT_STEPS":
+			return state.phase === "result" ? { ...state, showNextSteps: true } : state;
+	}
+}
 
 export default function PickerForm({
 	teams,
@@ -40,29 +95,23 @@ export default function PickerForm({
 	canCreateProjects: boolean;
 	mockError?: string;
 }) {
-	const [phase, setPhase] = useState<Phase>("form");
 	const [selectedTeam, setSelectedTeam] = useState("");
 	const [selectedTeamName, setSelectedTeamName] = useState("");
 	const [selectedProject, setSelectedProject] = useState<"newProject" | "inbox">(
 		canCreateProjects ? "newProject" : "inbox",
 	);
-	const [resultStatus, setResultStatus] = useState<"success" | "error" | null>(
-		null,
-	);
-	const [deepLink, setDeepLink] = useState<string | undefined>();
-	const [errorMessage, setErrorMessage] = useState<string | undefined>();
-	const [showNextSteps, setShowNextSteps] = useState(false);
+	const [state, dispatch] = useReducer(submitReducer, { phase: "form" });
 
-	const headerVisible = phase === "loading" || phase === "result";
+	const headerVisible = state.phase === "loading" || state.phase === "result";
 	const headerStatus: ImportUiStatus =
-		phase === "result" && resultStatus ? resultStatus : "loading";
+		state.phase === "result" ? state.status : "loading";
 
 	async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
 		event.preventDefault();
 		if (!selectedTeam) return;
 
 		const submitStart = Date.now();
-		setPhase("submitting");
+		dispatch({ type: "SUBMIT_START" });
 		// Phase advances to "loading" via the form's onTransitionEnd handler
 		// below, once the CSS opacity fade actually finishes -- matching the
 		// original's real transitionend listener instead of a timer guessing
@@ -94,16 +143,13 @@ export default function PickerForm({
 		if (remaining > 0) await sleep(remaining);
 
 		if (result.success) {
-			setResultStatus("success");
-			setDeepLink(result.deepLink);
+			dispatch({ type: "RESULT_SUCCESS", deepLink: result.deepLink });
 		} else {
-			setResultStatus("error");
-			setErrorMessage(result.message);
+			dispatch({ type: "RESULT_ERROR", message: result.message });
 		}
-		setPhase("result");
 
 		await sleep(RESULT_TO_NEXT_STEPS_DELAY_MS);
-		setShowNextSteps(true);
+		dispatch({ type: "SHOW_NEXT_STEPS" });
 	}
 
 	return (
@@ -116,14 +162,18 @@ export default function PickerForm({
 				/>
 				<ImportStatusHeader
 					status={headerStatus}
-					subtitleOverride={resultStatus === "error" ? errorMessage : undefined}
+					subtitleOverride={
+						state.phase === "result" && state.status === "error"
+							? state.errorMessage
+							: undefined
+					}
 					visible={headerVisible}
 				/>
 			</div>
 			<div className="app-content">
-				{(phase === "form" || phase === "submitting") && (
+				{(state.phase === "form" || state.phase === "submitting") && (
 					<form
-						className={phase === "submitting" ? "fade-out" : ""}
+						className={state.phase === "submitting" ? "fade-out" : ""}
 						onSubmit={handleSubmit}
 						onTransitionEnd={(event: React.TransitionEvent<HTMLFormElement>) => {
 							// Matches the original transitions.js exactly: only
@@ -133,9 +183,9 @@ export default function PickerForm({
 							// transition firing later while the form is idle.
 							if (
 								event.propertyName === "opacity" &&
-								phase === "submitting"
+								state.phase === "submitting"
 							) {
-								setPhase("loading");
+								dispatch({ type: "FADE_OUT_COMPLETE" });
 							}
 						}}
 					>
@@ -163,11 +213,11 @@ export default function PickerForm({
 						</button>
 					</form>
 				)}
-				{phase === "result" && showNextSteps && resultStatus && (
+				{state.phase === "result" && state.showNextSteps && (
 					<NextStepsList
-						status={resultStatus}
-						deepLink={deepLink}
-						errorMessage={errorMessage}
+						status={state.status}
+						deepLink={state.status === "success" ? state.deepLink : undefined}
+						errorMessage={state.status === "error" ? state.errorMessage : undefined}
 					/>
 				)}
 			</div>
