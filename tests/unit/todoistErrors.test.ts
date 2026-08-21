@@ -6,7 +6,7 @@ import {
 	toClassifiedError,
 	mapTodoistErrorTypeToHttpStatus,
 	createMockTodoistError,
-} from "../../app/utils/todoistErrors.js";
+} from "@/lib/todoistErrors";
 
 describe("classifyTodoistError", () => {
 	it.each([

@@ -1,4 +1,15 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import type { TodoistApi } from "@doist/todoist-api-typescript";
+
+// Test doubles below are intentionally minimal duck-typed objects (only the
+// methods each test actually calls), not full TodoistApi instances -- the
+// `as unknown as TodoistApi` casts tell TypeScript that's deliberate rather
+// than a missed field. lib/todoist.ts's real signature takes a `TodoistApi`
+// because that's what production code passes in; tests substitute a mock
+// shaped like just the slice of it that's used.
+function asApi(partial: Record<string, unknown>): TodoistApi {
+	return partial as unknown as TodoistApi;
+}
 
 const { TodoistApiMock, getProjectUrlMock, getSectionUrlMock } = vi.hoisted(
 	() => ({
@@ -20,7 +31,7 @@ import {
 	importSchedule,
 	addYearlyReminder,
 	userReachedProjectLimit,
-} from "../../app/utils/todoist.js";
+} from "@/lib/todoist";
 
 describe("todoist utilities", () => {
 	beforeEach(() => {
@@ -89,7 +100,7 @@ describe("todoist utilities", () => {
 		};
 
 		const destination = await createDestination(
-			api,
+			asApi(api),
 			"inbox",
 			"BOS schedule",
 			"red",
@@ -111,7 +122,7 @@ describe("todoist utilities", () => {
 		};
 
 		const destination = await createDestination(
-			api,
+			asApi(api),
 			"newProject",
 			"BOS schedule",
 			"red",
@@ -126,7 +137,7 @@ describe("todoist utilities", () => {
 
 	it("throws for invalid destination", async () => {
 		await expect(
-			createDestination({}, "bad", "BOS schedule", "red"),
+			createDestination(asApi({}), "bad", "BOS schedule", "red"),
 		).rejects.toThrow("Invalid destination type: bad");
 	});
 
@@ -138,7 +149,7 @@ describe("todoist utilities", () => {
 		};
 
 		await expect(
-			createDestination(api, "newProject", "BOS schedule", "red", "429"),
+			createDestination(asApi(api), "newProject", "BOS schedule", "red", "429"),
 		).rejects.toMatchObject({
 			todoistErrorType: "RATE_LIMITED",
 			httpStatusCode: 429,
@@ -155,7 +166,7 @@ describe("todoist utilities", () => {
 		const api = { getProjects: vi.fn().mockRejectedValue(authError) };
 
 		await expect(
-			createDestination(api, "inbox", "BOS schedule", "red"),
+			createDestination(asApi(api), "inbox", "BOS schedule", "red"),
 		).rejects.toMatchObject({ todoistErrorType: "AUTH_EXPIRED" });
 	});
 
@@ -166,7 +177,7 @@ describe("todoist utilities", () => {
 		const api = { addProject: vi.fn().mockRejectedValue(serverError) };
 
 		await expect(
-			createDestination(api, "newProject", "BOS schedule", "red"),
+			createDestination(asApi(api), "newProject", "BOS schedule", "red"),
 		).rejects.toMatchObject({ todoistErrorType: "SERVER_ERROR", retryable: true });
 	});
 
@@ -197,7 +208,7 @@ describe("todoist utilities", () => {
 			},
 		];
 
-		await importSchedule(api, schedule, "BOS", { projectId: "p1" });
+		await importSchedule(asApi(api), schedule, "BOS", { projectId: "p1" });
 
 		expect(api.addTask).toHaveBeenCalledTimes(2);
 		expect(api.addTask).toHaveBeenNthCalledWith(
@@ -221,7 +232,7 @@ describe("todoist utilities", () => {
 	it("adds yearly reminder in section when section exists", async () => {
 		const api = { addTask: vi.fn().mockResolvedValue({}) };
 
-		await addYearlyReminder(api, "BOS", {
+		await addYearlyReminder(asApi(api), "BOS", {
 			projectId: "project-1",
 			sectionId: "section-1",
 		});

@@ -4,7 +4,7 @@ import {
 	getUpcomingGames,
 	isLaterThanNow,
 	getTeamData,
-} from "../../app/utils/parseSchedule.js";
+} from "@/lib/parseSchedule";
 
 afterEach(() => {
 	vi.useRealTimers();
@@ -28,9 +28,9 @@ describe("parseSchedule utilities", () => {
 	it("filters a schedule to only upcoming games", () => {
 		const now = new Date("2026-01-01T10:00:00Z");
 		const schedule = [
-			{ gameTimeUtcIso8601: "2025-12-31T10:00:00Z", opponent: "LAL" },
-			{ gameTimeUtcIso8601: "2026-01-01T10:00:00Z", opponent: "BOS" },
-			{ gameTimeUtcIso8601: "2026-01-02T10:00:00Z", opponent: "MIA" },
+			{ gameTimeUtcIso8601: "2025-12-31T10:00:00Z", opponent: "LAL", isHomeGame: true },
+			{ gameTimeUtcIso8601: "2026-01-01T10:00:00Z", opponent: "BOS", isHomeGame: false },
+			{ gameTimeUtcIso8601: "2026-01-02T10:00:00Z", opponent: "MIA", isHomeGame: true },
 		];
 
 		const upcoming = getUpcomingGames(schedule, now);
