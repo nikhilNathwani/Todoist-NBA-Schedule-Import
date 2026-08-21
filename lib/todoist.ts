@@ -88,7 +88,17 @@ export async function userReachedProjectLimit(
 
 		// Use the TypeScript library to fetch projects (it handles API versioning)
 		const api = new TodoistApi(accessToken);
-		const response = await api.getProjects({ limit: 200 });
+		// getUser().isPremium is the real, directly-exposed plan flag -- fetched
+		// in parallel with the project list, not inferred from project count.
+		// (An earlier version of this function inferred premium status from
+		// projectCount > 5, on the belief the API didn't expose it directly --
+		// it does, via the same SDK already in use here. The 5/300 numeric caps
+		// themselves still aren't exposed by the API as of this writing, so
+		// those stay hardcoded; only which cap applies is now a real API value.)
+		const [user, response] = await Promise.all([
+			api.getUser(),
+			api.getProjects({ limit: 200 }),
+		]);
 
 		// Handle both array response and paginated response format
 		const projects = Array.isArray(response)
@@ -101,11 +111,7 @@ export async function userReachedProjectLimit(
 			0,
 		);
 
-		// REST API doesn't expose premium status directly, so we infer it:
-		// Free users are limited to 5 projects, so if they have more, they must be premium
-		const isPremium = projectCount > projectLimits.FREE;
-
-		return isPremium
+		return user.isPremium
 			? projectCount >= projectLimits.PREMIUM
 			: projectCount >= projectLimits.FREE;
 	} catch (error) {

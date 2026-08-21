@@ -43,6 +43,7 @@ describe("todoist utilities", () => {
 	it("detects free-tier project limit", async () => {
 		TodoistApiMock.mockImplementation(function TodoistApiCtor() {
 			return {
+				getUser: vi.fn().mockResolvedValue({ isPremium: false }),
 				getProjects: vi.fn().mockResolvedValue([
 					{ id: "inbox", inboxProject: true },
 					{ id: "a", inboxProject: false },
@@ -55,6 +56,49 @@ describe("todoist utilities", () => {
 		});
 
 		await expect(userReachedProjectLimit("token")).resolves.toBe(true);
+	});
+
+	it("uses the real isPremium flag, not an inferred one, to pick the threshold", async () => {
+		// A free account that happens to have MORE than 5 projects (e.g. some
+		// were created outside this app) must still be evaluated against the
+		// free-tier cap, not misclassified as premium just because the count
+		// crossed 5 -- this is exactly the bug an earlier version had, where
+		// premium status was inferred from projectCount > 5 instead of read
+		// from the API. 6 real projects, isPremium: false -> still "reached".
+		TodoistApiMock.mockImplementation(function TodoistApiCtor() {
+			return {
+				getUser: vi.fn().mockResolvedValue({ isPremium: false }),
+				getProjects: vi.fn().mockResolvedValue([
+					{ id: "a", inboxProject: false },
+					{ id: "b", inboxProject: false },
+					{ id: "c", inboxProject: false },
+					{ id: "d", inboxProject: false },
+					{ id: "e", inboxProject: false },
+					{ id: "f", inboxProject: false },
+				]),
+			};
+		});
+
+		await expect(userReachedProjectLimit("token")).resolves.toBe(true);
+	});
+
+	it("gives a real premium account the 300-project threshold, not the free one", async () => {
+		TodoistApiMock.mockImplementation(function TodoistApiCtor() {
+			return {
+				getUser: vi.fn().mockResolvedValue({ isPremium: true }),
+				getProjects: vi.fn().mockResolvedValue([
+					{ id: "a", inboxProject: false },
+					{ id: "b", inboxProject: false },
+					{ id: "c", inboxProject: false },
+					{ id: "d", inboxProject: false },
+					{ id: "e", inboxProject: false },
+					{ id: "f", inboxProject: false },
+				]),
+			};
+		});
+
+		// 6 projects, genuinely premium -- nowhere near the real 300 cap.
+		await expect(userReachedProjectLimit("token")).resolves.toBe(false);
 	});
 
 	it("simulates a classified Todoist error via mockErrorCode instead of calling the API", async () => {
@@ -79,7 +123,10 @@ describe("todoist utilities", () => {
 			responseData: { retry_after: 15 },
 		});
 		TodoistApiMock.mockImplementation(function TodoistApiCtor() {
-			return { getProjects: vi.fn().mockRejectedValue(rateLimitError) };
+			return {
+				getUser: vi.fn().mockResolvedValue({ isPremium: false }),
+				getProjects: vi.fn().mockRejectedValue(rateLimitError),
+			};
 		});
 
 		await expect(
