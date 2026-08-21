@@ -24,10 +24,6 @@ import type { TeamSummary } from "@/lib/parseSchedule";
 // pause transitionToResult() added before the next-steps list was appended.
 const MIN_LOADING_DURATION_MS = 3000;
 const RESULT_TO_NEXT_STEPS_DELAY_MS = 1200;
-// Matches style.css's `form { transition: opacity 1s ease, ... }` --
-// the original waited for the real `transitionend` DOM event; here a
-// timeout of the same duration drives the phase change instead.
-const FORM_FADE_OUT_DURATION_MS = 1000;
 
 function sleep(ms: number) {
 	return new Promise((resolve) => setTimeout(resolve, ms));
@@ -67,7 +63,10 @@ export default function PickerForm({
 
 		const submitStart = Date.now();
 		setPhase("submitting");
-		setTimeout(() => setPhase("loading"), FORM_FADE_OUT_DURATION_MS);
+		// Phase advances to "loading" via the form's onTransitionEnd handler
+		// below, once the CSS opacity fade actually finishes -- matching the
+		// original's real transitionend listener instead of a timer guessing
+		// the fade's duration.
 
 		let result: Awaited<ReturnType<typeof importScheduleAction>>;
 		try {
@@ -88,8 +87,8 @@ export default function PickerForm({
 
 		// Enforce the same minimum loading duration as the original
 		// waitForLoadingUI(), measured from submit rather than from when the
-		// "loading" phase visually started (the difference is at most
-		// FORM_FADE_OUT_DURATION_MS, well under the 3s floor).
+		// "loading" phase visually started (the difference is however long the
+		// fade-out transition takes, well under the 3s floor either way).
 		const elapsed = Date.now() - submitStart;
 		const remaining = MIN_LOADING_DURATION_MS - elapsed;
 		if (remaining > 0) await sleep(remaining);
@@ -126,6 +125,19 @@ export default function PickerForm({
 					<form
 						className={phase === "submitting" ? "fade-out" : ""}
 						onSubmit={handleSubmit}
+						onTransitionEnd={(event: React.TransitionEvent<HTMLFormElement>) => {
+							// Matches the original transitions.js exactly: only
+							// advance once the opacity fade (not some other
+							// transitioning property) actually finishes, and only
+							// while we're mid fade-out -- not on some unrelated
+							// transition firing later while the form is idle.
+							if (
+								event.propertyName === "opacity" &&
+								phase === "submitting"
+							) {
+								setPhase("loading");
+							}
+						}}
 					>
 						<TeamSelector
 							teams={teams}
