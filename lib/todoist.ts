@@ -216,11 +216,58 @@ async function importGame(
 	destinationIds: DestinationIds,
 ): Promise<void> {
 	const task = formatTask(game, teamName, taskOrder, destinationIds);
-	try {
-		await api.addTask(task);
-	} catch (error) {
-		console.error("Error adding task to Todoist:", error);
-	}
+	// Let failures propagate -- importSchedule below decides whether to
+	// retry and how to report a game that never made it in. (Previously
+	// this caught and console.error'd every failure, so a partial import
+	// silently reported "success" -- see KNOWN_ISSUES.md's former item #2.)
+	await api.addTask(task);
+}
+
+function gameLabel(game: Game, teamName: string): string {
+	return `${teamName} ${game.isHomeGame ? "vs" : "at"} ${game.opponent}`;
+}
+
+function sleep(ms: number): Promise<void> {
+	return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+// Backoff before the one automatic retry pass below. Deliberately shorter
+// than the classifier's user-facing "wait Xs and try again" guidance
+// (lib/todoistErrors.ts) -- that's aimed at a human deciding whether to
+// retry manually after reading an error message; this is one silent retry
+// a user is already actively watching the loading screen through.
+export const GAME_RETRY_BACKOFF_SECONDS = 10;
+
+interface ScheduledGame {
+	game: Game;
+	taskOrder: number;
+}
+
+interface FailedGame extends ScheduledGame {
+	error: unknown;
+}
+
+// Fires addTask for every game in parallel and reports which ones failed,
+// instead of Promise.all's all-or-nothing (which would abort the whole
+// batch on the first rejection and never even attempt the rest).
+async function importGamesOnce(
+	api: TodoistApi,
+	games: ScheduledGame[],
+	teamName: string,
+	destinationIds: DestinationIds,
+): Promise<FailedGame[]> {
+	const results = await Promise.allSettled(
+		games.map(({ game, taskOrder }) =>
+			importGame(api, game, teamName, taskOrder, destinationIds),
+		),
+	);
+	const failed: FailedGame[] = [];
+	results.forEach((result, i) => {
+		if (result.status === "rejected") {
+			failed.push({ ...games[i], error: result.reason });
+		}
+	});
+	return failed;
 }
 
 export async function importSchedule(
@@ -232,11 +279,52 @@ export async function importSchedule(
 	console.log(
 		`Importing ${schedule.length} games for ${teamName} into project ID ${destinationIds.projectId}`,
 	);
-	// Use map to create an array of promises
-	const tasks = schedule.map((game, index) =>
-		importGame(api, game, teamName, index + 1, destinationIds),
+
+	const games = schedule.map((game, index) => ({ game, taskOrder: index + 1 }));
+	const firstPassFailures = await importGamesOnce(
+		api,
+		games,
+		teamName,
+		destinationIds,
 	);
-	await Promise.all(tasks);
+	if (firstPassFailures.length === 0) return;
+
+	// The errors observed in practice here were transient 502/503s from
+	// Todoist under the burst of ~80 concurrent addTask calls a full-season
+	// import fires off -- a short pause and one retry of just the stragglers
+	// (not the whole batch again) reliably clears them. One retry pass,
+	// batched together with a single shared backoff, not a per-game
+	// sequential retry -- keeps worst-case added latency to one ~10s pause
+	// no matter how many games failed the first time.
+	console.warn(
+		`${firstPassFailures.length}/${schedule.length} games failed on the first pass, retrying after ${GAME_RETRY_BACKOFF_SECONDS}s:`,
+		firstPassFailures.map((f) => gameLabel(f.game, teamName)),
+	);
+	await sleep(GAME_RETRY_BACKOFF_SECONDS * 1000);
+
+	const stillFailed = await importGamesOnce(
+		api,
+		firstPassFailures.map(({ game, taskOrder }) => ({ game, taskOrder })),
+		teamName,
+		destinationIds,
+	);
+	if (stillFailed.length === 0) return;
+
+	// Still-failing games after the retry are reported as a real failure --
+	// not swallowed into a false "success" -- naming exactly which games
+	// didn't make it rather than leaving the user to hunt for them, while
+	// leaving the games that DID succeed in place rather than rolling them
+	// back (a rollback's own delete calls are exactly as failure-prone as
+	// the adds that got us here, and would discard real completed work to
+	// react to a handful of stragglers).
+	const failedLabels = stillFailed.map((f) => gameLabel(f.game, teamName));
+	const succeededCount = schedule.length - stillFailed.length;
+	const classified = toClassifiedError(
+		stillFailed[0].error,
+		`importSchedule: ${stillFailed.length}/${schedule.length} games failed after retry`,
+	);
+	classified.message = `${stillFailed.length} of ${schedule.length} games couldn't be added to Todoist: ${failedLabels.join(", ")}. The other ${succeededCount} were imported successfully.`;
+	throw classified;
 }
 
 function formatTask(

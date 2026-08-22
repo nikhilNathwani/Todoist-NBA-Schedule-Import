@@ -31,6 +31,7 @@ import {
 	importSchedule,
 	addYearlyReminder,
 	userReachedProjectLimit,
+	GAME_RETRY_BACKOFF_SECONDS,
 } from "@/lib/todoist";
 
 describe("todoist utilities", () => {
@@ -274,6 +275,86 @@ describe("todoist utilities", () => {
 				order: 2,
 			}),
 		);
+	});
+
+	it("retries a game that failed on the first pass, and succeeds silently if the retry works", async () => {
+		vi.useFakeTimers();
+		try {
+			let miaCallCount = 0;
+			const api = {
+				addTask: vi.fn().mockImplementation((task: { content: string }) => {
+					if (task.content === "BOS at MIA") {
+						miaCallCount++;
+						if (miaCallCount === 1) {
+							return Promise.reject(
+								Object.assign(new Error("Server error"), { httpStatusCode: 503 }),
+							);
+						}
+					}
+					return Promise.resolve({});
+				}),
+			};
+			const schedule = [
+				{ opponent: "LAL", isHomeGame: true, gameTimeUtcIso8601: "2026-01-01T10:00:00Z" },
+				{ opponent: "MIA", isHomeGame: false, gameTimeUtcIso8601: "2026-01-02T10:00:00Z" },
+			];
+
+			const promise = importSchedule(asApi(api), schedule, "BOS", { projectId: "p1" });
+			const expectation = expect(promise).resolves.toBeUndefined();
+			await vi.advanceTimersByTimeAsync(GAME_RETRY_BACKOFF_SECONDS * 1000);
+			await expectation;
+
+			// LAL once, MIA twice (failed first pass, succeeded on retry)
+			expect(api.addTask).toHaveBeenCalledTimes(3);
+			expect(miaCallCount).toBe(2);
+		} finally {
+			vi.useRealTimers();
+		}
+	});
+
+	it("reports a specific, named failure (not a false success) if a game still fails after the retry", async () => {
+		vi.useFakeTimers();
+		try {
+			const api = {
+				addTask: vi.fn().mockImplementation((task: { content: string }) => {
+					if (task.content === "BOS at MIA") {
+						return Promise.reject(
+							Object.assign(new Error("Server error"), { httpStatusCode: 503 }),
+						);
+					}
+					return Promise.resolve({});
+				}),
+			};
+			const schedule = [
+				{ opponent: "LAL", isHomeGame: true, gameTimeUtcIso8601: "2026-01-01T10:00:00Z" },
+				{ opponent: "MIA", isHomeGame: false, gameTimeUtcIso8601: "2026-01-02T10:00:00Z" },
+			];
+
+			const promise = importSchedule(asApi(api), schedule, "BOS", { projectId: "p1" });
+			const expectation = expect(promise).rejects.toMatchObject({
+				todoistErrorType: "SERVICE_UNAVAILABLE",
+				retryable: true,
+				// Names the specific game, states how many succeeded -- not a
+				// generic "something went wrong" the user has to hunt around from.
+				message: expect.stringContaining("BOS at MIA"),
+			});
+			await vi.advanceTimersByTimeAsync(GAME_RETRY_BACKOFF_SECONDS * 1000);
+			await expectation;
+
+			const finalMessage = await promise.catch((e: Error) => e.message);
+			expect(finalMessage).toContain("1 of 2 games");
+			expect(finalMessage).toContain("other 1 were imported successfully");
+
+			// LAL once (never failed), MIA twice (failed both the first pass
+			// and the retry) -- the successful LAL task is never touched again,
+			// confirming there's no rollback of games that already succeeded.
+			expect(api.addTask).toHaveBeenCalledTimes(3);
+			expect(api.addTask).toHaveBeenCalledWith(
+				expect.objectContaining({ content: "BOS vs LAL" }),
+			);
+		} finally {
+			vi.useRealTimers();
+		}
 	});
 
 	it("adds yearly reminder in section when section exists", async () => {
