@@ -2,12 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { saveAccessToken } from "@/lib/cookieSession";
 import { retrieveAccessToken } from "@/lib/todoist";
 import { isClassifiedTodoistError } from "@/lib/todoistErrors";
-
-const { STATE_SECRET } = process.env;
+import { verifyAndClearOAuthState } from "@/lib/oauthState";
 
 // Ported from app/routes/auth/callback.js (now removed). Handles the OAuth
-// callback from Todoist -- logic unchanged, including the CSRF state check
-// and the OAuth-error-reason mapping below.
+// callback from Todoist -- logic unchanged except the CSRF state check now
+// compares against the per-request nonce from lib/oauthState.ts instead of
+// a static secret (see KNOWN_ISSUES.md's former item #1). The
+// OAuth-error-reason mapping below is otherwise unchanged.
 //
 // This is the ONE place `saveAccessToken` (lib/cookieSession.ts) is called
 // in the whole app -- see NEXTJS_MIGRATION_HANDOFF.md for the cookie-security
@@ -17,8 +18,9 @@ export async function GET(request: NextRequest) {
 	const code = request.nextUrl.searchParams.get("code");
 	const state = request.nextUrl.searchParams.get("state");
 
-	// Verify the state parameter to prevent CSRF attacks
-	if (state !== STATE_SECRET) {
+	// Verify the state parameter against the nonce /api/auth/login stashed
+	// in a cookie, to prevent CSRF attacks
+	if (!(await verifyAndClearOAuthState(state))) {
 		return new NextResponse("State mismatch! Potential CSRF attack.", {
 			status: 403,
 		});

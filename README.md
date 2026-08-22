@@ -56,7 +56,6 @@ Use `.env.local` (see `.env.example`):
 
 - `CLIENT_ID`
 - `CLIENT_SECRET`
-- `STATE_SECRET`
 - `ENCRYPTION_KEY`
 - `COOKIE_SECRET`
 - `REDIRECT_URI`

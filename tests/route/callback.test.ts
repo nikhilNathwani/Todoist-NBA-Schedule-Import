@@ -31,6 +31,9 @@ function createMockCookieStore() {
 		set: vi.fn((name: string, value: string, _options?: Record<string, unknown>) => {
 			store.set(name, value);
 		}),
+		delete: vi.fn((name: string) => {
+			store.delete(name);
+		}),
 	};
 }
 
@@ -40,12 +43,19 @@ vi.mock("next/headers", () => ({ cookies: cookiesMock }));
 import { GET } from "@/app/api/auth/callback/route";
 import { decrypt } from "@/lib/encryption";
 import { SESSION_COOKIE_NAME, SESSION_MAX_AGE_SECONDS } from "@/lib/cookieSession";
+import { OAUTH_STATE_COOKIE_NAME } from "@/lib/oauthState";
 
 function callbackRequest(query: string) {
 	return new NextRequest(
 		`http://localhost:3000/api/auth/callback${query}`,
 	);
 }
+
+// The state check now compares the `state` query param against whatever
+// /api/auth/login would have stashed in the oauth_state cookie -- so a
+// "valid" callback request in these tests needs that cookie pre-seeded
+// with the same value the request claims as its state.
+const VALID_STATE = "test-nonce-1234";
 
 describe("GET /api/auth/callback", () => {
 	let cookieStore: ReturnType<typeof createMockCookieStore>;
@@ -57,7 +67,10 @@ describe("GET /api/auth/callback", () => {
 		cookiesMock.mockResolvedValue(cookieStore);
 	});
 
-	it("rejects when state does not match (CSRF check)", async () => {
+	it("rejects when state does not match the nonce cookie (CSRF check)", async () => {
+		cookieStore.set(OAUTH_STATE_COOKIE_NAME, VALID_STATE);
+		cookieStore.set.mockClear();
+
 		const response = await GET(
 			callbackRequest("?code=abc&state=wrong-state"),
 		);
@@ -68,11 +81,31 @@ describe("GET /api/auth/callback", () => {
 		expect(cookieStore.set).not.toHaveBeenCalled();
 	});
 
+	it("rejects when no oauth_state cookie was ever set (e.g. cookie expired or blocked)", async () => {
+		const response = await GET(
+			callbackRequest(`?code=abc&state=${VALID_STATE}`),
+		);
+
+		expect(response.status).toBe(403);
+		expect(retrieveAccessTokenMock).not.toHaveBeenCalled();
+	});
+
+	it("clears the oauth_state cookie after a single use, success or not", async () => {
+		cookieStore.set(OAUTH_STATE_COOKIE_NAME, VALID_STATE);
+		retrieveAccessTokenMock.mockResolvedValue("real-todoist-access-token");
+
+		await GET(callbackRequest(`?code=abc&state=${VALID_STATE}`));
+
+		expect(cookieStore.delete).toHaveBeenCalledWith(OAUTH_STATE_COOKIE_NAME);
+	});
+
 	it("(a) sets the session cookie with exactly the required attributes on success", async () => {
+		cookieStore.set(OAUTH_STATE_COOKIE_NAME, VALID_STATE);
+		cookieStore.set.mockClear();
 		retrieveAccessTokenMock.mockResolvedValue("real-todoist-access-token");
 
 		const response = await GET(
-			callbackRequest("?code=abc&state=test-state-secret"),
+			callbackRequest(`?code=abc&state=${VALID_STATE}`),
 		);
 
 		expect(response.status).toBe(307); // NextResponse.redirect default
@@ -93,9 +126,11 @@ describe("GET /api/auth/callback", () => {
 	});
 
 	it("(b) the cookie value set on success decrypts back to the real access token (same iron round trip)", async () => {
+		cookieStore.set(OAUTH_STATE_COOKIE_NAME, VALID_STATE);
+		cookieStore.set.mockClear();
 		retrieveAccessTokenMock.mockResolvedValue("real-todoist-access-token");
 
-		await GET(callbackRequest("?code=abc&state=test-state-secret"));
+		await GET(callbackRequest(`?code=abc&state=${VALID_STATE}`));
 
 		const [, sealedValue] = cookieStore.set.mock.calls[0];
 		await expect(decrypt(sealedValue)).resolves.toBe(
@@ -109,9 +144,11 @@ describe("GET /api/auth/callback", () => {
 			responseData: { error: "bad_authorization_code" },
 		});
 		retrieveAccessTokenMock.mockRejectedValue(err);
+		cookieStore.set(OAUTH_STATE_COOKIE_NAME, VALID_STATE);
+		cookieStore.set.mockClear();
 
 		const response = await GET(
-			callbackRequest("?code=abc&state=test-state-secret"),
+			callbackRequest(`?code=abc&state=${VALID_STATE}`),
 		);
 
 		expect(response.status).toBe(400);
@@ -125,9 +162,11 @@ describe("GET /api/auth/callback", () => {
 			httpStatusCode: 429,
 		});
 		retrieveAccessTokenMock.mockRejectedValue(err);
+		cookieStore.set(OAUTH_STATE_COOKIE_NAME, VALID_STATE);
+		cookieStore.set.mockClear();
 
 		const response = await GET(
-			callbackRequest("?code=abc&state=test-state-secret"),
+			callbackRequest(`?code=abc&state=${VALID_STATE}`),
 		);
 
 		expect(response.status).toBe(429);
@@ -135,9 +174,11 @@ describe("GET /api/auth/callback", () => {
 
 	it("returns 500 (not 502) for an unclassified error with no httpStatusCode", async () => {
 		retrieveAccessTokenMock.mockRejectedValue(new Error("boom"));
+		cookieStore.set(OAUTH_STATE_COOKIE_NAME, VALID_STATE);
+		cookieStore.set.mockClear();
 
 		const response = await GET(
-			callbackRequest("?code=abc&state=test-state-secret"),
+			callbackRequest(`?code=abc&state=${VALID_STATE}`),
 		);
 
 		expect(response.status).toBe(500);
