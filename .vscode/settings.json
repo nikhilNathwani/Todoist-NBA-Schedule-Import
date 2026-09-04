@@ -8,7 +8,8 @@
 		// "package-lock.json": true,
 		"vercel.json": true,
 		"**/__pycache__": true,
-		"**/demo": true
+		"**/demo": true,
+		"**/docs": true
 	},
 	// Show these files when explicitly searching for them
 	"search.exclude": {
