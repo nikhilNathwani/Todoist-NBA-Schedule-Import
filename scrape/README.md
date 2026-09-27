@@ -9,14 +9,14 @@ Python scripts for scraping NBA team schedules from CBS Sports.
 ```bash
 cd scrape
 
-# Create virtual environment
-python3 -m venv .venv
+# Create the virtual environment with uv (uses the Python version in .python-version)
+uv venv --managed-python .venv
+
+# Install dependencies
+uv pip install --python .venv/bin/python -r requirements.txt
 
 # Activate virtual environment
 source .venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
 ```
 
 ### Running the Scraper
@@ -45,8 +45,8 @@ See [SCRAPE_INSTRUCTIONS.md](../SCRAPE_INSTRUCTIONS.md) for detailed workflow.
 ```bash
 cd scrape
 source .venv/bin/activate
-pip install new-package
-pip freeze > requirements.txt
+uv pip install new-package
+uv pip freeze > requirements.txt
 git add requirements.txt
 git commit -m "Add new-package"
 ```
