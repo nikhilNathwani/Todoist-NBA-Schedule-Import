@@ -39,9 +39,12 @@ Unit tests verify isolated logic with dependencies mocked.
 
 Files:
 
-- `tests/unit/parseSchedule.test.js`
-- `tests/unit/cookieSession.test.js`
-- `tests/unit/todoist.test.js`
+- `tests/unit/parseSchedule.test.ts`
+- `tests/unit/cookieSession.test.ts`
+- `tests/unit/encryption.test.ts`
+- `tests/unit/oauthState.test.ts`
+- `tests/unit/todoist.test.ts`
+- `tests/unit/todoistErrors.test.ts`
 
 Examples in this repo:
 
@@ -51,17 +54,17 @@ Examples in this repo:
 
 ### 2. Integration tests
 
-Integration tests verify behavior across components (route + middleware + mocked service layer).
+Integration tests verify behavior across components (route handler or Server Action + mocked service layer).
 
 Files:
 
-- `tests/integration/routes/getTeamsRoute.test.js`
-- `tests/integration/routes/importScheduleRoute.test.js`
-- `tests/integration/routes/authRoutes.test.js`
+- `tests/route/login.test.ts` (`GET /api/auth/login`)
+- `tests/route/callback.test.ts` (`GET /api/auth/callback`)
+- `tests/route/importScheduleAction.test.ts` (the import Server Action)
 
 Examples in this repo:
 
-- API status codes and JSON response shapes
+- Redirects/status codes from the OAuth route handlers and the Server Action's result shapes
 - OAuth callback state validation
 - Error handling when downstream services fail
 
@@ -70,21 +73,23 @@ Examples in this repo:
 ```text
 tests/
   setup/
-    env.js                      # test environment variables
+    env.ts                      # test environment variables
   unit/
-    parseSchedule.test.js
-    cookieSession.test.js
-    todoist.test.js
-  integration/
-    routes/
-      getTeamsRoute.test.js
-      importScheduleRoute.test.js
-      authRoutes.test.js
+    parseSchedule.test.ts
+    cookieSession.test.ts
+    encryption.test.ts
+    oauthState.test.ts
+    todoist.test.ts
+    todoistErrors.test.ts
+  route/
+    login.test.ts
+    callback.test.ts
+    importScheduleAction.test.ts
 ```
 
 ## How Vitest works
 
-Vitest discovers files matching `tests/**/*.test.js` (configured in `vitest.config.js`).
+Vitest discovers files matching `tests/**/*.test.ts` (configured in `vitest.config.ts`).
 
 Core building blocks:
 
@@ -178,7 +183,7 @@ Run coverage mode:
 
 Run one specific test file:
 
-- `npx vitest run tests/unit/todoist.test.js`
+- `npx vitest run tests/unit/todoist.test.ts`
 
 Run tests matching a name:
 
@@ -203,7 +208,7 @@ When a test fails:
 
 Practical workflow:
 
-1. Run a single file (`npx vitest run path/to/file.test.js`)
+1. Run a single file (`npx vitest run path/to/file.test.ts`)
 2. Add temporary `console.log` in test and code under test
 3. Verify mock setup order (ESM mocking is order-sensitive)
 4. Confirm async code is awaited

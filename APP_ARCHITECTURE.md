@@ -1,5 +1,7 @@
 # Application Flow
 
+> **Historical — describes the original Express + vanilla-JS app, which was replaced by the Next.js rewrite (see `NEXTJS_MIGRATION_HANDOFF.md`).** File paths below (`app/routes/…`, `public/scripts/…`) no longer exist. For the current structure and request flow, see `README.md`.
+
 This document explains how the NBA Todoist Schedule Importer works, from landing page to successful import.
 
 ## Overview

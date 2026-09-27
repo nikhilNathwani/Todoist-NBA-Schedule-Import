@@ -1,14 +1,13 @@
 {
 	"name": "todoist-nba-schedule-import",
 	"version": "1.0.0",
-	"description": "An app to import NBA schedules into Todoist. (Next.js + TypeScript rewrite exploration -- see NEXTJS_MIGRATION_HANDOFF.md)",
+	"description": "Import an NBA team's schedule into Todoist as tasks (Next.js)",
 	"private": true,
 	"type": "module",
 	"scripts": {
 		"dev": "next dev",
 		"build": "next build",
 		"start": "next start",
-		"lint": "next lint",
 		"test": "vitest run",
 		"test:watch": "vitest",
 		"test:coverage": "vitest run --coverage",

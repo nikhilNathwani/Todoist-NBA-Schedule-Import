@@ -1,5 +1,7 @@
 # Next.js Migration Handoff
 
+> **Historical — this migration has since been merged to `main` and is what's deployed on Vercel.** The "nothing here was deployed" and branch notes below describe the state at the time it was written.
+
 Branch: `nextjs-migration` (built on top of the `error-handling-hardening` work already merged into this branch). This document is written for you (Nikhil) to review when you're back — it covers what changed, what's actually been verified (with real command output, not just "it works"), what wasn't verified, and every judgment call made along the way.
 
 **Purpose reminder**: this is an exploratory rewrite to inform the Slidemoji-vs-Todoist-NBA-Import decision for the Lovable interview. Nothing here was deployed anywhere.
