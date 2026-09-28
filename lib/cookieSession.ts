@@ -29,10 +29,9 @@
 // cookie is just as tamper-evident and just as encrypted as before --
 // dropping the outer HMAC layer removes redundant, not load-bearing,
 // protection. The practical effect: COOKIE_SECRET is no longer read
-// anywhere in this codebase. It's left defined in .env.example /
-// tests/setup/env.js for now (harmless if set) rather than ripped out, in
-// case Nikhil wants to restore the double-signed envelope for exact parity
-// -- flagged explicitly in the handoff doc rather than silently dropped.
+// anywhere in this codebase, and was removed from .env.example and the Vercel
+// project on 2026-09-28. Restoring the double-signed envelope would need a
+// new COOKIE_SECRET.
 //
 // Cookie attributes below are preserved EXACTLY from app.js's cookie-session
 // config: httpOnly, secure, sameSite: 'lax' (specifically lax, not strict --

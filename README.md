@@ -67,8 +67,6 @@ Use `.env.local` (see `.env.example`):
 - `REDIRECT_URI`
 - `ENABLE_ERROR_DEMO` (optional; `"true"` simulates Todoist API failures for demos)
 
-`COOKIE_SECRET` is still listed in `.env.example` but is no longer read by the app (see the comment in `lib/cookieSession.ts`).
-
 ## Getting Started
 
 ### 1. Install dependencies
