@@ -2,8 +2,10 @@
 // Ported (typed) from app/utils/todoist.js (now removed). Logic unchanged.
 import {
 	TodoistApi,
+	colors,
 	getProjectUrl,
 	getSectionUrl,
+	type ColorKey,
 } from "@doist/todoist-api-typescript";
 import { toClassifiedError, createMockTodoistError } from "./todoistErrors";
 import type { Game } from "./parseSchedule";
@@ -179,12 +181,23 @@ export async function createDestination(
 		if (!color) {
 			throw new Error(`No color defined for team: ${name}`);
 		}
+		// Team colors come from data/nba_schedule.json; Todoist only accepts
+		// its own color keys (e.g. "grey", not "gray"), so fail clearly here
+		// rather than with an opaque API error.
+		const colorKey = colors.find((c) => c.key === color)?.key as
+			| ColorKey
+			| undefined;
+		if (!colorKey) {
+			throw new Error(
+				`Team color "${color}" for ${name} isn't a Todoist color key`,
+			);
+		}
 
 		// Create a new Todoist project
 		try {
 			const newProjectResponse = await api.addProject({
 				name: name,
-				color: color,
+				color: colorKey,
 			});
 			return {
 				projectId: newProjectResponse.id,
