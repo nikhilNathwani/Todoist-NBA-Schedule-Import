@@ -195,22 +195,87 @@ function createDeepLink(destinationIds) {
 
 async function importGame(api, game, teamName, taskOrder, destinationIds) {
 	const task = formatTask(game, teamName, taskOrder, destinationIds);
-	try {
-		await api.addTask(task);
-	} catch (error) {
-		console.error("Error adding task to Todoist:", error);
-	}
+	// Failures propagate: importSchedule decides whether to retry and how to
+	// report a game that never made it in
+	await api.addTask(task);
+}
+
+// Pause before the one automatic retry in importSchedule
+const GAME_RETRY_BACKOFF_SECONDS = 10;
+
+function sleep(ms) {
+	return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function gameLabel(game, teamName) {
+	return `${teamName} ${game.isHomeGame ? "vs" : "at"} ${game.opponent}`;
+}
+
+// Adds every game in parallel and returns the ones that failed.
+// Promise.allSettled (not Promise.all) waits for every call and records
+// each result, instead of rejecting as soon as the first one fails.
+async function importGamesOnce(api, games, teamName, destinationIds) {
+	const results = await Promise.allSettled(
+		games.map(({ game, taskOrder }) =>
+			importGame(api, game, teamName, taskOrder, destinationIds),
+		),
+	);
+	return games
+		.map((scheduledGame, i) => ({ ...scheduledGame, result: results[i] }))
+		.filter(({ result }) => result.status === "rejected")
+		.map(({ game, taskOrder, result }) => ({
+			game,
+			taskOrder,
+			error: result.reason,
+		}));
 }
 
 async function importSchedule(api, schedule, teamName, destinationIds) {
 	console.log(
 		`Importing ${schedule.length} games for ${teamName} into project ID ${destinationIds.projectId}`,
 	);
-	// Use map to create an array of promises
-	const tasks = schedule.map((game, index) =>
-		importGame(api, game, teamName, index + 1, destinationIds),
+	const games = schedule.map((game, index) => ({
+		game,
+		taskOrder: index + 1,
+	}));
+
+	const firstPassFailures = await importGamesOnce(
+		api,
+		games,
+		teamName,
+		destinationIds,
 	);
-	return Promise.all(tasks); // Return the promise, don't await
+	if (firstPassFailures.length === 0) return;
+
+	// Failures seen in practice are transient 502/503s from sending ~80
+	// addTask calls at once. One shared pause, then one retry of only the
+	// failed games, clears them, and caps the added wait at ~10s however
+	// many games failed.
+	console.warn(
+		`${firstPassFailures.length}/${schedule.length} games failed, retrying in ${GAME_RETRY_BACKOFF_SECONDS}s:`,
+		firstPassFailures.map((f) => gameLabel(f.game, teamName)),
+	);
+	await sleep(GAME_RETRY_BACKOFF_SECONDS * 1000);
+
+	const stillFailed = await importGamesOnce(
+		api,
+		firstPassFailures,
+		teamName,
+		destinationIds,
+	);
+	if (stillFailed.length === 0) return;
+
+	// Report exactly which games are missing instead of claiming success.
+	// Games that did import are kept, not rolled back: the deletes would be
+	// as failure-prone as the adds, and would throw away completed work.
+	const failedLabels = stillFailed.map((f) => gameLabel(f.game, teamName));
+	const succeededCount = schedule.length - stillFailed.length;
+	const classified = toClassifiedError(
+		stillFailed[0].error,
+		`importSchedule: ${stillFailed.length}/${schedule.length} games failed after retry`,
+	);
+	classified.message = `${stillFailed.length} of ${schedule.length} games couldn't be added to Todoist: ${failedLabels.join(", ")}. The other ${succeededCount} were imported successfully.`;
+	throw classified;
 }
 
 function formatTask(game, teamName, taskOrder, destinationIds) {
@@ -261,4 +326,5 @@ export {
 	createDeepLink,
 	importSchedule,
 	addYearlyReminder,
+	GAME_RETRY_BACKOFF_SECONDS,
 };
