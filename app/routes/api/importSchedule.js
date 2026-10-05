@@ -9,7 +9,10 @@ import {
 	createDeepLink,
 	userReachedProjectLimit,
 } from "../../utils/todoist.js";
-import { mapTodoistErrorTypeToHttpStatus } from "../../utils/todoistErrors.js";
+import {
+	TODOIST_ERROR_TYPES,
+	mapTodoistErrorTypeToHttpStatus,
+} from "../../utils/todoistErrors.js";
 
 const router = express.Router();
 
@@ -43,10 +46,14 @@ router.post("/import-schedule", async (req, res) => {
 		accessToken = await getAccessToken(req);
 		todoistApi = initializeTodoistAPI(accessToken);
 	} catch (error) {
-		console.error("Failed to initialize Todoist API:", error.message);
+		// No valid session: usually the 1-hour cookie expired while the
+		// picker page sat open. Same error type as Todoist rejecting a
+		// token, so the browser offers "Log in again".
+		console.error("No valid session for import:", error.message);
 		return res.status(401).json({
 			success: false,
-			message: "Failed to initialize Todoist API: " + error.message,
+			errorType: TODOIST_ERROR_TYPES.AUTH_EXPIRED,
+			message: "Your session has expired. Please log in again.",
 		});
 	}
 

@@ -95,16 +95,21 @@ describe("POST /api/import-schedule", () => {
 		expect(addYearlyReminderMock).toHaveBeenCalled();
 	});
 
-	it("returns 401 when token retrieval fails", async () => {
-		getAccessTokenMock.mockRejectedValue(new Error("missing token"));
+	it("returns 401 'session expired' (not the internal error) when there's no valid session", async () => {
+		getAccessTokenMock.mockRejectedValue(
+			new Error("Access token is not set in the session."),
+		);
 
 		const response = await request(createApp())
 			.post("/api/import-schedule")
 			.send({ team: "BOS", project: "inbox" });
 
 		expect(response.status).toBe(401);
-		expect(response.body.success).toBe(false);
-		expect(response.body.message).toContain("missing token");
+		expect(response.body).toEqual({
+			success: false,
+			errorType: "AUTH_EXPIRED",
+			message: "Your session has expired. Please log in again.",
+		});
 	});
 
 	it("returns 403 when free-tier project limit reached", async () => {
