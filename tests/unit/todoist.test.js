@@ -34,6 +34,7 @@ describe("todoist utilities", () => {
 	it("detects free-tier project limit", async () => {
 		TodoistApiMock.mockImplementation(function TodoistApiCtor() {
 			return {
+				getUser: vi.fn().mockResolvedValue({ isPremium: false }),
 				getProjects: vi.fn().mockResolvedValue([
 					{ id: "inbox", inboxProject: true },
 					{ id: "a", inboxProject: false },
@@ -46,6 +47,45 @@ describe("todoist utilities", () => {
 		});
 
 		await expect(userReachedProjectLimit("token")).resolves.toBe(true);
+	});
+
+	it("uses the real isPremium flag to pick the threshold, not the project count", async () => {
+		// A free account with MORE than 5 projects (e.g. created before a
+		// downgrade) must still get the free cap. The old version guessed
+		// premium from projectCount > 5 and got this case wrong.
+		TodoistApiMock.mockImplementation(function TodoistApiCtor() {
+			return {
+				getUser: vi.fn().mockResolvedValue({ isPremium: false }),
+				getProjects: vi.fn().mockResolvedValue([
+					{ id: "a", inboxProject: false },
+					{ id: "b", inboxProject: false },
+					{ id: "c", inboxProject: false },
+					{ id: "d", inboxProject: false },
+					{ id: "e", inboxProject: false },
+					{ id: "f", inboxProject: false },
+				]),
+			};
+		});
+
+		await expect(userReachedProjectLimit("token")).resolves.toBe(true);
+	});
+
+	it("gives a premium account the 300-project threshold", async () => {
+		TodoistApiMock.mockImplementation(function TodoistApiCtor() {
+			return {
+				getUser: vi.fn().mockResolvedValue({ isPremium: true }),
+				getProjects: vi.fn().mockResolvedValue([
+					{ id: "a", inboxProject: false },
+					{ id: "b", inboxProject: false },
+					{ id: "c", inboxProject: false },
+					{ id: "d", inboxProject: false },
+					{ id: "e", inboxProject: false },
+					{ id: "f", inboxProject: false },
+				]),
+			};
+		});
+
+		await expect(userReachedProjectLimit("token")).resolves.toBe(false);
 	});
 
 	it("simulates a classified Todoist error via mockErrorCode instead of calling the API", async () => {
@@ -70,7 +110,10 @@ describe("todoist utilities", () => {
 			responseData: { retry_after: 15 },
 		});
 		TodoistApiMock.mockImplementation(function TodoistApiCtor() {
-			return { getProjects: vi.fn().mockRejectedValue(rateLimitError) };
+			return {
+				getUser: vi.fn().mockResolvedValue({ isPremium: false }),
+				getProjects: vi.fn().mockRejectedValue(rateLimitError),
+			};
 		});
 
 		await expect(
