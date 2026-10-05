@@ -38,7 +38,7 @@ python3 verifySchedule.py
 deactivate
 ```
 
-See [SCRAPE_INSTRUCTIONS.md](../SCRAPE_INSTRUCTIONS.md) for detailed workflow.
+See [docs/SCRAPE_INSTRUCTIONS.md](../docs/SCRAPE_INSTRUCTIONS.md) for detailed workflow.
 
 ## Adding Python Packages
 
