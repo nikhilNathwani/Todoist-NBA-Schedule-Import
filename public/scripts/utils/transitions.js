@@ -44,16 +44,6 @@ export async function transitionToResult(status, subtitleOverride) {
 	await new Promise((resolve) => setTimeout(resolve, 1200));
 }
 
-export function fadeInNextSteps() {
-	const list = document.querySelector(".app-content ul");
-	if (list) {
-		// Use requestAnimationFrame to ensure DOM is ready
-		requestAnimationFrame(() => {
-			list.classList.add("fade-in");
-		});
-	}
-}
-
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 //                                           //
 //       LOADING TIMER                       //

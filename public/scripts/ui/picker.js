@@ -4,6 +4,15 @@
  */
 
 export function populateTeamDropdown(teamSelect, teams) {
+	// fetchTeamData returns {} if /api/get-teams failed. Say so in the
+	// dropdown instead of leaving it silently empty (the submit button stays
+	// disabled, since no team can be picked).
+	if (Object.keys(teams).length === 0) {
+		teamSelect.options[0].textContent =
+			"Couldn't load teams. Please refresh the page.";
+		return;
+	}
+
 	// Sort teams alphabetically by city
 	const sortedTeams = Object.entries(teams).sort((a, b) =>
 		a[1].city > b[1].city ? 1 : -1

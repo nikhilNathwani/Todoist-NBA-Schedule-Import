@@ -12,9 +12,18 @@ import { transitionToLoading, transitionToResult } from "../utils/transitions.js
 export function listenForFormSubmit(form) {
 	const teamSelect = form.elements["team"];
 	const projectSelect = form.elements["project"];
+	const submitButton = document.getElementById("submitButton");
+	let submitted = false;
 
 	form.addEventListener("submit", async function (event) {
 		event.preventDefault();
+		// Only the first submit counts. A double-click would otherwise start
+		// two imports; the second sees the project the first just created,
+		// fails the project-limit check, and its error replaces the real
+		// success on screen.
+		if (submitted) return;
+		submitted = true;
+		submitButton.disabled = true;
 		console.log("Form submitted");
 
 		// Show loading state
@@ -38,7 +47,7 @@ export function listenForFormSubmit(form) {
 			// Show error state, with the backend's classified message (e.g.
 			// "Todoist is rate-limiting requests...") if one was provided
 			await transitionToResult(importStatus.ERROR, error.message);
-			showNextStepsList(importStatus.ERROR, null, error);
+			showNextStepsList(importStatus.ERROR, null, error.message);
 		}
 	});
 }

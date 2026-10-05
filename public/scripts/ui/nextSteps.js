@@ -4,7 +4,6 @@
  */
 
 import { importStatus } from "./header/importStatus.js";
-import { fadeInNextSteps } from "../utils/transitions.js";
 
 export function showNextStepsList(status, deepLink, errorMessage) {
 	console.log("showNextStepsList called:", {
@@ -24,10 +23,8 @@ export function showNextStepsList(status, deepLink, errorMessage) {
 	const appContent = document.querySelector(".app-content");
 	console.log("appContent element:", appContent);
 	console.log("list element:", list);
+	// Fades in on its own via the CSS animation on `ul` in style.css
 	appContent.appendChild(list);
-
-	// Trigger fade-in animation (handled by transitions.js)
-	fadeInNextSteps();
 }
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
