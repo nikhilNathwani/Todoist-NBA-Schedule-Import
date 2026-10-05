@@ -30,8 +30,8 @@ describe("auth routes", () => {
 	function createApp() {
 		const app = express();
 		app.use(cookieSession({ name: "session", secret: "test-cookie-secret" }));
-		app.use("/api/auth", loginRoute);
-		app.use("/api/auth", callbackRoute);
+		app.use("/auth", loginRoute);
+		app.use("/auth", callbackRoute);
 		return app;
 	}
 
@@ -40,7 +40,7 @@ describe("auth routes", () => {
 	// /login sent to Todoist.
 	async function startLogin() {
 		const agent = request.agent(createApp());
-		const response = await agent.get("/api/auth/login");
+		const response = await agent.get("/auth/login");
 		const state = new URL(response.headers.location).searchParams.get("state");
 		return { agent, response, state };
 	}
@@ -54,11 +54,11 @@ describe("auth routes", () => {
 		expect(url.searchParams.get("client_id")).toBe("test-client-id");
 		expect(url.searchParams.get("scope")).toBe("data:read_write");
 		expect(url.searchParams.get("redirect_uri")).toBe(
-			"http://localhost:3000/api/auth/callback",
+			"http://localhost:3000/auth/callback",
 		);
 		// Encoded, not pasted in raw
 		expect(response.headers.location).toContain(
-			"redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fapi%2Fauth%2Fcallback",
+			"redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth%2Fcallback",
 		);
 	});
 
@@ -75,7 +75,7 @@ describe("auth routes", () => {
 		saveAccessTokenMock.mockResolvedValue(undefined);
 		const { agent, state } = await startLogin();
 
-		const response = await agent.get(`/api/auth/callback?code=abc&state=${state}`);
+		const response = await agent.get(`/auth/callback?code=abc&state=${state}`);
 
 		expect(response.status).toBe(302);
 		expect(response.headers.location).toBe("/configure-import");
@@ -86,7 +86,7 @@ describe("auth routes", () => {
 	it("rejects callback when state does not match", async () => {
 		const { agent } = await startLogin();
 
-		const response = await agent.get("/api/auth/callback?code=abc&state=wrong-state");
+		const response = await agent.get("/auth/callback?code=abc&state=wrong-state");
 
 		expect(response.status).toBe(403);
 		expect(response.text).toContain("State mismatch");
@@ -98,7 +98,7 @@ describe("auth routes", () => {
 
 		// Fresh client with no session cookie, even though the state is real
 		const response = await request(createApp()).get(
-			`/api/auth/callback?code=abc&state=${state}`,
+			`/auth/callback?code=abc&state=${state}`,
 		);
 
 		expect(response.status).toBe(403);
@@ -109,8 +109,8 @@ describe("auth routes", () => {
 		retrieveAccessTokenMock.mockResolvedValue("token-123");
 		const { agent, state } = await startLogin();
 
-		await agent.get(`/api/auth/callback?code=abc&state=${state}`);
-		const replay = await agent.get(`/api/auth/callback?code=abc&state=${state}`);
+		await agent.get(`/auth/callback?code=abc&state=${state}`);
+		const replay = await agent.get(`/auth/callback?code=abc&state=${state}`);
 
 		expect(replay.status).toBe(403);
 		expect(retrieveAccessTokenMock).toHaveBeenCalledTimes(1);
@@ -156,7 +156,7 @@ describe("auth routes", () => {
 		retrieveAccessTokenMock.mockRejectedValue(error);
 		const { agent, state } = await startLogin();
 
-		const response = await agent.get(`/api/auth/callback?code=abc&state=${state}`);
+		const response = await agent.get(`/auth/callback?code=abc&state=${state}`);
 
 		expect(response.status).toBe(status);
 		expect(response.text).toContain(text);
@@ -167,7 +167,7 @@ describe("auth routes", () => {
 		retrieveAccessTokenMock.mockRejectedValue(new Error("boom"));
 		const { agent, state } = await startLogin();
 
-		const response = await agent.get(`/api/auth/callback?code=abc&state=${state}`);
+		const response = await agent.get(`/auth/callback?code=abc&state=${state}`);
 
 		expect(response.status).toBe(500);
 		expect(response.text).toContain(

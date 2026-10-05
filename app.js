@@ -53,10 +53,10 @@ app.use(express.urlencoded({ extended: true }));
 
 // Mount routes
 // API routes
-app.use("/api", importScheduleRoute);
+app.use("/", importScheduleRoute);
 // Auth routes
-app.use("/api/auth", loginRoute);
-app.use("/api/auth", callbackRoute);
+app.use("/auth", loginRoute);
+app.use("/auth", callbackRoute);
 // Page routes
 app.use("/", pickerPageRoute);
 app.use("/", indexPageRoute);

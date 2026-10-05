@@ -41,7 +41,7 @@ vi.mock("../../../app/utils/todoist.js", () => ({
 
 import importScheduleRoute from "../../../app/routes/api/importSchedule.js";
 
-describe("POST /api/import-schedule", () => {
+describe("POST /import-schedule", () => {
 	beforeEach(() => {
 		getAccessTokenMock.mockReset();
 		getTeamDataMock.mockReset();
@@ -56,7 +56,7 @@ describe("POST /api/import-schedule", () => {
 	function createApp() {
 		const app = express();
 		app.use(express.json());
-		app.use("/api", importScheduleRoute);
+		app.use(importScheduleRoute);
 		return app;
 	}
 
@@ -78,7 +78,7 @@ describe("POST /api/import-schedule", () => {
 		createDeepLinkMock.mockReturnValue("todoist://project/p1");
 
 		const response = await request(createApp())
-			.post("/api/import-schedule")
+			.post("/import-schedule")
 			.send({ team: "BOS", project: "newProject" });
 
 		expect(response.status).toBe(200);
@@ -101,7 +101,7 @@ describe("POST /api/import-schedule", () => {
 		);
 
 		const response = await request(createApp())
-			.post("/api/import-schedule")
+			.post("/import-schedule")
 			.send({ team: "BOS", project: "inbox" });
 
 		expect(response.status).toBe(401);
@@ -118,7 +118,7 @@ describe("POST /api/import-schedule", () => {
 		userReachedProjectLimitMock.mockResolvedValue(true);
 
 		const response = await request(createApp())
-			.post("/api/import-schedule")
+			.post("/import-schedule")
 			.send({ team: "BOS", project: "newProject" });
 
 		expect(response.status).toBe(403);
@@ -133,7 +133,7 @@ describe("POST /api/import-schedule", () => {
 		userReachedProjectLimitMock.mockRejectedValue(new Error("api down"));
 
 		const response = await request(createApp())
-			.post("/api/import-schedule")
+			.post("/import-schedule")
 			.send({ team: "BOS", project: "newProject" });
 
 		expect(response.status).toBe(500);
@@ -150,7 +150,7 @@ describe("POST /api/import-schedule", () => {
 		getTeamDataMock.mockRejectedValue(new Error("bad team"));
 
 		const response = await request(createApp())
-			.post("/api/import-schedule")
+			.post("/import-schedule")
 			.send({ team: "BOS", project: "newProject" });
 
 		expect(response.status).toBe(500);
@@ -179,7 +179,7 @@ describe("POST /api/import-schedule", () => {
 			);
 
 			const response = await request(createApp())
-				.post("/api/import-schedule")
+				.post("/import-schedule")
 				.send({ team: "BOS", project: "inbox" });
 
 			expect(response.status).toBe(429);
@@ -202,7 +202,7 @@ describe("POST /api/import-schedule", () => {
 			);
 
 			const response = await request(createApp())
-				.post("/api/import-schedule")
+				.post("/import-schedule")
 				.send({ team: "BOS", project: "newProject" });
 
 			expect(response.status).toBe(401);
@@ -227,7 +227,7 @@ describe("POST /api/import-schedule", () => {
 			);
 
 			const response = await request(createApp())
-				.post("/api/import-schedule")
+				.post("/import-schedule")
 				.send({ team: "BOS", project: "inbox" });
 
 			expect(response.status).toBe(502);
@@ -249,14 +249,14 @@ describe("POST /api/import-schedule", () => {
 			);
 			const app = express();
 			app.use(express.json());
-			app.use("/api", freshRoute);
+			app.use(freshRoute);
 
 			getAccessTokenMock.mockResolvedValue("token");
 			initializeTodoistAPIMock.mockReturnValue({});
 			userReachedProjectLimitMock.mockResolvedValue(false);
 
 			await request(app)
-				.post("/api/import-schedule")
+				.post("/import-schedule")
 				.send({ team: "BOS", project: "newProject", mockError: "500" });
 
 			expect(userReachedProjectLimitMock).toHaveBeenCalledWith(
@@ -273,14 +273,14 @@ describe("POST /api/import-schedule", () => {
 			);
 			const app = express();
 			app.use(express.json());
-			app.use("/api", freshRoute);
+			app.use(freshRoute);
 
 			getAccessTokenMock.mockResolvedValue("token");
 			initializeTodoistAPIMock.mockReturnValue({});
 			userReachedProjectLimitMock.mockResolvedValue(false);
 
 			await request(app)
-				.post("/api/import-schedule")
+				.post("/import-schedule")
 				.send({ team: "BOS", project: "newProject", mockError: "500" });
 
 			expect(userReachedProjectLimitMock).toHaveBeenCalledWith(

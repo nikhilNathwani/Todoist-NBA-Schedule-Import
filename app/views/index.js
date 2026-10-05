@@ -18,7 +18,7 @@ function makeLandingPageHTML() {
 					<div class="app-content">
 						<div class="button-container">
 							<a
-								href="/api/auth/login"
+								href="/auth/login"
 								role="button"
 								class="button button-primary"
 								>Log in with Todoist</a

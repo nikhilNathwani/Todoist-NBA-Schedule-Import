@@ -10,7 +10,7 @@ Findings from audits of this app, kept so they don't get lost. Several were firs
 
 **Was:** `state=${STATE_SECRET}` sent the same environment variable on every login, and the callback compared against it. A fixed value is a second permanent secret, not CSRF protection: once leaked, it works forever.
 
-**Fix:** `/api/auth/login` generates `crypto.randomUUID()` per attempt and saves it in the session cookie; `/api/auth/callback` accepts only a matching state, and deletes it first so it works once. `STATE_SECRET` is gone. Tests: `tests/integration/routes/authRoutes.test.js`.
+**Fix:** `/auth/login` generates `crypto.randomUUID()` per attempt and saves it in the session cookie; `/auth/callback` accepts only a matching state, and deletes it first so it works once. `STATE_SECRET` is gone. Tests: `tests/integration/routes/authRoutes.test.js`.
 
 ### 2. OAuth URL parameters weren't URL-encoded
 
@@ -46,14 +46,22 @@ Findings from audits of this app, kept so they don't get lost. Several were firs
 
 **Fix:** both are classified as `SERVICE_UNAVAILABLE` (retryable), like 503.
 
+### 8. An expired session during an import showed an internal message
+
+**Was:** if the 1-hour session expired while the picker page was open, the import showed "Failed to initialize Todoist API: Access token is not set in the session."
+
+**Fix:** the import returns `AUTH_EXPIRED` with "Your session has expired. Please log in again.", and the browser offers a "Log in again" link.
+
+### 9. Page HTML didn't escape inserted data
+
+**Was:** template strings inserted team data and error text as-is. Nothing a visitor types reached the HTML, but error text from Todoist could.
+
+**Fix:** `escapeHTML()` (`app/views/escapeHTML.js`) on every inserted value that doesn't come from the view file itself. The "Open Todoist" link in the browser is set with the `href` property instead of pasted into HTML.
+
 ---
 
 ## Open
 
-### 1. `/api/import-schedule` with an expired session shows an internal message
-
-If the 1-hour session expires while the picker page is open, the import request returns `401` with "Failed to initialize Todoist API: Access token is not set in the session." That text appears on screen. It should say the session expired and link back to log in.
-
-### 2. Yearly reminder failures are only logged
+### 1. Yearly reminder failures are only logged
 
 `addYearlyReminder` still catches and logs its own failure. It's a single, low-stakes task, so this was left out of the import-retry fix.

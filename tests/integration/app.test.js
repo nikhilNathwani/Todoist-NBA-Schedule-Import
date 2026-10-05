@@ -21,7 +21,7 @@ describe("app", () => {
 	it("sets the session cookie httpOnly, secure, sameSite=Lax, for 1 hour", async () => {
 		const before = Date.now();
 		const response = await request(app)
-			.get("/api/auth/login")
+			.get("/auth/login")
 			.set("X-Forwarded-Proto", "https");
 
 		const cookies = response.headers["set-cookie"];
@@ -52,6 +52,23 @@ describe("app", () => {
 
 		expect(response.status).toBe(302);
 		expect(response.headers.location).toBe("/");
+	});
+
+	// Routes deliberately avoid /api/...: on Vercel, that prefix is reserved
+	// for files in an api/ folder and never reaches this app
+	it("serves login and import at their non-/api paths", async () => {
+		const login = await request(app)
+			.get("/auth/login")
+			.set("X-Forwarded-Proto", "https");
+		expect(login.status).toBe(302);
+		expect(login.headers.location).toMatch(/^https:\/\/todoist\.com\/oauth\/authorize\?/);
+
+		// No session, so the import route answers "session expired"
+		const importResponse = await request(app)
+			.post("/import-schedule")
+			.send({ team: "BOS", project: "inbox" });
+		expect(importResponse.status).toBe(401);
+		expect(importResponse.body.errorType).toBe("AUTH_EXPIRED");
 	});
 
 	it("responds 404 with a not-found page for unknown paths", async () => {
