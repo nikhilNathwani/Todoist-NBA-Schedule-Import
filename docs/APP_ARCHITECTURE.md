@@ -6,9 +6,9 @@ How the NBA Todoist Schedule Importer works, from landing page to finished impor
 
 An Express 5 app. The server renders each page's HTML (template-string functions in `app/views/`), and browser-side JavaScript (`public/scripts/`, loaded as ES modules) handles the picker page's interactivity. The browser talks to the server through one JSON endpoint, `POST /import-schedule`. Users log in with Todoist OAuth before importing.
 
-`app.js` builds the app (session middleware, static files, body parsing, routers) and exports it. `server.js` runs it locally with `app.listen()`. On Vercel, the platform's built-in Express support imports `app.js` directly and runs it as a serverless function; `public/` files are served from Vercel's CDN. No `vercel.json` or `api/` folder is needed.
+`app.js` builds the app (session middleware, static files, body parsing, routers) and exports it. `server.js` runs it locally with `app.listen()`. On Vercel, the platform's built-in Express support imports `app.js` directly and runs it as a serverless function; `public/` files are served from Vercel's CDN. `vercel.json` has one setting, `"framework": "express"`, which turns that support on. Without it, Vercel treats the project as a static site and answers every app route with its own 404 (verified on a preview deployment).
 
-**Why no URL starts with `/api/`:** Vercel reserves that prefix for files in an `api/` folder and answers it with its own 404 before the app sees the request (found on NBA Moneyline, Aug 2026). Earlier versions of this app used `/api/...` routes and needed an `api/index.js` wrapper plus a `vercel.json` rewrite as a workaround; moving the routes to `/auth/...` and `/import-schedule` removed both.
+**Why no URL starts with `/api/`:** Vercel reserves that prefix for files in an `api/` folder and answers it with its own 404 before the app sees the request (found on NBA Moneyline, Aug 2026). Earlier versions of this app used `/api/...` routes and needed an `api/index.js` wrapper plus a `vercel.json` rewrite as a workaround; the routes now live at `/auth/...` and `/import-schedule`, and the wrapper is gone.
 
 ---
 

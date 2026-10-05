@@ -1,6 +1,7 @@
 // Local development server - NOT used in production
 // On Vercel, the platform imports app.js directly and runs the exported app
-// (Vercel's built-in Express support), so this file's app.listen() isn't used
+// (Vercel's built-in Express support, enabled by vercel.json), so this
+// file's app.listen() isn't used
 
 // Env vars come from .env.local, loaded by Node itself before this file runs
 // (`node --env-file`, see the "dev"/"start" scripts in package.json)

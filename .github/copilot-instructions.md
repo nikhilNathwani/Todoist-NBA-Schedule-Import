@@ -12,7 +12,7 @@
 
 ## Major Components
 
--   **`app.js`**: Builds and exports the Express app (middleware, routers, 404). `server.js` runs it locally; Vercel imports `app.js` directly.
+-   **`app.js`**: Builds and exports the Express app (middleware, routers, 404). `server.js` runs it locally; Vercel imports `app.js` directly (`vercel.json` declares `"framework": "express"`, required for that).
 -   **No `/api/...` URLs:** Vercel reserves that prefix for an `api/` folder, so routes live at `/auth/...` and `/import-schedule`.
 -   **`app/routes/`**: Page, API, and OAuth route handlers.
 -   **`app/views/`**: Functions that return page HTML.
