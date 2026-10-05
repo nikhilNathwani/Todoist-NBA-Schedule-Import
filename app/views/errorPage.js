@@ -10,7 +10,19 @@ function makeErrorPageHTML(classifiedError) {
 		classifiedError.message ||
 		"An unexpected error occurred talking to Todoist.";
 	const action = ACTION_LINKS[classifiedError.todoistErrorType] || DEFAULT_ACTION;
+	return renderErrorPage(title, message, action);
+}
 
+// Shown for any URL no route matches (see the 404 handler in app.js)
+function makeNotFoundPageHTML() {
+	return renderErrorPage(
+		"Page not found",
+		"There's nothing at this address.",
+		DEFAULT_ACTION,
+	);
+}
+
+function renderErrorPage(title, message, action) {
 	return `
 	<!DOCTYPE html>
 	<html lang="en">
@@ -58,4 +70,4 @@ const ACTION_LINKS = {
 	NOT_FOUND: { href: "/configure-import", label: "Try again" },
 };
 
-export { makeErrorPageHTML };
+export { makeErrorPageHTML, makeNotFoundPageHTML };

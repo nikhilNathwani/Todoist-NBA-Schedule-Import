@@ -1,5 +1,6 @@
 import {
 	TodoistApi,
+	colors,
 	getProjectUrl,
 	getSectionUrl,
 } from "@doist/todoist-api-typescript";
@@ -152,6 +153,14 @@ async function createDestination(api, destination, name, color, mockErrorCode) {
 		// Check if a color exists for the given team name
 		if (!color) {
 			throw new Error(`No color defined for team: ${name}`);
+		}
+		// Team colors come from data/nba_schedule.json; Todoist only accepts
+		// its own color keys (e.g. "grey", not "gray"), so fail clearly here
+		// rather than with an opaque API error.
+		if (!colors.some((c) => c.key === color)) {
+			throw new Error(
+				`Team color "${color}" for ${name} isn't a Todoist color key`,
+			);
 		}
 
 		// Create a new Todoist project

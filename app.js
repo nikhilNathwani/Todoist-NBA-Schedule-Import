@@ -13,6 +13,8 @@ import pickerPageRoute from "./app/routes/pages/picker.js";
 // Auth routes
 import loginRoute from "./app/routes/auth/login.js";
 import callbackRoute from "./app/routes/auth/callback.js";
+// Views
+import { makeNotFoundPageHTML } from "./app/views/errorPage.js";
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~ */
 /*                           */
@@ -54,6 +56,11 @@ app.use("/api/auth", loginRoute);
 app.use("/api/auth", callbackRoute);
 // Page routes
 app.use("/", pickerPageRoute);
-app.use("/", indexPageRoute); // Must be last (has catch-all route)
+app.use("/", indexPageRoute);
+
+// Anything no route above matched: a real 404, not the landing page
+app.use((req, res) => {
+	res.status(404).send(makeNotFoundPageHTML());
+});
 
 export default app;

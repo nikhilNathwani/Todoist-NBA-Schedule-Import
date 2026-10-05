@@ -8,7 +8,9 @@ const { TodoistApiMock, getProjectUrlMock, getSectionUrlMock } = vi.hoisted(
 	}),
 );
 
-vi.mock("@doist/todoist-api-typescript", () => ({
+vi.mock("@doist/todoist-api-typescript", async (importOriginal) => ({
+	// Keep the SDK's real color list (plain data) so color validation is tested for real.
+	colors: (await importOriginal()).colors,
 	TodoistApi: TodoistApiMock,
 	getProjectUrl: getProjectUrlMock,
 	getSectionUrl: getSectionUrlMock,
@@ -122,6 +124,25 @@ describe("todoist utilities", () => {
 			color: "red",
 		});
 		expect(destination).toEqual({ projectId: "project-1" });
+	});
+
+	it("rejects a team color that isn't a Todoist color key, without calling the API", async () => {
+		const api = { addProject: vi.fn() };
+
+		await expect(
+			createDestination(api, "newProject", "BOS schedule", "gray"),
+		).rejects.toThrow('Team color "gray" for BOS schedule isn\'t a Todoist color key');
+		expect(api.addProject).not.toHaveBeenCalled();
+	});
+
+	it("uses only valid Todoist color keys in the schedule data", async () => {
+		const { colors } = await vi.importActual("@doist/todoist-api-typescript");
+		const valid = new Set(colors.map((c) => c.key));
+		const { default: schedule } = await import("../../data/nba_schedule.json");
+		const invalid = Object.values(schedule)
+			.map((team) => team.color)
+			.filter((color) => !valid.has(color));
+		expect(invalid).toEqual([]);
 	});
 
 	it("throws for invalid destination", async () => {
