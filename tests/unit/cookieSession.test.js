@@ -49,4 +49,11 @@ describe("cookieSession utilities", () => {
 		);
 		expect(decryptMock).not.toHaveBeenCalled();
 	});
+
+	it("throws (so callers treat the visitor as logged out) when the stored token fails to decrypt", async () => {
+		decryptMock.mockRejectedValue(new Error("Bad hmac value"));
+		const req = { session: { accessTokenEncrypted: "tampered" } };
+
+		await expect(getAccessToken(req)).rejects.toThrow("Bad hmac value");
+	});
 });

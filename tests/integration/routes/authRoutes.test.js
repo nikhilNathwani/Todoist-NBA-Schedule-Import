@@ -116,6 +116,53 @@ describe("auth routes", () => {
 		expect(retrieveAccessTokenMock).toHaveBeenCalledTimes(1);
 	});
 
+	// How a failed code-for-token exchange with Todoist is reported
+	it.each([
+		[
+			"a bad or reused authorization code",
+			Object.assign(new Error("OAuth request failed with status 400"), {
+				httpStatusCode: 400,
+				responseData: { error: "bad_authorization_code" },
+			}),
+			400,
+			"Bad authorization code",
+		],
+		[
+			"wrong client credentials",
+			Object.assign(new Error("OAuth request failed with status 400"), {
+				httpStatusCode: 400,
+				responseData: { error: "incorrect_application_credentials" },
+			}),
+			400,
+			"Incorrect client credentials",
+		],
+		[
+			"Todoist rate-limiting us",
+			Object.assign(new Error("Todoist is rate-limiting requests right now."), {
+				httpStatusCode: 429,
+			}),
+			429,
+			"rate-limiting",
+		],
+		[
+			"a Todoist outage",
+			Object.assign(new Error("Todoist is temporarily unavailable."), {
+				httpStatusCode: 503,
+			}),
+			502,
+			"temporarily unavailable",
+		],
+	])("responds to %s with %i", async (_label, error, status, text) => {
+		retrieveAccessTokenMock.mockRejectedValue(error);
+		const { agent, state } = await startLogin();
+
+		const response = await agent.get(`/api/auth/callback?code=abc&state=${state}`);
+
+		expect(response.status).toBe(status);
+		expect(response.text).toContain(text);
+		expect(saveAccessTokenMock).not.toHaveBeenCalled();
+	});
+
 	it("returns 500 on generic OAuth exchange error", async () => {
 		retrieveAccessTokenMock.mockRejectedValue(new Error("boom"));
 		const { agent, state } = await startLogin();
