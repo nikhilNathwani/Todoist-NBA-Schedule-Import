@@ -16,10 +16,10 @@ Todoist NBA Schedule Import connects to a user's Todoist account, lets them choo
 
 ## Tech Stack
 
-- Next.js 16 (App Router) + React 19 + TypeScript
+- Node.js + Express (ES modules)
 - Todoist REST API via `@doist/todoist-api-typescript`
-- `@hapi/iron` for the encrypted session cookie
-- Vitest for unit and route tests
+- `cookie-session` + `@hapi/iron` for token handling
+- Vanilla JavaScript frontend
 - Python scraper for annual schedule refresh
 - Vercel deployment
 
@@ -27,26 +27,19 @@ Todoist NBA Schedule Import connects to a user's Todoist account, lets them choo
 
 ```text
 app/
-    page.tsx                  # Landing page (or season-over page off-season)
-    layout.tsx
-    api/auth/login/           # Starts Todoist OAuth (sets CSRF state cookie)
-    api/auth/callback/        # Verifies state, exchanges code, stores encrypted token
-    configure-import/
-        page.tsx              # Team + destination picker
-        actions.ts            # Server Action that creates the Todoist tasks
-        _components/          # PickerForm, TeamSelector, ProjectSelector, ...
-components/                   # Landing, season-over, error page, header/footer
-lib/
-    todoist.ts                # Todoist API operations
-    todoistErrors.ts          # Classifies Todoist API failures for the UI
-    cookieSession.ts          # Encrypted token session helpers (iron)
-    oauthState.ts             # OAuth CSRF state nonce
-    encryption.ts
-    parseSchedule.ts          # Schedule parsing and season-state logic
-tests/                        # Vitest: unit/ and route/
-public/                       # Team logos and static images
-scrape/                       # Python schedule scraping pipeline
-data/nba_schedule.json        # Canonical schedule data
+    routes/
+        auth/                 # OAuth login/callback
+        pages/                # Landing and picker pages
+        api/                  # Team list + import endpoint
+    utils/
+        todoist.js            # Todoist API operations
+        cookieSession.js      # Encrypted token session helpers
+        parseSchedule.js      # Schedule parsing and season-state logic
+    views/                  # Server-rendered HTML templates
+
+public/                   # Frontend JS, CSS, images
+scrape/                   # Schedule scraping pipeline
+data/nba_schedule.json    # Canonical schedule data
 ```
 
 ## Request Flow
@@ -54,8 +47,8 @@ data/nba_schedule.json        # Canonical schedule data
 1. User visits landing page and starts Todoist OAuth.
 2. Callback verifies state, exchanges code for token, and stores encrypted token in session cookie.
 3. User selects team and destination.
-4. A Server Action (`app/configure-import/actions.ts`) reads the team schedule from local JSON and creates Todoist tasks.
-5. The action returns a deep link to open imported tasks in Todoist.
+4. API route reads team schedule from local JSON and creates Todoist tasks.
+5. Response returns a deep link to open imported tasks in Todoist.
 
 ## Environment Variables
 
@@ -63,15 +56,14 @@ Use `.env.local` (see `.env.example`):
 
 - `CLIENT_ID`
 - `CLIENT_SECRET`
+- `STATE_SECRET`
 - `ENCRYPTION_KEY`
+- `COOKIE_SECRET`
 - `REDIRECT_URI`
-- `ENABLE_ERROR_DEMO` (optional; `"true"` simulates Todoist API failures for demos)
 
 ## Getting Started
 
 ### 1. Install dependencies
-
-Requires Node 24 (pinned in `.nvmrc`; fnm switches to it automatically).
 
 ```bash
 npm install
@@ -96,20 +88,15 @@ App runs at http://localhost:3000.
 ## Scripts
 
 ```bash
-npm run dev            # Dev server with hot reload
-npm run build          # Production build
-npm start              # Serve the production build
-npm test               # Run the Vitest suite once
-npm run test:coverage  # With coverage (what CI runs)
+npm start      # Start server
+npm run dev    # Dev mode with nodemon
 ```
 
 ## Updating NBA Schedule Data
 
 ```bash
-scrape/.venv/bin/python scrape/main.py
+python3 scrape/main.py
 ```
-
-(See `scrape/README.md` to create the venv with uv first.)
 
 For annual workflow and verification details, see `SCRAPE_INSTRUCTIONS.md`.
 
@@ -130,6 +117,13 @@ Deliberately not done now, but worth revisiting if the constraints below change:
   A database would add write-consistency and query machinery this data has
   no use for. Reconsider if the app ever needs runtime writes to this data
   (e.g. live in-season score/date updates, or user-customized schedules).
+- **Dependency updates.** `npm audit`/Dependabot currently flags ~20
+  transitive vulnerabilities (mostly `express`'s bundled `path-to-regexp`/
+  `qs`, a couple in the Todoist SDK's own dependencies, and several in
+  dev-only tooling that never ships to production). None are realistically
+  exploitable in this app's threat model today, but a periodic `npm update`
+  / `pip install -U -r scrape/requirements.txt` pass (bumping Express to a
+  current minor version in particular) would clear most of them cheaply.
 
 ## Why This Project
 

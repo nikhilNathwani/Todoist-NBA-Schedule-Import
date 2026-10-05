@@ -1,13 +1,12 @@
 {
 	"name": "todoist-nba-schedule-import",
 	"version": "1.0.0",
-	"description": "Import an NBA team's schedule into Todoist as tasks (Next.js)",
-	"private": true,
+	"description": "An app to import NBA schedules into Todoist.",
 	"type": "module",
+	"main": "app.js",
 	"scripts": {
-		"dev": "next dev",
-		"build": "next build",
-		"start": "next start",
+		"start": "node server.js",
+		"dev": "NODE_ENV=development nodemon server.js",
 		"test": "vitest run",
 		"test:watch": "vitest",
 		"test:coverage": "vitest run --coverage",
@@ -17,26 +16,16 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
-		"@doist/todoist-api-typescript": "^7.10.0",
+		"@doist/todoist-api-typescript": "^6.0.1",
 		"@hapi/iron": "^7.0.1",
-		"next": "^16.3.3",
-		"react": "^19.2.0",
-		"react-dom": "^19.2.0"
+		"cookie-session": "^2.1.0",
+		"express": "^4.21.1"
 	},
 	"devDependencies": {
-		"@types/node": "^24.13.1",
-		"@types/react": "^19.2.0",
-		"@types/react-dom": "^19.2.0",
-		"@vitest/coverage-v8": "^5.0.2",
-		"type-fest": "^4.41.0",
-		"typescript": "^5.7.3",
-		"vitest": "^5.0.2"
-	},
-	"overrides": {
-		"form-data": "^4.0.6",
-		"uuid": "^11.1.1"
-	},
-	"engines": {
-		"node": "24.x"
+		"@vitest/coverage-v8": "^4.1.10",
+		"dotenv": "^17.2.2",
+		"nodemon": "^3.1.10",
+		"supertest": "^7.2.2",
+		"vitest": "^4.1.10"
 	}
 }
