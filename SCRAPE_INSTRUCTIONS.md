@@ -1,6 +1,6 @@
 # Annual NBA Schedule Update
 
-1. Run `python3 scrape/main.py` in July/August when next season's schedule is released
+1. Run `scrape/.venv/bin/python scrape/main.py` in July/August (venv setup: `scrape/README.md`) when next season's schedule is released
 2. The script will:
     - Update `data/nba_schedule.json` with the new season's games
     - Automatically verify:

@@ -1,10 +1,12 @@
 # Application Flow
 
-This document explains how the NBA Todoist Schedule Importer works, from landing page to successful import.
+How the NBA Todoist Schedule Importer works, from landing page to finished import.
 
 ## Overview
 
-The app uses server-side rendering (backend generates HTML) combined with client-side JavaScript for interactivity. OAuth authentication with Todoist is required before importing schedules.
+An Express 5 app. The server renders each page's HTML (template-string functions in `app/views/`), and browser-side JavaScript (`public/scripts/`, loaded as ES modules) handles the picker page's interactivity. The browser talks to the server through two JSON endpoints: `GET /api/get-teams` and `POST /api/import-schedule`. Users log in with Todoist OAuth before importing.
+
+`app.js` builds the app: session middleware, static files, body parsing, then the routers. `server.js` runs it locally; on Vercel, `api/index.js` exports the same app as a serverless function, and `vercel.json` rewrites every path to it.
 
 ---
 
@@ -12,214 +14,173 @@ The app uses server-side rendering (backend generates HTML) combined with client
 
 ### 1. Landing Page
 
-**Route:** `GET /`  
-**Handler:** `app/routes/pages/index.js`  
-**View:** `app/views/index.js`
+**Route:** `GET /`
+**Handler:** `app/routes/pages/index.js`
+**Views:** `app/views/index.js`, `app/views/seasonOver.js`
 
-- Backend checks if NBA season is over using `isSeasonOver()` from `app/utils/parseSchedule.js`
-- If season is over: renders season-over page (`app/views/seasonOver.js`)
-- If season is active: renders landing page with "Log in with Todoist" button
-- Page is fully server-rendered HTML
+- `isSeasonOver()` (`app/utils/parseSchedule.js`) compares now with the latest game time in `data/nba_schedule.json`. Both are absolute UTC moments, so the answer doesn't depend on the server's time zone.
+- Season over: renders the season-over page. Otherwise: renders the landing page with "Log in with Todoist".
+- Outside production, `/test-season-on` and `/test-season-over` force either page for previewing.
 
 ---
 
-### 2. OAuth Login Initiation
+### 2. OAuth Login
 
-**Route:** `GET /auth/login`  
+**Route:** `GET /api/auth/login`
 **Handler:** `app/routes/auth/login.js`
 
-- User clicks "Log in with Todoist" button
-- Backend redirects to Todoist OAuth authorization URL
-- Includes `client_id`, `scope`, `state`, and `redirect_uri` parameters
+- Generates a fresh random `state` (`crypto.randomUUID()`) and saves it in the session cookie.
+- Redirects to `https://todoist.com/oauth/authorize` with `client_id`, `scope=data:read_write`, `state` and `redirect_uri`, built with `URLSearchParams` so each value is URL-encoded.
 
 ---
 
 ### 3. OAuth Callback
 
-**Route:** `GET /auth/callback`  
+**Route:** `GET /api/auth/callback`
 **Handler:** `app/routes/auth/callback.js`
 
-- Todoist redirects back with authorization `code`
-- Backend exchanges code for access token using `retrieveAccessToken()` from `app/utils/todoist.js`
-- Access token is encrypted and saved to session using `saveAccessToken()` from `app/utils/cookieSession.js`
-- Backend checks if user has reached project limit using `userReachedProjectLimit()` from `app/utils/todoist.js`
-- Redirects to `/configure-import` with `canCreateProjects` flag if needed
+- Todoist redirects back with `code` and `state`.
+- **CSRF check:** `state` must equal the one saved in this browser's session. The saved state is deleted first, so each one works once. Mismatch or missing: `403`.
+- Exchanges `code` for an access token (`retrieveAccessToken()` in `app/utils/todoist.js`, a `fetch` POST to Todoist's token endpoint).
+- Encrypts the token and stores it in the session (`saveAccessToken()` in `app/utils/cookieSession.js`), then redirects to `/configure-import`.
+- Todoist OAuth errors map to specific responses: bad code or credentials `400`, rate limited `429`, other Todoist failures `502`, anything unclassified `500`.
 
 ---
 
-### 4. Picker Page Load
+### 4. Picker Page (server side)
 
-**Route:** `GET /configure-import`  
-**Handler:** `app/routes/pages/picker.js`  
+**Route:** `GET /configure-import`
+**Handler:** `app/routes/pages/picker.js`
 **View:** `app/views/picker.js`
 
-- Backend renders picker page with empty team dropdown and project selection radio buttons
-- If user hit project limit, "Create New Project" option is disabled and "Inbox" is pre-selected
-- Page loads with these frontend scripts (in order):
-    1. `public/scripts/api/getTeams.js` - API call function
-    2. `public/scripts/api/importSchedule.js` - API call function
-    3. `public/scripts/ui/header/importStatus.js` - Status enum and header updates
-    4. `public/scripts/ui/header/teamLogo.js` - Team logo display
-    5. `public/scripts/ui/picker.js` - Picker page initialization
-    6. `public/scripts/utils/transitions.js` - Page transitions and animations
-    7. `public/scripts/ui/nextSteps.js` - Next steps list display
-    8. `public/scripts/events/selectTeam.js` - Team selection handler
-    9. `public/scripts/events/submitForm.js` - Form submission handler
+- Reads the token from the session. None, or expired: redirects to `/` to log in.
+- **Account tier check:** `userReachedProjectLimit()` (`app/utils/todoist.js`) calls `getUser()` and `getProjects()` in parallel, counts non-Inbox projects, and compares against the cap for the user's plan: 5 if `user.isPremium` is false, 300 if true. The API exposes the plan but not the caps, so the caps are constants.
+- Renders the page. If the user is at their limit, "Create New Project" is disabled and "Inbox" is pre-selected.
+- If the Todoist call fails, renders an error page with the classified HTTP status (401/403/404/429/500/502/503) and a matching message. See [Error handling](#error-handling).
 
 ---
 
-### 5. Team Dropdown Population (Frontend)
+### 5. Picker Page (browser side)
 
-**Script:** `public/scripts/ui/picker.js` → `initializePickerPage()`  
-**API Call:** `public/scripts/api/getTeams.js` → `getTeams()`  
-**API Route:** `GET /api/teams`  
-**Handler:** `app/routes/api/getTeams.js`
+**Entry point:** `public/scripts/main.js` (the page's only `<script type="module">`)
 
-- On page load, `initializePickerPage()` runs
-- Calls `getTeams()` which fetches team data from backend
-- Backend reads `data/nba_schedule.json` using `getTeams()` from `app/utils/parseSchedule.js`
-- Frontend populates team dropdown with options
-- Submit button remains disabled until team is selected
+`main.js` imports everything else explicitly; no script relies on globals:
+
+| File | Role |
+|---|---|
+| `api/getTeams.js` | `fetchTeamData()`: `GET /api/get-teams` |
+| `api/importSchedule.js` | `importSchedule()`: `POST /api/import-schedule` |
+| `ui/picker.js` | Fills the team dropdown; updates the "new project" subtitle; enables the submit button |
+| `ui/header/importStatus.js` | Status enum (LOADING/SUCCESS/ERROR) and header text |
+| `ui/header/teamLogo.js` | Shows the selected team's logo |
+| `ui/nextSteps.js` | Builds the next-steps list shown after an import |
+| `ui/demoBanner.js` | Banner shown when `?mockTodoistError=` is in the URL |
+| `utils/transitions.js` | Fade-out/fade-in sequence and 3-second minimum loading time |
+| `events/selectTeam.js` | Dropdown `change` listener |
+| `events/submitForm.js` | Form `submit` listener |
+
+On load, `main.js` attaches the listeners, then fills the dropdown from `GET /api/get-teams` (handler `app/routes/api/getTeams.js`, which returns every team's name, city and color from the schedule JSON). If that request fails, the dropdown says "Couldn't load teams. Please refresh the page." and the button stays disabled.
+
+Choosing a team shows its logo, names the new project ("Celtics schedule"), and enables "Import schedule".
 
 ---
 
-### 6. Team Selection (Frontend)
-
-**Script:** `public/scripts/events/selectTeam.js`
-
-- User selects a team from dropdown
-- Event handler shows team logo using `showTeamLogo()` from `public/scripts/ui/header/teamLogo.js`
-- Event handler enables submit button using `enableSubmitButton()` from `public/scripts/ui/picker.js`
-
----
-
-### 7. Form Submission (Frontend)
+### 6. Submitting the Form
 
 **Script:** `public/scripts/events/submitForm.js`
 
-- User clicks "Import schedule" button
-- Form submission prevented (handled via JavaScript)
-- `transitionToLoading()` called from `public/scripts/utils/transitions.js`:
-    - Starts loading timer
-    - Updates header status to LOADING
-    - Fades out form
-    - Removes form from DOM
-    - Shows loading animation
-- `importSchedule()` called from `public/scripts/api/importSchedule.js`
+- Prevents the normal form post. Only the first submit counts, and the button is disabled, so a double-click can't start two imports.
+- `transitionToLoading()`: starts the loading timer, sets the header to LOADING, fades the form out and removes it once its `transitionend` fires.
+- Calls `importSchedule(team, project)`.
 
 ---
 
-### 8. Import Schedule API Call
+### 7. Import Schedule API
 
-**API Route:** `POST /api/import-schedule`  
-**Handler:** `app/routes/api/importSchedule.js`  
-**Body:** `{ team: "BOS", project: "newProject" }` (or `"inbox"`)
+**Route:** `POST /api/import-schedule`
+**Handler:** `app/routes/api/importSchedule.js`
+**Body:** `{ team: "BOS", project: "newProject" | "inbox" }`
 
-Backend performs 7 steps:
-
-1. **Get access token** from session using `getAccessToken()` from `app/utils/cookieSession.js`
-2. **Initialize Todoist API** using `initializeTodoistAPI()` from `app/utils/todoist.js`
-3. **Get team data** using `getTeamData()` from `app/utils/parseSchedule.js`:
-    - Reads `data/nba_schedule.json`
-    - Filters to upcoming games only
-    - Returns team info and schedule
-4. **Create destination** (project or get inbox ID) using `createDestination()` from `app/utils/todoist.js`
-5. **Import games** as Todoist tasks using `importSchedule()` from `app/utils/todoist.js`
-6. **Add yearly reminder** task using `addYearlyReminder()` from `app/utils/todoist.js`
-7. **Create deep link** to project using `createDeepLink()` from `app/utils/todoist.js`
-
-Returns: `{ deepLink: "https://app.todoist.com/app/project/..." }`
+1. Read the token from the session (missing: `401`).
+2. If `newProject`, re-check the project limit (it may have changed since the page loaded). At the limit: `403`.
+3. `getTeamData()` reads the team from the schedule JSON and keeps only games later than now.
+4. `createDestination()`: a new project named "<Team> schedule" in the team's color (checked against Todoist's color list), or a new section inside the Inbox.
+5. `importSchedule()` adds one task per game, all in parallel. Each task's `dueDatetime` is the game's UTC time. Failed games are retried once, together, after 10 seconds. If any still fail, the request fails with a message naming them; games that did import are kept.
+6. `addYearlyReminder()`: a recurring "every October 10th" task to re-import next season.
+7. Returns `{ deepLink }` to the new project or section.
 
 ---
 
-### 9. Success Result (Frontend)
+### 8. Result
 
-**Script:** `public/scripts/events/submitForm.js` (continued)
+**Scripts:** `utils/transitions.js` → `ui/nextSteps.js`
 
-- Import API call succeeds
-- `transitionToResult(importStatus.SUCCESS)` called from `public/scripts/utils/transitions.js`:
-    - Waits for minimum 3-second loading duration
-    - Updates header status to SUCCESS
-    - Delays 1.2 seconds for smooth UX
-- `showNextStepsList(importStatus.SUCCESS, deepLink)` called from `public/scripts/ui/nextSteps.js`:
-    - Creates `<ul>` element with next steps
-    - Appends to `.app-content`
-    - Calls `fadeInNextSteps()` from `public/scripts/utils/transitions.js` to trigger fade-in animation
-- User sees:
-    - Success header with checkmark
-    - "Import complete!" message
-    - Next steps list with links to:
-        - Open Todoist project
-        - Import another schedule
-        - Contact developer
-
----
-
-### 10. Error Handling (Frontend)
-
-**Script:** `public/scripts/events/submitForm.js` (error path)
-
-- If import API call fails:
-- `transitionToResult(importStatus.ERROR)` called
-- `showNextStepsList(importStatus.ERROR, null, error)` called with error message
-- User sees:
-    - Error header with warning icon
-    - "An error occurred" message
-    - Next steps list with link to send error report email
+- `transitionToResult()` waits until at least 3 seconds have passed since loading began, updates the header, then pauses 1.2 seconds.
+- Success: "Import complete!" and links to open Todoist, import another team, or contact me.
+- Error: "An error occurred", the server's message as the subtitle, and a "Send error report" email link that includes the message.
+- The list fades in through a CSS `@keyframes` animation that plays as soon as it's added.
 
 ---
 
 ## Key Technical Details
 
-### Session Management
+### Time zones
 
-- Access tokens are encrypted using AES-256-CBC (`app/utils/encryption.js`)
-- Encrypted tokens stored in cookie-session (`app/utils/cookieSession.js`)
-- Encryption key from `ENCRYPTION_KEY` environment variable
+- The scraper (`scrape/formatDateTime.py`) reads CBS's Eastern-time listings, attaches `America/New_York` with pytz (handling daylight saving), and stores UTC ISO-8601 strings.
+- Tasks are created with `dueDatetime` set to that UTC moment, not a "7:30pm" string. Todoist shows each task in the user's own Todoist time zone, so every user sees their local tip-off time from the same data.
+- "Upcoming games" and "season over" compare absolute moments, independent of the server's time zone.
+- The yearly reminder uses `dueString: "every October 10th"`, which Todoist reads in the user's time zone.
 
-### Data Flow
+### Account tier
 
-- NBA schedule data stored in `data/nba_schedule.json`
-- Generated by `scrape/main.py` (run manually to update)
-- Backend reads JSON file for all schedule operations
+- Free: 5 projects. Premium: 300. The plan comes from `getUser().isPremium`; the caps are constants because the API doesn't expose them.
+- Checked when the picker renders (to disable "Create New Project") and again at import time.
+- Inbox imports create a section inside the Inbox, which works on any plan.
 
-### Animation Timing
+### Sessions and security
 
-- All transitions managed by `public/scripts/utils/transitions.js`
-- Minimum 3-second loading screen ensures smooth UX
-- Fade-in animations use CSS classes (`fade-in`, `fade-out`)
+- `cookie-session` stores the session in a cookie signed with `COOKIE_SECRET`: `httpOnly`, `secure`, `sameSite: "Lax"` (`Strict` would drop the cookie on the redirect back from Todoist), 1-hour lifetime.
+- Inside it, the access token is sealed with `@hapi/iron` (`app/utils/encryption.js`, key `ENCRYPTION_KEY`): AES-256-CBC encryption plus an HMAC-SHA256 integrity check, so it can't be read or altered.
+- The OAuth `state` is random per login, tied to the browser's session, and single-use.
 
-### Todoist API Operations
+### Error handling
 
-- All Todoist interactions in `app/utils/todoist.js`
-- Uses `@doist/todoist-api-typescript` library
-- Creates projects, tasks, and generates deep links
+- `app/utils/todoistErrors.js` sorts each Todoist failure by status code into a type: `AUTH_EXPIRED` (401), `FORBIDDEN`, `NOT_FOUND`, `RATE_LIMITED` (429, with a suggested wait: Todoist's `retry_after` if the response body has one, otherwise 30 seconds), `SERVER_ERROR`, `SERVICE_UNAVAILABLE`, `NETWORK_ERROR`, and so on. Each type carries whether it's worth retrying and a user-facing message.
+- Pages respond with the matching HTTP status and an error page; the import API responds with the status plus `{ errorType, message, retryable, retryAfterSeconds }`.
+- Demo mode: with `ENABLE_ERROR_DEMO=true`, `?mockTodoistError=<code>` on `/configure-import` simulates that failure instead of calling Todoist.
+- Unknown paths get a real `404` page.
+
+### Data
+
+- `data/nba_schedule.json` is generated once a year by `scrape/main.py` (see `SCRAPE_INSTRUCTIONS.md`) and read at request time. It's read-only, so it stays a file, not a database.
 
 ---
 
 ## File Organization
 
-### Backend Routes
-
-- `app/routes/pages/` - Page rendering routes
-- `app/routes/api/` - API endpoints
-- `app/routes/auth/` - OAuth flow routes
-
-### Backend Views
-
-- `app/views/` - HTML generation functions
-- `app/views/components.js` - Reusable components (head, footer, logo)
-
-### Backend Utils
-
-- `app/utils/todoist.js` - Todoist API operations
-- `app/utils/parseSchedule.js` - Schedule data operations
-- `app/utils/cookieSession.js` - Session token management
-- `app/utils/encryption.js` - AES encryption/decryption
-
-### Frontend Scripts
-
-- `public/scripts/api/` - API call functions
-- `public/scripts/events/` - User interaction handlers
-- `public/scripts/ui/` - UI updates and rendering
-- `public/scripts/utils/` - Transitions and animations
+```text
+app.js                     # Builds the Express app (middleware + routers + 404)
+server.js                  # Local server (npm run dev / npm start)
+api/index.js               # Vercel serverless entry; exports app.js
+app/
+  routes/
+    pages/index.js         # GET /  (+ debug routes outside production)
+    pages/picker.js        # GET /configure-import
+    api/getTeams.js        # GET /api/get-teams
+    api/importSchedule.js  # POST /api/import-schedule
+    auth/login.js          # GET /api/auth/login
+    auth/callback.js       # GET /api/auth/callback
+  utils/
+    todoist.js             # Todoist API calls (OAuth token, tier, projects, tasks)
+    todoistErrors.js       # Error classification + demo-mode mocks
+    parseSchedule.js       # Schedule JSON reads, upcoming games, season over
+    cookieSession.js       # Save/read the encrypted token in the session
+    encryption.js          # @hapi/iron seal/unseal
+  views/                   # HTML template functions (pages, error page, shared head/footer)
+public/
+  scripts/                 # Browser ES modules (entry: main.js)
+  style.css, images/
+tests/                     # Vitest: unit/ and integration/ (Supertest)
+scrape/                    # Python schedule scraper
+data/nba_schedule.json     # Schedule data
+```

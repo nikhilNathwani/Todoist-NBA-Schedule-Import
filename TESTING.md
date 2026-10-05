@@ -42,12 +42,16 @@ Files:
 - `tests/unit/parseSchedule.test.js`
 - `tests/unit/cookieSession.test.js`
 - `tests/unit/todoist.test.js`
+- `tests/unit/todoistErrors.test.js`
 
 Examples in this repo:
 
 - Date filtering logic (`isLaterThanNow`, `getUpcomingGames`)
 - Session token save/load behavior
 - Task formatting and destination logic for Todoist
+- Plan-based project limits (`getUser().isPremium` picks the 5 or 300 cap)
+- Retrying failed game imports (with fake timers, so the 10s wait is instant)
+- Classifying Todoist failures by status code
 
 ### 2. Integration tests
 
@@ -55,15 +59,18 @@ Integration tests verify behavior across components (route + middleware + mocked
 
 Files:
 
+- `tests/integration/app.test.js`
 - `tests/integration/routes/getTeamsRoute.test.js`
 - `tests/integration/routes/importScheduleRoute.test.js`
 - `tests/integration/routes/authRoutes.test.js`
+- `tests/integration/routes/pickerRoute.test.js`
 
 Examples in this repo:
 
 - API status codes and JSON response shapes
-- OAuth callback state validation
-- Error handling when downstream services fail
+- OAuth state checks, using the real `cookie-session` middleware and a Supertest agent that keeps cookies between requests like a browser
+- Redirecting logged-out visitors, and classified error pages
+- The fully assembled `app.js` boots and returns a 404 for unknown paths (each route test builds its own small app, so only this catches mistakes in how `app.js` wires them together)
 
 ## Project test structure
 
@@ -75,11 +82,14 @@ tests/
     parseSchedule.test.js
     cookieSession.test.js
     todoist.test.js
+    todoistErrors.test.js
   integration/
+    app.test.js
     routes/
       getTeamsRoute.test.js
       importScheduleRoute.test.js
       authRoutes.test.js
+      pickerRoute.test.js
 ```
 
 ## How Vitest works
@@ -130,7 +140,7 @@ Use hooks to avoid test cross-contamination.
 Examples in this repo:
 
 - Reset mock call history in `beforeEach`
-- Restore real timers in `afterEach`
+- Restore real timers after fake-timer tests (`vi.useRealTimers()` in a `finally` block)
 
 If you do not reset state, tests can become flaky and misleading.
 
