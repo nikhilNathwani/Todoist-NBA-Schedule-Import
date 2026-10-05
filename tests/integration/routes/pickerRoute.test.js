@@ -56,6 +56,18 @@ describe("GET /configure-import", () => {
 		expect(response.text).toContain("temporarily unavailable");
 	});
 
+	it("redirects to the start page when there's no valid session", async () => {
+		getAccessTokenMock.mockRejectedValue(
+			new Error("Access token is not set in the session."),
+		);
+
+		const response = await request(createApp()).get("/configure-import");
+
+		expect(response.status).toBe(302);
+		expect(response.headers.location).toBe("/");
+		expect(userReachedProjectLimitMock).not.toHaveBeenCalled();
+	});
+
 	it("falls back to a generic 500 for an unclassified error", async () => {
 		getAccessTokenMock.mockResolvedValue("token");
 		userReachedProjectLimitMock.mockRejectedValue(new Error("boom"));

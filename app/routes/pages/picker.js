@@ -18,8 +18,16 @@ router.get("/configure-import", async (req, res) => {
 		? req.query.mockTodoistError
 		: undefined;
 
+	// No valid session (never logged in, or the 1-hour cookie expired):
+	// send them to the start page to log in, rather than an error page
+	let accessToken;
 	try {
-		const accessToken = await getAccessToken(req);
+		accessToken = await getAccessToken(req);
+	} catch {
+		return res.redirect("/");
+	}
+
+	try {
 		const canCreateProjects = !(
 			await userReachedProjectLimit(accessToken, mockErrorCode)
 		);
