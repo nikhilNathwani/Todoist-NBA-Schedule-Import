@@ -5,7 +5,7 @@
  * - Coordinating UI transitions during import
  */
 
-const importStatus = {
+export const importStatus = {
 	LOADING: 0,
 	SUCCESS: 1,
 	ERROR: 2,
@@ -42,7 +42,7 @@ const STATUS_CONFIG = {
  *   provided (used for the ERROR state to show the classified, user-facing
  *   message from the backend instead of a blank subtitle)
  */
-function updateHeaderStatus(status, subtitleOverride) {
+export function updateHeaderStatus(status, subtitleOverride) {
 	const config = STATUS_CONFIG[status];
 
 	if (config) {

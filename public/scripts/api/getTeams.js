@@ -5,7 +5,7 @@
 /**
  * @returns {Promise<Object>} Object mapping team IDs to team data
  */
-async function fetchTeamData() {
+export async function fetchTeamData() {
 	try {
 		const response = await fetch("/api/get-teams");
 		if (!response.ok) {

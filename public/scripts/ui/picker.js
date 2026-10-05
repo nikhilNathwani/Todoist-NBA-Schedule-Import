@@ -1,34 +1,9 @@
 /**
- * Picker page view initialization
- * Fetches data and populates the team dropdown on page load
+ * Picker page view updates
+ * Team dropdown, "new project" subtitle, and submit button
  */
 
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-//                                           //
-//       FORM ELEMENTS                       //
-//                                           //
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-
-// Form elements - shared with event handlers
-const form = document.querySelector("form");
-const teamSelect = form.elements["team"];
-const projectSelect = form.elements["project"];
-
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-//                                           //
-//       INITIALIZATION                      //
-//                                           //
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-
-let teamData = null;
-
-// Initialize picker page: fetch team data and populate dropdown
-async function initializePickerPage() {
-	teamData = await fetchTeamData();
-	populateTeamDropdown(teamData);
-}
-
-function populateTeamDropdown(teams) {
+export function populateTeamDropdown(teamSelect, teams) {
 	// Sort teams alphabetically by city
 	const sortedTeams = Object.entries(teams).sort((a, b) =>
 		a[1].city > b[1].city ? 1 : -1
@@ -50,7 +25,7 @@ function populateTeamDropdown(teams) {
 //                                           //
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-function updateNewProjectSubtitle(teamName) {
+export function updateNewProjectSubtitle(teamName) {
 	const newProjectInput = document.querySelector('input[value="newProject"]');
 	const newProjectSubtitle = document
 		.getElementById("newProject")
@@ -61,16 +36,7 @@ function updateNewProjectSubtitle(teamName) {
 	}
 }
 
-function enableSubmitButton() {
+export function enableSubmitButton() {
 	const submitButton = document.getElementById("submitButton");
 	submitButton.disabled = false;
 }
-
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-//                                           //
-//       MAIN                                //
-//                                           //
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-
-// Initialize on page load
-initializePickerPage();

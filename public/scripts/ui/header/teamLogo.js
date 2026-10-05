@@ -3,7 +3,7 @@
  * Handles the NBA team logo and banner animations in the header
  */
 
-function updateTeamLogo(teamID) {
+export function updateTeamLogo(teamID) {
 	const teamLogo = document
 		.getElementById("nbaLogoContainer")
 		.querySelector("img");
@@ -11,7 +11,7 @@ function updateTeamLogo(teamID) {
 	teamLogo.alt = `Selected Team (${teamID}) Logo`;
 }
 
-function growLogoBanner() {
+export function growLogoBanner() {
 	const logoBanner = document.querySelector(".logo-banner");
 	logoBanner.classList.add("logo-banner-large");
 }

@@ -3,34 +3,42 @@
  * Triggers loading UI, calls import API, and shows results
  */
 
-// Note: form, teamSelect, projectSelect are defined in picker.js
+import { importSchedule } from "../api/importSchedule.js";
+import { importStatus } from "../ui/header/importStatus.js";
+import { showNextStepsList } from "../ui/nextSteps.js";
+import { transitionToLoading, transitionToResult } from "../utils/transitions.js";
 
 // Set up event listener for form submission
-form.addEventListener("submit", async function (event) {
-	event.preventDefault();
-	console.log("Form submitted");
+export function listenForFormSubmit(form) {
+	const teamSelect = form.elements["team"];
+	const projectSelect = form.elements["project"];
 
-	// Show loading state
-	transitionToLoading();
+	form.addEventListener("submit", async function (event) {
+		event.preventDefault();
+		console.log("Form submitted");
 
-	try {
-		// Call import API
-		const data = await importSchedule(
-			teamSelect.value,
-			projectSelect.value
-		);
-		console.log("Import successful, data:", data);
+		// Show loading state
+		transitionToLoading();
 
-		// Show success state with deep link
-		await transitionToResult(importStatus.SUCCESS);
-		console.log("About to call showNextStepsList");
-		showNextStepsList(importStatus.SUCCESS, data.deepLink);
-	} catch (error) {
-		console.error("Import failed:", error);
+		try {
+			// Call import API
+			const data = await importSchedule(
+				teamSelect.value,
+				projectSelect.value
+			);
+			console.log("Import successful, data:", data);
 
-		// Show error state, with the backend's classified message (e.g.
-		// "Todoist is rate-limiting requests...") if one was provided
-		await transitionToResult(importStatus.ERROR, error.message);
-		showNextStepsList(importStatus.ERROR, null, error);
-	}
-});
+			// Show success state with deep link
+			await transitionToResult(importStatus.SUCCESS);
+			console.log("About to call showNextStepsList");
+			showNextStepsList(importStatus.SUCCESS, data.deepLink);
+		} catch (error) {
+			console.error("Import failed:", error);
+
+			// Show error state, with the backend's classified message (e.g.
+			// "Todoist is rate-limiting requests...") if one was provided
+			await transitionToResult(importStatus.ERROR, error.message);
+			showNextStepsList(importStatus.ERROR, null, error);
+		}
+	});
+}

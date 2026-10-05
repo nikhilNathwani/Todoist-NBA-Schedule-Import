@@ -3,13 +3,16 @@
  * Handles UI transitions and loading duration management
  */
 
+import { importStatus, updateHeaderStatus } from "../ui/header/importStatus.js";
+import { growLogoBanner } from "../ui/header/teamLogo.js";
+
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 //                                           //
 //       PAGE TRANSITIONS                    //
 //                                           //
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-function transitionToLoading() {
+export function transitionToLoading() {
 	// Start loading timer
 	startLoadingTimer();
 
@@ -30,7 +33,7 @@ function transitionToLoading() {
 	});
 }
 
-async function transitionToResult(status, subtitleOverride) {
+export async function transitionToResult(status, subtitleOverride) {
 	// Wait for minimum loading duration
 	await waitForLoadingUI();
 
@@ -41,7 +44,7 @@ async function transitionToResult(status, subtitleOverride) {
 	await new Promise((resolve) => setTimeout(resolve, 1200));
 }
 
-function fadeInNextSteps() {
+export function fadeInNextSteps() {
 	const list = document.querySelector(".app-content ul");
 	if (list) {
 		// Use requestAnimationFrame to ensure DOM is ready

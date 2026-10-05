@@ -3,7 +3,10 @@
  * Displays actionable next steps after import completes (success or error)
  */
 
-function showNextStepsList(status, deepLink, errorMessage) {
+import { importStatus } from "./header/importStatus.js";
+import { fadeInNextSteps } from "../utils/transitions.js";
+
+export function showNextStepsList(status, deepLink, errorMessage) {
 	console.log("showNextStepsList called:", {
 		status,
 		deepLink,

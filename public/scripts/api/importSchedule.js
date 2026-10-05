@@ -7,7 +7,7 @@
  * @param {string} project - Destination type ("newProject" or "inbox")
  * @returns {Promise<Object>} Response data containing deepLink
  */
-async function importSchedule(team, project) {
+export async function importSchedule(team, project) {
 	// Error-handling demo hook: if the page URL has ?mockTodoistError=<code>,
 	// forward it so the backend simulates that Todoist API failure instead
 	// of making a real call. Only takes effect if the server has error-demo

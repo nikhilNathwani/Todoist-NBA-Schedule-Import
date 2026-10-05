@@ -43,7 +43,7 @@ function renderErrorPage(title, message, action) {
 				</div>
 			</main>
 			${makeFooter()}
-			<script src="/scripts/ui/demoBanner.js"></script>
+			<script type="module" src="/scripts/ui/demoBanner.js"></script>
 		</body>
 	</html>
 `;

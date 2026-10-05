@@ -32,16 +32,7 @@ async function makePickerPageHTML(canCreateProjects) {
 				</div>	
 			</main>
 			${makeFooter()}
-	<script src="/scripts/api/getTeams.js"></script>
-	<script src="/scripts/api/importSchedule.js"></script>
-	<script src="/scripts/ui/header/importStatus.js"></script>
-	<script src="/scripts/ui/header/teamLogo.js"></script>
-	<script src="/scripts/ui/picker.js"></script>
-	<script src="/scripts/ui/demoBanner.js"></script>
-	<script src="/scripts/utils/transitions.js"></script>
-	<script src="/scripts/ui/nextSteps.js"></script>
-	<script src="/scripts/events/selectTeam.js"></script>
-	<script src="/scripts/events/submitForm.js"></script>
+	<script type="module" src="/scripts/main.js"></script>
 		</body>
 	</html>
 	`;
@@ -55,7 +46,7 @@ function makeTeamPickerHTML() {
 			</legend>
 			<select id="team-selector" name="team" aria-label="NBA Team">
 				<option value="" disabled selected>Choose a team</option>
-				<!-- Options populated by frontend scripts/events/selectTeam.js -->
+				<!-- Options populated by frontend scripts/ui/picker.js -->
 			</select>
 		</fieldset>`;
 }
