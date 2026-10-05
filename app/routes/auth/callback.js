@@ -3,14 +3,17 @@ import { saveAccessToken } from "../../utils/cookieSession.js";
 import { retrieveAccessToken } from "../../utils/todoist.js";
 
 const router = express.Router();
-const { STATE_SECRET } = process.env;
 
 // Handle the OAuth callback from Todoist
 router.get("/callback", async (req, res) => {
 	const { code, state } = req.query;
 
-	// Verify the state parameter to prevent CSRF attacks
-	if (state !== STATE_SECRET) {
+	// Verify the state parameter to prevent CSRF attacks: it must match the
+	// one /login saved in this browser's session. Cleared right away so each
+	// state works only once.
+	const expectedState = req.session.oauthState;
+	delete req.session.oauthState;
+	if (!expectedState || state !== expectedState) {
 		return res.status(403).send("State mismatch! Potential CSRF attack.");
 	}
 
