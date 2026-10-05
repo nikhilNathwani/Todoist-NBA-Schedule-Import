@@ -1,4 +1,5 @@
 import { makeHead, makeFooter, makeLogoBanner } from "./components.js";
+import { escapeHTML } from "./escapeHTML.js";
 
 // Renders a styled error page for failures that happen before the picker
 // form can even be shown (e.g. the project-limit check right after OAuth
@@ -32,12 +33,12 @@ function renderErrorPage(title, message, action) {
 				<div class="app-frame season-over" id="appFrameLanding">
 					<div class="app-header">
 						${makeLogoBanner(true)}
-						<h1>${title}</h1>
+						<h1>${escapeHTML(title)}</h1>
 						<h3>
-							${message}
+							${escapeHTML(message)}
 							<br />
 							<br />
-							<a href="${action.href}">${action.label}</a>
+							<a href="${escapeHTML(action.href)}">${escapeHTML(action.label)}</a>
 						</h3>
 					</div>
 				</div>

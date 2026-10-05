@@ -15,7 +15,10 @@ export function showNextStepsList(status, deepLink, errorMessage) {
 	const list = document.createElement("ul");
 
 	if (status === importStatus.SUCCESS) {
-		list.innerHTML = getSuccessNextSteps(deepLink);
+		list.innerHTML = getSuccessNextSteps();
+		// Set as a property, not pasted into the HTML string above, so the
+		// URL from the server can't add markup
+		list.querySelector("a.open-todoist").href = deepLink;
 	} else if (status === importStatus.ERROR) {
 		list.innerHTML = getErrorNextSteps(errorMessage);
 	}
@@ -33,10 +36,10 @@ export function showNextStepsList(status, deepLink, errorMessage) {
 //                                           //
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-function getSuccessNextSteps(deepLink) {
+function getSuccessNextSteps() {
 	return `
 		<li>
-			<a class="project project-game" href="${deepLink}" target="_blank">
+			<a class="project project-game open-todoist" target="_blank">
 				<i class="fa-solid fa-up-right-from-square"></i> Open Todoist
 			</a> to view schedule
 		</li>

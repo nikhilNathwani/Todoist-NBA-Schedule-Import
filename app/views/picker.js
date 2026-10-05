@@ -1,4 +1,5 @@
 import { makeHead, makeFooter, makeLogoBanner } from "./components.js";
+import { escapeHTML } from "./escapeHTML.js";
 
 async function makePickerPageHTML(canCreateProjects, teams) {
 	const teamPickerHTML = makeTeamPickerHTML(teams);
@@ -45,7 +46,7 @@ function makeTeamPickerHTML(teams) {
 		.sort(([, a], [, b]) => a.city.localeCompare(b.city))
 		.map(
 			([teamID, team]) =>
-				`<option value="${teamID}" data-team-name="${team.name}">${team.city} ${team.name}</option>`,
+				`<option value="${escapeHTML(teamID)}" data-team-name="${escapeHTML(team.name)}">${escapeHTML(team.city)} ${escapeHTML(team.name)}</option>`,
 		)
 		.join("\n\t\t\t\t");
 
