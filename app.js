@@ -23,6 +23,11 @@ import { makeNotFoundPageHTML } from "./app/views/errorPage.js";
 const app = express();
 
 // Cookie-session configuration
+// cookie-session needs a secret to sign the cookie and fails with a vague
+// ".keys required" without one; name the missing env var instead
+if (!process.env.COOKIE_SECRET) {
+	throw new Error("COOKIE_SECRET environment variable is not set");
+}
 app.set("trust proxy", 1); // Trust the Vercel proxy
 app.use(
 	cookieSession({
