@@ -47,7 +47,7 @@ export function listenForFormSubmit(form) {
 			// Show error state, with the backend's classified message (e.g.
 			// "Todoist is rate-limiting requests...") if one was provided
 			await transitionToResult(importStatus.ERROR, error.message);
-			showNextStepsList(importStatus.ERROR, null, error.message, error.errorType);
+			showNextStepsList(importStatus.ERROR, null, error.message);
 		}
 	});
 }

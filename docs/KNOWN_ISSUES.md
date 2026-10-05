@@ -50,7 +50,7 @@ Findings from audits of this app, kept so they don't get lost. Several were firs
 
 **Was:** if the 1-hour session expired while the picker page was open, the import showed "Failed to initialize Todoist API: Access token is not set in the session."
 
-**Fix:** the import returns `AUTH_EXPIRED` with "Your session has expired. Please log in again.", and the browser offers a "Log in again" link.
+**Fix:** the import returns `AUTH_EXPIRED` with "Your session has expired. Please log in again." No special handling in the browser: its existing "Try again" link goes to `/configure-import`, which already redirects logged-out visitors to the login page.
 
 ### 9. Page HTML didn't escape inserted data
 

@@ -105,7 +105,7 @@ Choosing a team shows its logo, names the new project ("Celtics schedule"), and 
 **Handler:** `app/routes/api/importSchedule.js`
 **Body:** `{ team: "BOS", project: "newProject" | "inbox" }`
 
-1. Read the token from the session. Missing or expired: `401` with type `AUTH_EXPIRED` and "Your session has expired. Please log in again."; the browser then offers a "Log in again" link.
+1. Read the token from the session. Missing or expired: `401` with type `AUTH_EXPIRED` and "Your session has expired. Please log in again." The page's "Try again" link goes to `/configure-import`, which sends a logged-out visitor to the login page.
 2. If `newProject`, re-check the project limit (it may have changed since the page loaded). At the limit: `403`.
 3. `getTeamData()` reads the team from the schedule JSON and keeps only games later than now.
 4. `createDestination()`: a new project named "<Team> schedule" in the team's color (checked against Todoist's color list), or a new section inside the Inbox.

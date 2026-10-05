@@ -5,7 +5,7 @@
 
 import { importStatus } from "./header/importStatus.js";
 
-export function showNextStepsList(status, deepLink, errorMessage, errorType) {
+export function showNextStepsList(status, deepLink, errorMessage) {
 	console.log("showNextStepsList called:", {
 		status,
 		deepLink,
@@ -20,7 +20,7 @@ export function showNextStepsList(status, deepLink, errorMessage, errorType) {
 		// URL from the server can't add markup
 		list.querySelector("a.open-todoist").href = deepLink;
 	} else if (status === importStatus.ERROR) {
-		list.innerHTML = getErrorNextSteps(errorMessage, errorType);
+		list.innerHTML = getErrorNextSteps(errorMessage);
 	}
 
 	const appContent = document.querySelector(".app-content");
@@ -58,20 +58,7 @@ function getSuccessNextSteps() {
 	`;
 }
 
-// Errors where logging in again is the fix (session expired, access revoked)
-const LOGIN_ERROR_TYPES = ["AUTH_EXPIRED", "FORBIDDEN"];
-
-function getErrorNextSteps(errorMessage, errorType) {
-	if (LOGIN_ERROR_TYPES.includes(errorType)) {
-		return `
-		<li>
-			<a class="project project-game" href="/">
-				<i class="fa-solid fa-right-to-bracket"></i> Log in again
-			</a>
-		</li>
-	`;
-	}
-
+function getErrorNextSteps(errorMessage) {
 	const errorReportLink = `mailto:nnathwani36@gmail.com?subject=${encodeURIComponent(
 		"Issue with NBA Todoist Import",
 	)}&body=${encodeURIComponent(
