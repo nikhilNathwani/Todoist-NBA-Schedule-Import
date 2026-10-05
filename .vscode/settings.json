@@ -9,6 +9,7 @@
 		"**/.venv": true,
 		"**/.python-version": true,
 		".nvmrc": true,
+		".env.example": true,
 		"vitest.config.js": true,
 		"**/.claude": true,
 		"**/coverage": true,
