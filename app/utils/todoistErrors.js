@@ -9,10 +9,14 @@
 // consistent shape the rest of the app can branch on -- instead of every
 // caller re-deciding what a generic caught Error means.
 //
-// The status codes handled below are exactly the ones Todoist's own API
-// docs document as possible responses (400, 401, 403, 404, 429, 500, 503):
+// The status codes handled below are the ones Todoist's own API docs
+// document as possible responses (400, 401, 403, 404, 429, 500, 503):
 // https://developer.todoist.com/api/v1/#tag/Overview/Errors
-// Anything else observed is classified as UNKNOWN rather than guessed at.
+// plus 502 and 504, which Todoist doesn't list but which come from the
+// gateway/proxy layer in front of any API and mean the same thing as 503:
+// temporarily unreachable, try again. (502s were seen in practice during
+// bulk imports.) Anything else is classified as UNKNOWN rather than
+// guessed at.
 //
 // Known SDK limitation, found while building this: @doist/todoist-api-typescript's
 // TodoistRequestError only carries `httpStatusCode` and `responseData` (the
@@ -129,7 +133,9 @@ function classifyTodoistError(error) {
 				userMessage:
 					"Todoist is having a server-side issue right now. Please try again in a moment.",
 			};
-		case 503:
+		case 502: // Bad Gateway
+		case 503: // Service Unavailable
+		case 504: // Gateway Timeout
 			return {
 				type: TODOIST_ERROR_TYPES.SERVICE_UNAVAILABLE,
 				httpStatusCode,

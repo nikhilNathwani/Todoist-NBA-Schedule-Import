@@ -40,6 +40,12 @@ Findings from audits of this app, kept so they don't get lost. Several were firs
 
 **Fix:** they're redirected to `/` to log in.
 
+### 7. 502 and 504 from Todoist were classified as `UNKNOWN`
+
+**Was:** the classifier only had cases for the status codes Todoist documents (including 500 and 503), so 502 (bad gateway) and 504 (gateway timeout) fell through to `UNKNOWN`: not retryable, with a generic message. 502s were among the errors seen during bulk imports.
+
+**Fix:** both are classified as `SERVICE_UNAVAILABLE` (retryable), like 503.
+
 ---
 
 ## Open
@@ -48,10 +54,6 @@ Findings from audits of this app, kept so they don't get lost. Several were firs
 
 If the 1-hour session expires while the picker page is open, the import request returns `401` with "Failed to initialize Todoist API: Access token is not set in the session." That text appears on screen. It should say the session expired and link back to log in.
 
-### 2. 502 and 504 from Todoist are classified as `UNKNOWN`
-
-`classifyTodoistError` (`app/utils/todoistErrors.js`) has cases for 500 and 503 but not 502 (bad gateway) or 504 (gateway timeout), so those fall through to `UNKNOWN` with a generic message. Both are transient upstream failures and belong with `SERVICE_UNAVAILABLE` (retryable). 502s were among the errors seen during bulk imports.
-
-### 3. Yearly reminder failures are only logged
+### 2. Yearly reminder failures are only logged
 
 `addYearlyReminder` still catches and logs its own failure. It's a single, low-stakes task, so this was left out of the import-retry fix.

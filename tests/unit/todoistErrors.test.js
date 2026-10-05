@@ -16,7 +16,9 @@ describe("classifyTodoistError", () => {
 		[404, TODOIST_ERROR_TYPES.NOT_FOUND, false],
 		[429, TODOIST_ERROR_TYPES.RATE_LIMITED, true],
 		[500, TODOIST_ERROR_TYPES.SERVER_ERROR, true],
+		[502, TODOIST_ERROR_TYPES.SERVICE_UNAVAILABLE, true],
 		[503, TODOIST_ERROR_TYPES.SERVICE_UNAVAILABLE, true],
+		[504, TODOIST_ERROR_TYPES.SERVICE_UNAVAILABLE, true],
 	])(
 		"classifies HTTP %i as %s (retryable: %s)",
 		(httpStatusCode, expectedType, expectedRetryable) => {

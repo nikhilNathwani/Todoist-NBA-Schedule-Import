@@ -147,7 +147,7 @@ Choosing a team shows its logo, names the new project ("Celtics schedule"), and 
 
 ### Error handling
 
-- `app/utils/todoistErrors.js` sorts each Todoist failure by status code into a type: `AUTH_EXPIRED` (401), `FORBIDDEN`, `NOT_FOUND`, `RATE_LIMITED` (429, with a suggested wait: Todoist's `retry_after` if the response body has one, otherwise 30 seconds), `SERVER_ERROR`, `SERVICE_UNAVAILABLE`, `NETWORK_ERROR`, and so on. Each type carries whether it's worth retrying and a user-facing message.
+- `app/utils/todoistErrors.js` sorts each Todoist failure by status code into a type: `AUTH_EXPIRED` (401), `FORBIDDEN`, `NOT_FOUND`, `RATE_LIMITED` (429, with a suggested wait: Todoist's `retry_after` if the response body has one, otherwise 30 seconds), `SERVER_ERROR` (500), `SERVICE_UNAVAILABLE` (502/503/504), `NETWORK_ERROR`, and so on. Each type carries whether it's worth retrying and a user-facing message.
 - Pages respond with the matching HTTP status and an error page; the import API responds with the status plus `{ errorType, message, retryable, retryAfterSeconds }`.
 - Demo mode: with `ENABLE_ERROR_DEMO=true`, `?mockTodoistError=<code>` on `/configure-import` simulates that failure instead of calling Todoist.
 - Unknown paths get a real `404` page.
