@@ -1,7 +1,7 @@
 import { makeHead, makeFooter, makeLogoBanner } from "./components.js";
 
-async function makePickerPageHTML(canCreateProjects) {
-	const teamPickerHTML = makeTeamPickerHTML();
+async function makePickerPageHTML(canCreateProjects, teams) {
+	const teamPickerHTML = makeTeamPickerHTML(teams);
 	const projectPickerHTML = makeProjectPickerHTML(canCreateProjects);
 
 	const form = `
@@ -38,7 +38,17 @@ async function makePickerPageHTML(canCreateProjects) {
 	`;
 }
 
-function makeTeamPickerHTML() {
+// teams: { BOS: { name: "Celtics", city: "Boston", ... }, ... } from getTeams()
+function makeTeamPickerHTML(teams) {
+	// Sorted by city, so "Boston Celtics" sits under B
+	const teamOptions = Object.entries(teams)
+		.sort(([, a], [, b]) => a.city.localeCompare(b.city))
+		.map(
+			([teamID, team]) =>
+				`<option value="${teamID}" data-team-name="${team.name}">${team.city} ${team.name}</option>`,
+		)
+		.join("\n\t\t\t\t");
+
 	return `
 		<fieldset id="teamPicker">
 			<legend>
@@ -46,7 +56,7 @@ function makeTeamPickerHTML() {
 			</legend>
 			<select id="team-selector" name="team" aria-label="NBA Team">
 				<option value="" disabled selected>Choose a team</option>
-				<!-- Options populated by frontend scripts/ui/picker.js -->
+				${teamOptions}
 			</select>
 		</fieldset>`;
 }

@@ -60,7 +60,6 @@ Integration tests verify behavior across components (route + middleware + mocked
 Files:
 
 - `tests/integration/app.test.js`
-- `tests/integration/routes/getTeamsRoute.test.js`
 - `tests/integration/routes/importScheduleRoute.test.js`
 - `tests/integration/routes/authRoutes.test.js`
 - `tests/integration/routes/pickerRoute.test.js`
@@ -69,7 +68,7 @@ Examples in this repo:
 
 - API status codes and JSON response shapes
 - OAuth state checks, using the real `cookie-session` middleware and a Supertest agent that keeps cookies between requests like a browser
-- Redirecting logged-out visitors, and classified error pages
+- The picker page: team options rendered in city order, "Create New Project" disabled at the plan limit, logged-out redirect, classified error pages
 - The fully assembled `app.js` boots and returns a 404 for unknown paths (each route test builds its own small app, so only this catches mistakes in how `app.js` wires them together)
 
 ## Project test structure
@@ -86,7 +85,6 @@ tests/
   integration/
     app.test.js
     routes/
-      getTeamsRoute.test.js
       importScheduleRoute.test.js
       authRoutes.test.js
       pickerRoute.test.js

@@ -1,6 +1,7 @@
 import express from "express";
 import { getAccessToken } from "../../utils/cookieSession.js";
 import { userReachedProjectLimit } from "../../utils/todoist.js";
+import { getTeams } from "../../utils/parseSchedule.js";
 import { makePickerPageHTML } from "../../views/picker.js";
 import { makeErrorPageHTML } from "../../views/errorPage.js";
 import { mapTodoistErrorTypeToHttpStatus } from "../../utils/todoistErrors.js";
@@ -28,10 +29,13 @@ router.get("/configure-import", async (req, res) => {
 	}
 
 	try {
-		const canCreateProjects = !(
-			await userReachedProjectLimit(accessToken, mockErrorCode)
-		);
-		const html = await makePickerPageHTML(canCreateProjects);
+		// The tier check (a Todoist API call) and the team list (a local
+		// file read) don't depend on each other, so run them in parallel
+		const [reachedLimit, teams] = await Promise.all([
+			userReachedProjectLimit(accessToken, mockErrorCode),
+			getTeams(),
+		]);
+		const html = await makePickerPageHTML(!reachedLimit, teams);
 		res.send(html);
 	} catch (error) {
 		console.error("Error rendering picker page:", error);

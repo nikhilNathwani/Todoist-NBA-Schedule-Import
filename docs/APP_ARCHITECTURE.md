@@ -4,9 +4,9 @@ How the NBA Todoist Schedule Importer works, from landing page to finished impor
 
 ## Overview
 
-An Express 5 app. The server renders each page's HTML (template-string functions in `app/views/`), and browser-side JavaScript (`public/scripts/`, loaded as ES modules) handles the picker page's interactivity. The browser talks to the server through two JSON endpoints: `GET /api/get-teams` and `POST /api/import-schedule`. Users log in with Todoist OAuth before importing.
+An Express 5 app. The server renders each page's HTML (template-string functions in `app/views/`), and browser-side JavaScript (`public/scripts/`, loaded as ES modules) handles the picker page's interactivity. The browser talks to the server through one JSON endpoint, `POST /api/import-schedule`. Users log in with Todoist OAuth before importing.
 
-`app.js` builds the app: session middleware, static files, body parsing, then the routers. `server.js` runs it locally; on Vercel, `api/index.js` exports the same app as a serverless function, and `vercel.json` rewrites every path to it.
+`app.js` builds the app: session middleware, static files, body parsing, then the routers. `server.js` runs it locally; on Vercel, `api/index.js` exports the same app as a serverless function, and `vercel.json` rewrites every path to it. Vercel's zero-config Express detection was tried and rejected: it returns 404 for any `/api/*` path that has no matching file under `api/`, and this app's login and import routes all live under `/api` (see commit `da86219`).
 
 ---
 
@@ -54,8 +54,9 @@ An Express 5 app. The server renders each page's HTML (template-string functions
 **View:** `app/views/picker.js`
 
 - Reads the token from the session. None, or expired: redirects to `/` to log in.
+- In parallel: the tier check below and `getTeams()` (`app/utils/parseSchedule.js`), which reads every team's name and city from the schedule JSON.
 - **Account tier check:** `userReachedProjectLimit()` (`app/utils/todoist.js`) calls `getUser()` and `getProjects()` in parallel, counts non-Inbox projects, and compares against the cap for the user's plan: 5 if `user.isPremium` is false, 300 if true. The API exposes the plan but not the caps, so the caps are constants.
-- Renders the page. If the user is at their limit, "Create New Project" is disabled and "Inbox" is pre-selected.
+- Renders the page with the team `<option>`s already in the dropdown, sorted by city. If the user is at their limit, "Create New Project" is disabled and "Inbox" is pre-selected.
 - If the Todoist call fails, renders an error page with the classified HTTP status (401/403/404/429/500/502/503) and a matching message. See [Error handling](#error-handling).
 
 ---
@@ -68,9 +69,8 @@ An Express 5 app. The server renders each page's HTML (template-string functions
 
 | File | Role |
 |---|---|
-| `api/getTeams.js` | `fetchTeamData()`: `GET /api/get-teams` |
 | `api/importSchedule.js` | `importSchedule()`: `POST /api/import-schedule` |
-| `ui/picker.js` | Fills the team dropdown; updates the "new project" subtitle; enables the submit button |
+| `ui/picker.js` | Updates the "new project" subtitle; enables the submit button |
 | `ui/header/importStatus.js` | Status enum (LOADING/SUCCESS/ERROR) and header text |
 | `ui/header/teamLogo.js` | Shows the selected team's logo |
 | `ui/nextSteps.js` | Builds the next-steps list shown after an import |
@@ -79,7 +79,9 @@ An Express 5 app. The server renders each page's HTML (template-string functions
 | `events/selectTeam.js` | Dropdown `change` listener |
 | `events/submitForm.js` | Form `submit` listener |
 
-On load, `main.js` attaches the listeners, then fills the dropdown from `GET /api/get-teams` (handler `app/routes/api/getTeams.js`, which returns every team's name, city and color from the schedule JSON). If that request fails, the dropdown says "Couldn't load teams. Please refresh the page." and the button stays disabled.
+On load, `main.js` attaches the dropdown and form listeners. The team list is already in the HTML, so there's nothing to fetch.
+
+**Why the team list is rendered on the server:** it's static data the page needs on first load, and the route already runs on the server for the tier check. Rendering it there means one request instead of two, no moment with an empty dropdown, and no separate failure case for "teams didn't load." An earlier version fetched it from a `GET /api/get-teams` endpoint after the page loaded.
 
 Choosing a team shows its logo, names the new project ("Celtics schedule"), and enables "Import schedule".
 
@@ -166,7 +168,6 @@ app/
   routes/
     pages/index.js         # GET /  (+ debug routes outside production)
     pages/picker.js        # GET /configure-import
-    api/getTeams.js        # GET /api/get-teams
     api/importSchedule.js  # POST /api/import-schedule
     auth/login.js          # GET /api/auth/login
     auth/callback.js       # GET /api/auth/callback

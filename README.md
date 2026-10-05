@@ -32,7 +32,7 @@ app/
     routes/
         auth/                 # OAuth login/callback
         pages/                # Landing and picker pages
-        api/                  # Team list + import endpoint
+        api/                  # Import endpoint
     utils/
         todoist.js            # Todoist API operations
         cookieSession.js      # Encrypted token session helpers

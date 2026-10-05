@@ -5,7 +5,6 @@ import path from "path";
 import { fileURLToPath } from "url";
 /* Internal imports */
 // API routes
-import getTeamsRoute from "./app/routes/api/getTeams.js";
 import importScheduleRoute from "./app/routes/api/importSchedule.js";
 // Page routes
 import indexPageRoute from "./app/routes/pages/index.js";
@@ -49,7 +48,6 @@ app.use(express.urlencoded({ extended: true }));
 
 // Mount routes
 // API routes
-app.use("/api", getTeamsRoute);
 app.use("/api", importScheduleRoute);
 // Auth routes
 app.use("/api/auth", loginRoute);

@@ -2,10 +2,12 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import express from "express";
 import request from "supertest";
 
-const { getAccessTokenMock, userReachedProjectLimitMock } = vi.hoisted(() => ({
-	getAccessTokenMock: vi.fn(),
-	userReachedProjectLimitMock: vi.fn(),
-}));
+const { getAccessTokenMock, userReachedProjectLimitMock, getTeamsMock } =
+	vi.hoisted(() => ({
+		getAccessTokenMock: vi.fn(),
+		userReachedProjectLimitMock: vi.fn(),
+		getTeamsMock: vi.fn(),
+	}));
 
 vi.mock("../../../app/utils/cookieSession.js", () => ({
 	getAccessToken: getAccessTokenMock,
@@ -15,12 +17,21 @@ vi.mock("../../../app/utils/todoist.js", () => ({
 	userReachedProjectLimit: userReachedProjectLimitMock,
 }));
 
+vi.mock("../../../app/utils/parseSchedule.js", () => ({
+	getTeams: getTeamsMock,
+}));
+
 import pickerRoute from "../../../app/routes/pages/picker.js";
 
 describe("GET /configure-import", () => {
 	beforeEach(() => {
 		getAccessTokenMock.mockReset();
 		userReachedProjectLimitMock.mockReset();
+		getTeamsMock.mockReset();
+		getTeamsMock.mockResolvedValue({
+			LAL: { name: "Lakers", city: "Los Angeles", nameCasual: "lakers" },
+			BOS: { name: "Celtics", city: "Boston", nameCasual: "celtics" },
+		});
 	});
 
 	function createApp() {
@@ -37,6 +48,32 @@ describe("GET /configure-import", () => {
 
 		expect(response.status).toBe(200);
 		expect(response.text).toContain("Select your NBA team");
+	});
+
+	it("renders the team options into the page, sorted by city", async () => {
+		getAccessTokenMock.mockResolvedValue("token");
+		userReachedProjectLimitMock.mockResolvedValue(false);
+
+		const response = await request(createApp()).get("/configure-import");
+
+		const boston = response.text.indexOf(
+			'<option value="BOS" data-team-name="Celtics">Boston Celtics</option>',
+		);
+		const losAngeles = response.text.indexOf(
+			'<option value="LAL" data-team-name="Lakers">Los Angeles Lakers</option>',
+		);
+		expect(boston).toBeGreaterThan(-1);
+		expect(losAngeles).toBeGreaterThan(boston);
+	});
+
+	it("disables Create New Project when the user is at their plan's limit", async () => {
+		getAccessTokenMock.mockResolvedValue("token");
+		userReachedProjectLimitMock.mockResolvedValue(true);
+
+		const response = await request(createApp()).get("/configure-import");
+
+		expect(response.text).toContain('value="newProject" disabled');
+		expect(response.text).toContain("Project limit reached");
 	});
 
 	it("renders a classified error page (not a raw 500) when the limit check fails with a known Todoist error", async () => {
