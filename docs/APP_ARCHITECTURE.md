@@ -163,7 +163,7 @@ Choosing a team shows its logo, names the new project ("Celtics schedule"), and 
 ```text
 app.js                     # Builds the Express app (middleware + routers + 404)
 server.js                  # Local server (npm run dev / npm start)
-api/index.js               # Vercel serverless entry; exports app.js
+api/index.js               # Vercel entry point only (Vercel requires this folder name); hands it app.js
 app/
   routes/
     pages/index.js         # GET /  (+ debug routes outside production)
