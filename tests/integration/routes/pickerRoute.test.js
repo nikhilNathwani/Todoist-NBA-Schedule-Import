@@ -93,6 +93,32 @@ describe("GET /configure-import", () => {
 		expect(response.text).toContain("temporarily unavailable");
 	});
 
+	// The cookie can outlive the token inside it: a revoked token, or (in
+	// Todoist's refresh-token mode) a one-hour token that expired. Todoist
+	// then answers 401, which should read as "log in again", with a link
+	// that starts OAuth directly.
+	it("shows 'Session expired' with a direct login link when Todoist rejects the token", async () => {
+		const { toClassifiedError } = await import(
+			"../../../app/utils/todoistErrors.js"
+		);
+		getAccessTokenMock.mockResolvedValue("expired-token");
+		userReachedProjectLimitMock.mockRejectedValue(
+			toClassifiedError(
+				Object.assign(new Error("Unauthorized"), {
+					httpStatusCode: 401,
+					responseData: { error_tag: "UNAUTHORIZED", http_code: 401 },
+				}),
+				"userReachedProjectLimit",
+			),
+		);
+
+		const response = await request(createApp()).get("/configure-import");
+
+		expect(response.status).toBe(401);
+		expect(response.text).toContain("Session expired");
+		expect(response.text).toContain('href="/auth/login"');
+	});
+
 	it("redirects to the start page when there's no valid session", async () => {
 		getAccessTokenMock.mockRejectedValue(
 			new Error("Access token is not set in the session."),

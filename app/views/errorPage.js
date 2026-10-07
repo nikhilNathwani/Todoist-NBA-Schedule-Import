@@ -61,9 +61,12 @@ const ERROR_TITLES = {
 };
 
 const DEFAULT_ACTION = { href: "/", label: "Back to start" };
+// "Log in again" starts OAuth directly (/auth/login makes a fresh state and
+// redirects to Todoist's permission page), rather than detouring through the
+// landing page's own "Log in" button.
 const ACTION_LINKS = {
-	AUTH_EXPIRED: { href: "/", label: "Log in again" },
-	FORBIDDEN: { href: "/", label: "Log in again" },
+	AUTH_EXPIRED: { href: "/auth/login", label: "Log in again" },
+	FORBIDDEN: { href: "/auth/login", label: "Log in again" },
 	RATE_LIMITED: { href: "/configure-import", label: "Try again" },
 	SERVER_ERROR: { href: "/configure-import", label: "Try again" },
 	SERVICE_UNAVAILABLE: { href: "/configure-import", label: "Try again" },

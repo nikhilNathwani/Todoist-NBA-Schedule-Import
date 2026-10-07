@@ -66,6 +66,12 @@ Findings from audits of this app, kept so they don't get lost. Several were firs
 
 **Fix:** `secure` is left to cookie-session's default, which marks the cookie Secure whenever the request came over HTTPS (on Vercel, always; `trust proxy` lets Express see that). A test checks the cookie is still set over plain HTTP.
 
+### 11. "Log in again" detoured through the landing page
+
+**Was:** the error page's "Log in again" link (expired or revoked token) went to `/`, where the user had to click "Log in" a second time.
+
+**Fix:** it goes to `/auth/login`, which makes a fresh `state` and redirects straight to Todoist's permission page. (A link can't point at Todoist's page directly: the URL needs a `state` the server has just generated and saved.)
+
 ## Open
 
 ### 1. Yearly reminder failures are only logged
