@@ -38,6 +38,18 @@ describe("app", () => {
 		expect(expires - before).toBeLessThan(oneHour + 5000);
 	});
 
+	// Local development runs on plain http://localhost. The cookie must still
+	// be set there (without Secure), or login can't keep its OAuth state.
+	it("still sets the session cookie, without Secure, over plain HTTP", async () => {
+		const response = await request(app).get("/auth/login");
+
+		const session = response.headers["set-cookie"]?.find((c) =>
+			c.startsWith("session="),
+		);
+		expect(session).toBeDefined();
+		expect(session).not.toMatch(/; secure/i);
+	});
+
 	// Two layers would each reject this: cookie-session's signature check, and
 	// the Iron seal on the token inside. Either way the visitor is logged out.
 	it("treats a forged session cookie as logged out", async () => {

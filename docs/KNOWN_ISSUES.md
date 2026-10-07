@@ -60,6 +60,12 @@ Findings from audits of this app, kept so they don't get lost. Several were firs
 
 ---
 
+### 10. Logging in locally always failed with "State mismatch"
+
+**Was:** `app.js` hard-coded `secure: true` on the session cookie. Over plain `http://localhost`, the `cookies` library behind cookie-session refuses to set a secure cookie and throws; cookie-session catches that and logs it only in debug mode. So `/auth/login`'s `state` never reached the browser, and every local callback failed the state check. Production, always HTTPS, was unaffected; the tests simulate HTTPS, so they didn't catch it either.
+
+**Fix:** `secure` is left to cookie-session's default, which marks the cookie Secure whenever the request came over HTTPS (on Vercel, always; `trust proxy` lets Express see that). A test checks the cookie is still set over plain HTTP.
+
 ## Open
 
 ### 1. Yearly reminder failures are only logged

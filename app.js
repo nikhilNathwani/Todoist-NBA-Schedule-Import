@@ -35,7 +35,12 @@ app.use(
 		secret: process.env.COOKIE_SECRET,
 		maxAge: 60 * 60 * 1000, // 1 hour
 		httpOnly: true, // Prevents client-side JS from accessing the cookie
-		secure: true, // Only HTTPS not HTTP
+		// `secure` is left to cookie-session's default: Secure (HTTPS-only)
+		// whenever the request came over HTTPS, which on Vercel is always
+		// ("trust proxy" above lets Express see that). Hard-coding
+		// `secure: true` made the cookies library silently refuse to set the
+		// cookie at all over plain http://localhost, so local login failed
+		// with "State mismatch".
 		// sameSite: "Strict", // Mitigates CSRF attacks
 		sameSite: "Lax", // Necessary because Strict blocks cookie from getting passed to configure-import as part of the redirect chain from todoist's auth flow
 	}),
