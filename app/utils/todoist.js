@@ -45,6 +45,10 @@ async function retrieveAccessToken(code) {
 			error.responseData = errorData;
 			throw error;
 		}
+		// Apps in Todoist's refresh-token mode also get `expires_in` (one hour)
+		// and a `refresh_token`. Only the access token is kept: the app needs
+		// access for one short session, which the 1-hour cookie already
+		// matches, so storing a long-lived refresh token would only add risk.
 		const { access_token } = await response.json();
 		return access_token;
 	} catch (error) {
