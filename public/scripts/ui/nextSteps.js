@@ -44,7 +44,7 @@ function getSuccessNextSteps() {
 			</a> to view schedule
 		</li>
 		<li>
-			<a class="project project-game" href="/configure-import">
+			<a class="project project-game" href="/setup">
 				<i class="fa-solid fa-arrow-left"></i> Import another
 			</a> schedule
 		</li>
@@ -73,7 +73,7 @@ function getErrorNextSteps(errorMessage) {
 			</a>
 		</li>
 		<li>
-			<a class="project project-game" href="/configure-import">
+			<a class="project project-game" href="/setup">
 				<i class="fa-solid fa-arrow-left"></i> Try again
 			</a>
 		</li>

@@ -36,7 +36,7 @@ Findings from audits of this app, kept so they don't get lost. Several were firs
 
 **Fix:** the submit handler runs once and disables the button.
 
-### 6. Logged-out visitors to `/configure-import` got a bare 500
+### 6. Logged-out visitors to `/setup` got a bare 500
 
 **Fix:** they're redirected to `/` to log in.
 
@@ -48,9 +48,9 @@ Findings from audits of this app, kept so they don't get lost. Several were firs
 
 ### 8. An expired session during an import showed an internal message
 
-**Was:** if the 1-hour session expired while the configure-import page was open, the import showed "Failed to initialize Todoist API: Access token is not set in the session."
+**Was:** if the 1-hour session expired while the setup page was open, the import showed "Failed to initialize Todoist API: Access token is not set in the session."
 
-**Fix:** the import returns `AUTH_EXPIRED` with "Your session has expired. Please log in again." No special handling in the browser: its existing "Try again" link goes to `/configure-import`, which already redirects logged-out visitors to the login page.
+**Fix:** the import returns `AUTH_EXPIRED` with "Your session has expired. Please log in again." No special handling in the browser: its existing "Try again" link goes to `/setup`, which already redirects logged-out visitors to the login page.
 
 ### 9. Page HTML didn't escape inserted data
 

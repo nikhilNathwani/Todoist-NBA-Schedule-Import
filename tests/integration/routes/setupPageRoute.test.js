@@ -21,9 +21,9 @@ vi.mock("../../../app/utils/parseSchedule.js", () => ({
 	getTeams: getTeamsMock,
 }));
 
-import configureImportRouter from "../../../app/routes/pages/configureImport.js";
+import setupPageRouter from "../../../app/routes/pages/setup.js";
 
-describe("GET /configure-import", () => {
+describe("GET /setup", () => {
 	beforeEach(() => {
 		getAccessTokenMock.mockReset();
 		userReachedProjectLimitMock.mockReset();
@@ -36,15 +36,15 @@ describe("GET /configure-import", () => {
 
 	function createApp() {
 		const app = express();
-		app.use("/configure-import", configureImportRouter);
+		app.use("/setup", setupPageRouter);
 		return app;
 	}
 
-	it("renders the configure-import page on success", async () => {
+	it("renders the setup page on success", async () => {
 		getAccessTokenMock.mockResolvedValue("token");
 		userReachedProjectLimitMock.mockResolvedValue(false);
 
-		const response = await request(createApp()).get("/configure-import");
+		const response = await request(createApp()).get("/setup");
 
 		expect(response.status).toBe(200);
 		expect(response.text).toContain("Select your NBA team");
@@ -54,7 +54,7 @@ describe("GET /configure-import", () => {
 		getAccessTokenMock.mockResolvedValue("token");
 		userReachedProjectLimitMock.mockResolvedValue(false);
 
-		const response = await request(createApp()).get("/configure-import");
+		const response = await request(createApp()).get("/setup");
 
 		const boston = response.text.indexOf(
 			'<option value="BOS" data-team-name="Celtics">Boston Celtics</option>',
@@ -70,7 +70,7 @@ describe("GET /configure-import", () => {
 		getAccessTokenMock.mockResolvedValue("token");
 		userReachedProjectLimitMock.mockResolvedValue(true);
 
-		const response = await request(createApp()).get("/configure-import");
+		const response = await request(createApp()).get("/setup");
 
 		expect(response.text).toContain('value="newProject" disabled');
 		expect(response.text).toContain("Project limit reached");
@@ -87,7 +87,7 @@ describe("GET /configure-import", () => {
 			),
 		);
 
-		const response = await request(createApp()).get("/configure-import");
+		const response = await request(createApp()).get("/setup");
 
 		expect(response.status).toBe(502);
 		expect(response.text).toContain("temporarily unavailable");
@@ -112,7 +112,7 @@ describe("GET /configure-import", () => {
 			),
 		);
 
-		const response = await request(createApp()).get("/configure-import");
+		const response = await request(createApp()).get("/setup");
 
 		expect(response.status).toBe(401);
 		expect(response.text).toContain("Session expired");
@@ -124,7 +124,7 @@ describe("GET /configure-import", () => {
 			new Error("Access token is not set in the session."),
 		);
 
-		const response = await request(createApp()).get("/configure-import");
+		const response = await request(createApp()).get("/setup");
 
 		expect(response.status).toBe(302);
 		expect(response.headers.location).toBe("/");
@@ -135,7 +135,7 @@ describe("GET /configure-import", () => {
 		getAccessTokenMock.mockResolvedValue("token");
 		userReachedProjectLimitMock.mockRejectedValue(new Error("boom"));
 
-		const response = await request(createApp()).get("/configure-import");
+		const response = await request(createApp()).get("/setup");
 
 		expect(response.status).toBe(500);
 		expect(response.text).toBe("An error occurred");
@@ -152,15 +152,15 @@ describe("GET /configure-import", () => {
 			delete process.env.ENABLE_ERROR_DEMO;
 			vi.resetModules();
 			const { default: freshRoute } = await import(
-				"../../../app/routes/pages/configureImport.js"
+				"../../../app/routes/pages/setup.js"
 			);
 			const app = express();
-			app.use("/configure-import", freshRoute);
+			app.use("/setup", freshRoute);
 
 			getAccessTokenMock.mockResolvedValue("token");
 			userReachedProjectLimitMock.mockResolvedValue(false);
 
-			await request(app).get("/configure-import?mockTodoistError=500");
+			await request(app).get("/setup?mockTodoistError=500");
 
 			expect(userReachedProjectLimitMock).toHaveBeenCalledWith(
 				"token",
@@ -172,15 +172,15 @@ describe("GET /configure-import", () => {
 			process.env.ENABLE_ERROR_DEMO = "true";
 			vi.resetModules();
 			const { default: freshRoute } = await import(
-				"../../../app/routes/pages/configureImport.js"
+				"../../../app/routes/pages/setup.js"
 			);
 			const app = express();
-			app.use("/configure-import", freshRoute);
+			app.use("/setup", freshRoute);
 
 			getAccessTokenMock.mockResolvedValue("token");
 			userReachedProjectLimitMock.mockResolvedValue(false);
 
-			await request(app).get("/configure-import?mockTodoistError=500");
+			await request(app).get("/setup?mockTodoistError=500");
 
 			expect(userReachedProjectLimitMock).toHaveBeenCalledWith(
 				"token",

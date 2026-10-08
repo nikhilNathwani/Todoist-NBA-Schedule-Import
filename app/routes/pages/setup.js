@@ -2,7 +2,7 @@ import express from "express";
 import { getAccessToken } from "../../utils/cookieSession.js";
 import { userReachedProjectLimit } from "../../utils/todoist.js";
 import { getTeams } from "../../utils/parseSchedule.js";
-import { makeConfigureImportHTML } from "../../views/configureImport.js";
+import { makeSetupPageHTML } from "../../views/setup.js";
 import { makeErrorPageHTML } from "../../views/errorPage.js";
 import { mapTodoistErrorTypeToHttpStatus } from "../../utils/todoistErrors.js";
 
@@ -13,7 +13,7 @@ const router = express.Router();
 // real deployment unless deliberately turned on for a demo.
 const ERROR_DEMO_ENABLED = process.env.ENABLE_ERROR_DEMO === "true";
 
-// Serve the configure-import page (team and project picker)
+// Serve the setup page (team and project picker)
 router.get("/", async (req, res) => {
 	const mockErrorCode = ERROR_DEMO_ENABLED
 		? req.query.mockTodoistError
@@ -35,10 +35,10 @@ router.get("/", async (req, res) => {
 			userReachedProjectLimit(accessToken, mockErrorCode),
 			getTeams(),
 		]);
-		const html = await makeConfigureImportHTML(!reachedLimit, teams);
+		const html = await makeSetupPageHTML(!reachedLimit, teams);
 		res.send(html);
 	} catch (error) {
-		console.error("Error rendering configure-import page:", error);
+		console.error("Error rendering setup page:", error);
 		if (error.todoistErrorType) {
 			const status = mapTodoistErrorTypeToHttpStatus(error.todoistErrorType);
 			return res.status(status).send(makeErrorPageHTML(error));

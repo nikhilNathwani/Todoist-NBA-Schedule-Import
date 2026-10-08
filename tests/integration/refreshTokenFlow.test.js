@@ -60,11 +60,11 @@ describe("login, then the token expires (refresh-token mode)", () => {
 			`/auth/callback?code=code-123&state=${state}`,
 		);
 		expect(callback.status).toBe(302);
-		expect(callback.headers.location).toBe("/configure-import");
+		expect(callback.headers.location).toBe("/setup");
 
-		// 3. The configure-import page works, calling Todoist with the access
+		// 3. The setup page works, calling Todoist with the access
 		//    token (never the refresh token, which the app doesn't keep)
-		const page = await agent.get("/configure-import");
+		const page = await agent.get("/setup");
 		expect(page.status).toBe(200);
 		expect(page.text).toContain("Select your NBA team");
 		expect(TodoistApiMock).toHaveBeenCalledWith("access-abc");
@@ -77,7 +77,7 @@ describe("login, then the token expires (refresh-token mode)", () => {
 				responseData: { error_tag: "UNAUTHORIZED", http_code: 401 },
 			}),
 		);
-		const expired = await agent.get("/configure-import");
+		const expired = await agent.get("/setup");
 		expect(expired.status).toBe(401);
 		expect(expired.text).toContain("Session expired");
 		expect(expired.text).toContain('href="/auth/login"');

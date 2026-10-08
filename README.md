@@ -31,8 +31,8 @@ Todoist NBA Schedule Import connects to a user's Todoist account, lets them choo
 app/
     routes/
         auth/                 # OAuth login/callback
-        pages/                # Landing and configure-import pages
-        api/                  # The app's JSON endpoint (POST /import-schedule)
+        pages/                # Landing and setup pages
+        api/                  # The app's JSON endpoint (POST /setup)
     utils/
         todoist.js            # Todoist API operations
         cookieSession.js      # Encrypted token session helpers
@@ -50,7 +50,7 @@ data/nba_schedule.json    # Canonical schedule data
 
 1. User visits landing page and starts Todoist OAuth.
 2. Callback verifies state, exchanges code for token, and stores encrypted token in session cookie.
-3. Configure-import page checks the user's plan and project count, then the user selects team and destination.
+3. Setup page checks the user's plan and project count, then the user selects team and destination.
 4. API route reads team schedule from local JSON and creates Todoist tasks.
 5. Response returns a deep link to open imported tasks in Todoist.
 

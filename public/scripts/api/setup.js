@@ -16,7 +16,7 @@ export async function importSchedule(team, project) {
 		"mockTodoistError",
 	);
 
-	const response = await fetch("/import-schedule", {
+	const response = await fetch("/setup", {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",

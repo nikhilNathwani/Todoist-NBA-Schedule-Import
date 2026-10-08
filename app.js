@@ -6,10 +6,10 @@ import { fileURLToPath } from "url";
 /* Internal imports */
 // Routers: each handles the path it's mounted at in "Mount routes" below
 import indexPageRouter from "./app/routes/pages/index.js";
-import configureImportRouter from "./app/routes/pages/configureImport.js";
+import setupPageRouter from "./app/routes/pages/setup.js";
 import loginRouter from "./app/routes/auth/login.js";
 import callbackRouter from "./app/routes/auth/callback.js";
-import importScheduleRouter from "./app/routes/api/importSchedule.js";
+import setupApiRouter from "./app/routes/api/setup.js";
 // Views
 import { makeNotFoundPageHTML } from "./app/views/errorPage.js";
 
@@ -40,7 +40,7 @@ app.use(
 		// cookie at all over plain http://localhost, so local login failed
 		// with "State mismatch".
 		// sameSite: "Strict", // Mitigates CSRF attacks
-		sameSite: "Lax", // Necessary because Strict blocks cookie from getting passed to configure-import as part of the redirect chain from todoist's auth flow
+		sameSite: "Lax", // Necessary because Strict blocks cookie from getting passed to /setup as part of the redirect chain from todoist's auth flow
 	}),
 );
 
@@ -55,14 +55,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Mount routes: each router is mounted at the path it serves
-// Pages
 app.use("/", indexPageRouter); // GET / (landing page)
-app.use("/configure-import", configureImportRouter); // GET /configure-import (team picker)
 // Login (OAuth)
 app.use("/auth/login", loginRouter); // GET /auth/login
 app.use("/auth/callback", callbackRouter); // GET /auth/callback
-// Called by the configure-import page's JavaScript
-app.use("/import-schedule", importScheduleRouter); // POST /import-schedule
+// The setup page: GET shows the team and project picker; the page's
+// JavaScript POSTs the choice back to the same path, which runs the import
+// and answers in JSON
+app.use("/setup", setupPageRouter); // GET /setup
+app.use("/setup", setupApiRouter); // POST /setup
 
 // Anything no route above matched: a real 404, not the landing page
 app.use((req, res) => {

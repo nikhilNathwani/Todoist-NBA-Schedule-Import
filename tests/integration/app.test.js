@@ -58,7 +58,7 @@ describe("app", () => {
 		).toString("base64");
 
 		const response = await request(app)
-			.get("/configure-import")
+			.get("/setup")
 			.set("X-Forwarded-Proto", "https")
 			.set("Cookie", `session=${forged}; session.sig=not-a-real-signature`);
 
@@ -77,7 +77,7 @@ describe("app", () => {
 
 		// No session, so the import route answers "session expired"
 		const importResponse = await request(app)
-			.post("/import-schedule")
+			.post("/setup")
 			.send({ team: "BOS", project: "inbox" });
 		expect(importResponse.status).toBe(401);
 		expect(importResponse.body.errorType).toBe("AUTH_EXPIRED");

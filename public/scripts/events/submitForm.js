@@ -3,7 +3,7 @@
  * Triggers loading UI, calls import API, and shows results
  */
 
-import { importSchedule } from "../api/importSchedule.js";
+import { importSchedule } from "../api/setup.js";
 import { importStatus } from "../ui/header/importStatus.js";
 import { showNextStepsList } from "../ui/nextSteps.js";
 import { transitionToLoading, transitionToResult } from "../utils/transitions.js";

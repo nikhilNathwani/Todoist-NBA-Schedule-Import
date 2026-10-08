@@ -78,7 +78,7 @@ describe("auth routes", () => {
 		const response = await agent.get(`/auth/callback?code=abc&state=${state}`);
 
 		expect(response.status).toBe(302);
-		expect(response.headers.location).toBe("/configure-import");
+		expect(response.headers.location).toBe("/setup");
 		expect(retrieveAccessTokenMock).toHaveBeenCalledWith("abc");
 		expect(saveAccessTokenMock).toHaveBeenCalled();
 	});

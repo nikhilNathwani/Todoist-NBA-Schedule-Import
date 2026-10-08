@@ -4,11 +4,11 @@ How the NBA Todoist Schedule Importer works, from landing page to finished impor
 
 ## Overview
 
-An Express 5 app. The server renders each page's HTML (template-string functions in `app/views/`), and browser-side JavaScript (`public/scripts/`, loaded as ES modules) handles the configure-import page's interactivity. The browser talks to the server through one JSON endpoint, `POST /import-schedule`. Users log in with Todoist OAuth before importing.
+An Express 5 app. The server renders each page's HTML (template-string functions in `app/views/`), and browser-side JavaScript (`public/scripts/`, loaded as ES modules) handles the setup page's interactivity. The browser talks to the server through one JSON endpoint, `POST /setup`. Users log in with Todoist OAuth before importing.
 
 `app.js` builds the app (session middleware, static files, body parsing, routers) and exports it. `server.js` runs it locally with `app.listen()`. On Vercel, the platform's built-in Express support imports `app.js` directly and runs it as a serverless function; `public/` files are served from Vercel's CDN. `vercel.json` has one setting, `"framework": "express"`, which turns that support on. Without it, Vercel treats the project as a static site and answers every app route with its own 404 (verified on a preview deployment).
 
-**Why no URL starts with `/api/`:** Vercel reserves that prefix for files in an `api/` folder and answers it with its own 404 before the app sees the request (found on NBA Moneyline, Aug 2026). Earlier versions of this app used `/api/...` routes and needed an `api/index.js` wrapper plus a `vercel.json` rewrite as a workaround; the routes now live at `/auth/...` and `/import-schedule`, and the wrapper is gone.
+**Why no URL starts with `/api/`:** Vercel reserves that prefix for files in an `api/` folder and answers it with its own 404 before the app sees the request (found on NBA Moneyline, Aug 2026). Earlier versions of this app used `/api/...` routes and needed an `api/index.js` wrapper plus a `vercel.json` rewrite as a workaround; the routes now live at `/auth/...` and `/setup`, and the wrapper is gone.
 
 ---
 
@@ -44,16 +44,16 @@ An Express 5 app. The server renders each page's HTML (template-string functions
 - Todoist redirects back with `code` and `state`.
 - **CSRF check:** `state` must equal the one saved in this browser's session. The saved state is deleted first, so each one works once. Mismatch or missing: `403`.
 - Exchanges `code` for an access token (`retrieveAccessToken()` in `app/utils/todoist.js`, a `fetch` POST to Todoist's token endpoint).
-- Encrypts the token and stores it in the session (`saveAccessToken()` in `app/utils/cookieSession.js`), then redirects to `/configure-import`.
+- Encrypts the token and stores it in the session (`saveAccessToken()` in `app/utils/cookieSession.js`), then redirects to `/setup`.
 - Todoist OAuth errors map to specific responses: bad code or credentials `400`, rate limited `429`, other Todoist failures `502`, anything unclassified `500`.
 
 ---
 
-### 4. Configure-Import Page (server side)
+### 4. Setup Page (server side)
 
-**Route:** `GET /configure-import`
-**Handler:** `app/routes/pages/configureImport.js`
-**View:** `app/views/configureImport.js`
+**Route:** `GET /setup`
+**Handler:** `app/routes/pages/setup.js`
+**View:** `app/views/setup.js`
 
 - Reads the token from the session. None, or expired: redirects to `/` to log in.
 - In parallel: the tier check below and `getTeams()` (`app/utils/parseSchedule.js`), which reads every team's name and city from the schedule JSON.
@@ -63,7 +63,7 @@ An Express 5 app. The server renders each page's HTML (template-string functions
 
 ---
 
-### 5. Configure-Import Page (browser side)
+### 5. Setup Page (browser side)
 
 **Entry point:** `public/scripts/main.js` (the page's only `<script type="module">`)
 
@@ -71,8 +71,8 @@ An Express 5 app. The server renders each page's HTML (template-string functions
 
 | File | Role |
 |---|---|
-| `api/importSchedule.js` | `importSchedule()`: `POST /import-schedule` |
-| `ui/configureImport.js` | Updates the "new project" subtitle; enables the submit button |
+| `api/setup.js` | `importSchedule()`: `POST /setup` |
+| `ui/setup.js` | Updates the "new project" subtitle; enables the submit button |
 | `ui/header/importStatus.js` | Status enum (LOADING/SUCCESS/ERROR) and header text |
 | `ui/header/teamLogo.js` | Shows the selected team's logo |
 | `ui/nextSteps.js` | Builds the next-steps list shown after an import |
@@ -101,11 +101,11 @@ Choosing a team shows its logo, names the new project ("Celtics schedule"), and 
 
 ### 7. Import Schedule API
 
-**Route:** `POST /import-schedule`
-**Handler:** `app/routes/api/importSchedule.js`
+**Route:** `POST /setup`
+**Handler:** `app/routes/api/setup.js`
 **Body:** `{ team: "BOS", project: "newProject" | "inbox" }`
 
-1. Read the token from the session. Missing or expired: `401` with type `AUTH_EXPIRED` and "Your session has expired. Please log in again." The page's "Try again" link goes to `/configure-import`, which sends a logged-out visitor to the login page.
+1. Read the token from the session. Missing or expired: `401` with type `AUTH_EXPIRED` and "Your session has expired. Please log in again." The page's "Try again" link goes to `/setup`, which sends a logged-out visitor to the login page.
 2. If `newProject`, re-check the project limit (it may have changed since the page loaded). At the limit: `403`.
 3. `getTeamData()` reads the team from the schedule JSON and keeps only games later than now.
 4. `createDestination()`: a new project named "<Team> schedule" in the team's color (checked against Todoist's color list), or a new section inside the Inbox.
@@ -138,7 +138,7 @@ Choosing a team shows its logo, names the new project ("Celtics schedule"), and 
 ### Account tier
 
 - Free: 5 projects. Premium: 300. The plan comes from `getUser().isPremium`; the caps are constants because the API doesn't expose them.
-- Checked when the configure-import page renders (to disable "Create New Project") and again at import time.
+- Checked when the setup page renders (to disable "Create New Project") and again at import time.
 - Inbox imports create a section inside the Inbox, which works on any plan.
 
 ### Sessions and security
@@ -152,7 +152,7 @@ Choosing a team shows its logo, names the new project ("Celtics schedule"), and 
 
 - `app/utils/todoistErrors.js` sorts each Todoist failure by status code into a type: `AUTH_EXPIRED` (401), `FORBIDDEN`, `NOT_FOUND`, `RATE_LIMITED` (429, with a suggested wait: Todoist's `retry_after` if the response body has one, otherwise 30 seconds), `SERVER_ERROR` (500), `SERVICE_UNAVAILABLE` (502/503/504), `NETWORK_ERROR`, and so on. Each type carries whether it's worth retrying and a user-facing message.
 - Pages respond with the matching HTTP status and an error page; the import API responds with the status plus `{ errorType, message, retryable, retryAfterSeconds }`.
-- Demo mode: with `ENABLE_ERROR_DEMO=true`, `?mockTodoistError=<code>` on `/configure-import` simulates that failure instead of calling Todoist.
+- Demo mode: with `ENABLE_ERROR_DEMO=true`, `?mockTodoistError=<code>` on `/setup` simulates that failure instead of calling Todoist.
 - Unknown paths get a real `404` page.
 
 ### Data
@@ -164,26 +164,26 @@ Choosing a team shows its logo, names the new project ("Celtics schedule"), and 
 ## File Organization
 
 ```text
-app.js                        # Builds the Express app (middleware + routers + 404)
-server.js                     # Local server (npm run dev / npm start); Vercel imports app.js instead
+app.js                  # Builds the Express app (middleware + routers + 404)
+server.js               # Local server (npm run dev / npm start); Vercel imports app.js instead
 app/
   routes/
-    pages/index.js            # GET /  (+ debug routes outside production)
-    pages/configureImport.js  # GET /configure-import
-    api/importSchedule.js     # POST /import-schedule (the app's JSON endpoint)
-    auth/login.js             # GET /auth/login
-    auth/callback.js          # GET /auth/callback
+    pages/index.js      # GET /  (+ debug routes outside production)
+    pages/setup.js      # GET /setup
+    api/setup.js        # POST /setup (the app's JSON endpoint)
+    auth/login.js       # GET /auth/login
+    auth/callback.js    # GET /auth/callback
   utils/
-    todoist.js                # Todoist API calls (OAuth token, tier, projects, tasks)
-    todoistErrors.js          # Error classification + demo-mode mocks
-    parseSchedule.js          # Schedule JSON reads, upcoming games, season over
-    cookieSession.js          # Save/read the encrypted token in the session
-    encryption.js             # @hapi/iron seal/unseal
-  views/                      # HTML template functions (pages, error page, shared head/footer)
+    todoist.js          # Todoist API calls (OAuth token, tier, projects, tasks)
+    todoistErrors.js    # Error classification + demo-mode mocks
+    parseSchedule.js    # Schedule JSON reads, upcoming games, season over
+    cookieSession.js    # Save/read the encrypted token in the session
+    encryption.js       # @hapi/iron seal/unseal
+  views/                # HTML template functions (pages, error page, shared head/footer)
 public/
-  scripts/                    # Browser ES modules (entry: main.js)
+  scripts/              # Browser ES modules (entry: main.js)
   style.css, images/
-tests/                        # Vitest: unit/ and integration/ (Supertest)
-scrape/                       # Python schedule scraper
-data/nba_schedule.json        # Schedule data
+tests/                  # Vitest: unit/ and integration/ (Supertest)
+scrape/                 # Python schedule scraper
+data/nba_schedule.json  # Schedule data
 ```

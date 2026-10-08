@@ -22,7 +22,7 @@ router.get("/", async (req, res) => {
 		const accessToken = await retrieveAccessToken(code);
 		await saveAccessToken(req, accessToken);
 		// Redirect to the team selection page
-		res.redirect(`/configure-import`);
+		res.redirect(`/setup`);
 	} catch (error) {
 		handleOAuthError(error, res);
 	}

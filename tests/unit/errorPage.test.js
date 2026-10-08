@@ -13,8 +13,8 @@ describe("error page", () => {
 		},
 	);
 
-	it("sends retryable failures back to the configure-import page", () => {
+	it("sends retryable failures back to the setup page", () => {
 		const html = makeErrorPageHTML({ todoistErrorType: "RATE_LIMITED", message: "x" });
-		expect(html).toContain('href="/configure-import"');
+		expect(html).toContain('href="/setup"');
 	});
 });

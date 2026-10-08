@@ -39,9 +39,9 @@ vi.mock("../../../app/utils/todoist.js", () => ({
 	userReachedProjectLimit: userReachedProjectLimitMock,
 }));
 
-import importScheduleRouter from "../../../app/routes/api/importSchedule.js";
+import setupApiRouter from "../../../app/routes/api/setup.js";
 
-describe("POST /import-schedule", () => {
+describe("POST /setup", () => {
 	beforeEach(() => {
 		getAccessTokenMock.mockReset();
 		getTeamDataMock.mockReset();
@@ -56,7 +56,7 @@ describe("POST /import-schedule", () => {
 	function createApp() {
 		const app = express();
 		app.use(express.json());
-		app.use("/import-schedule", importScheduleRouter);
+		app.use("/setup", setupApiRouter);
 		return app;
 	}
 
@@ -78,7 +78,7 @@ describe("POST /import-schedule", () => {
 		createDeepLinkMock.mockReturnValue("todoist://project/p1");
 
 		const response = await request(createApp())
-			.post("/import-schedule")
+			.post("/setup")
 			.send({ team: "BOS", project: "newProject" });
 
 		expect(response.status).toBe(200);
@@ -101,7 +101,7 @@ describe("POST /import-schedule", () => {
 		);
 
 		const response = await request(createApp())
-			.post("/import-schedule")
+			.post("/setup")
 			.send({ team: "BOS", project: "inbox" });
 
 		expect(response.status).toBe(401);
@@ -118,7 +118,7 @@ describe("POST /import-schedule", () => {
 		userReachedProjectLimitMock.mockResolvedValue(true);
 
 		const response = await request(createApp())
-			.post("/import-schedule")
+			.post("/setup")
 			.send({ team: "BOS", project: "newProject" });
 
 		expect(response.status).toBe(403);
@@ -133,7 +133,7 @@ describe("POST /import-schedule", () => {
 		userReachedProjectLimitMock.mockRejectedValue(new Error("api down"));
 
 		const response = await request(createApp())
-			.post("/import-schedule")
+			.post("/setup")
 			.send({ team: "BOS", project: "newProject" });
 
 		expect(response.status).toBe(500);
@@ -150,7 +150,7 @@ describe("POST /import-schedule", () => {
 		getTeamDataMock.mockRejectedValue(new Error("bad team"));
 
 		const response = await request(createApp())
-			.post("/import-schedule")
+			.post("/setup")
 			.send({ team: "BOS", project: "newProject" });
 
 		expect(response.status).toBe(500);
@@ -179,7 +179,7 @@ describe("POST /import-schedule", () => {
 			);
 
 			const response = await request(createApp())
-				.post("/import-schedule")
+				.post("/setup")
 				.send({ team: "BOS", project: "inbox" });
 
 			expect(response.status).toBe(429);
@@ -202,7 +202,7 @@ describe("POST /import-schedule", () => {
 			);
 
 			const response = await request(createApp())
-				.post("/import-schedule")
+				.post("/setup")
 				.send({ team: "BOS", project: "newProject" });
 
 			expect(response.status).toBe(401);
@@ -227,7 +227,7 @@ describe("POST /import-schedule", () => {
 			);
 
 			const response = await request(createApp())
-				.post("/import-schedule")
+				.post("/setup")
 				.send({ team: "BOS", project: "inbox" });
 
 			expect(response.status).toBe(502);
@@ -245,18 +245,18 @@ describe("POST /import-schedule", () => {
 			delete process.env.ENABLE_ERROR_DEMO;
 			vi.resetModules();
 			const { default: freshRoute } = await import(
-				"../../../app/routes/api/importSchedule.js"
+				"../../../app/routes/api/setup.js"
 			);
 			const app = express();
 			app.use(express.json());
-			app.use("/import-schedule", freshRoute);
+			app.use("/setup", freshRoute);
 
 			getAccessTokenMock.mockResolvedValue("token");
 			initializeTodoistAPIMock.mockReturnValue({});
 			userReachedProjectLimitMock.mockResolvedValue(false);
 
 			await request(app)
-				.post("/import-schedule")
+				.post("/setup")
 				.send({ team: "BOS", project: "newProject", mockError: "500" });
 
 			expect(userReachedProjectLimitMock).toHaveBeenCalledWith(
@@ -269,18 +269,18 @@ describe("POST /import-schedule", () => {
 			process.env.ENABLE_ERROR_DEMO = "true";
 			vi.resetModules();
 			const { default: freshRoute } = await import(
-				"../../../app/routes/api/importSchedule.js"
+				"../../../app/routes/api/setup.js"
 			);
 			const app = express();
 			app.use(express.json());
-			app.use("/import-schedule", freshRoute);
+			app.use("/setup", freshRoute);
 
 			getAccessTokenMock.mockResolvedValue("token");
 			initializeTodoistAPIMock.mockReturnValue({});
 			userReachedProjectLimitMock.mockResolvedValue(false);
 
 			await request(app)
-				.post("/import-schedule")
+				.post("/setup")
 				.send({ team: "BOS", project: "newProject", mockError: "500" });
 
 			expect(userReachedProjectLimitMock).toHaveBeenCalledWith(

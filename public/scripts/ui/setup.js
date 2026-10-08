@@ -1,11 +1,11 @@
 /**
- * Configure-import page view updates
+ * Setup page view updates
  * "New project" subtitle and submit button
  */
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 //                                           //
-//   CONFIGURE-IMPORT VIEW UPDATES           //
+//          SETUP VIEW UPDATES               //
 //                                           //
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 

@@ -1,11 +1,10 @@
 import { makeHead, makeFooter, makeLogoBanner } from "./components.js";
 import { escapeHTML } from "./escapeHTML.js";
 
-// Renders a styled error page for failures that happen before the
-// configure-import page's form can even be shown (e.g. the project-limit
-// check right after OAuth failing). Mirrors seasonOver.js's structure so a
-// real Todoist outage looks like an intentional part of the app, not a
-// broken page.
+// Renders a styled error page for failures that happen before the setup
+// page's form can even be shown (e.g. the project-limit check right after
+// OAuth failing). Mirrors seasonOver.js's structure so a real Todoist outage
+// looks like an intentional part of the app, not a broken page.
 function makeErrorPageHTML(classifiedError) {
 	const title = ERROR_TITLES[classifiedError.todoistErrorType] || "Something went wrong";
 	const message =
@@ -68,11 +67,11 @@ const DEFAULT_ACTION = { href: "/", label: "Back to start" };
 const ACTION_LINKS = {
 	AUTH_EXPIRED: { href: "/auth/login", label: "Log in again" },
 	FORBIDDEN: { href: "/auth/login", label: "Log in again" },
-	RATE_LIMITED: { href: "/configure-import", label: "Try again" },
-	SERVER_ERROR: { href: "/configure-import", label: "Try again" },
-	SERVICE_UNAVAILABLE: { href: "/configure-import", label: "Try again" },
-	NETWORK_ERROR: { href: "/configure-import", label: "Try again" },
-	NOT_FOUND: { href: "/configure-import", label: "Try again" },
+	RATE_LIMITED: { href: "/setup", label: "Try again" },
+	SERVER_ERROR: { href: "/setup", label: "Try again" },
+	SERVICE_UNAVAILABLE: { href: "/setup", label: "Try again" },
+	NETWORK_ERROR: { href: "/setup", label: "Try again" },
+	NOT_FOUND: { href: "/setup", label: "Try again" },
 };
 
 export { makeErrorPageHTML, makeNotFoundPageHTML };
