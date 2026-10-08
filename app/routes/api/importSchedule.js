@@ -47,8 +47,8 @@ router.post("/", async (req, res) => {
 		todoistApi = initializeTodoistAPI(accessToken);
 	} catch (error) {
 		// No valid session: usually the 1-hour cookie expired while the
-		// picker page sat open. The page's "Try again" link then lands on
-		// the login page (see pages/picker.js).
+		// configure-import page sat open. The page's "Try again" link then
+		// lands on the login page (see pages/configureImport.js).
 		console.error("No valid session for import:", error.message);
 		return res.status(401).json({
 			success: false,

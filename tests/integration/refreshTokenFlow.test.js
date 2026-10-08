@@ -62,11 +62,11 @@ describe("login, then the token expires (refresh-token mode)", () => {
 		expect(callback.status).toBe(302);
 		expect(callback.headers.location).toBe("/configure-import");
 
-		// 3. The picker works, calling Todoist with the access token (never the
-		//    refresh token, which the app doesn't keep)
-		const picker = await agent.get("/configure-import");
-		expect(picker.status).toBe(200);
-		expect(picker.text).toContain("Select your NBA team");
+		// 3. The configure-import page works, calling Todoist with the access
+		//    token (never the refresh token, which the app doesn't keep)
+		const page = await agent.get("/configure-import");
+		expect(page.status).toBe(200);
+		expect(page.text).toContain("Select your NBA team");
 		expect(TodoistApiMock).toHaveBeenCalledWith("access-abc");
 
 		// 4. An hour later the cookie is still valid but the token isn't:

@@ -1,10 +1,11 @@
 import { makeHead, makeFooter, makeLogoBanner } from "./components.js";
 import { escapeHTML } from "./escapeHTML.js";
 
-// Renders a styled error page for failures that happen before the picker
-// form can even be shown (e.g. the project-limit check right after OAuth
-// failing). Mirrors seasonOver.js's structure so a real Todoist outage
-// looks like an intentional part of the app, not a broken page.
+// Renders a styled error page for failures that happen before the
+// configure-import page's form can even be shown (e.g. the project-limit
+// check right after OAuth failing). Mirrors seasonOver.js's structure so a
+// real Todoist outage looks like an intentional part of the app, not a
+// broken page.
 function makeErrorPageHTML(classifiedError) {
 	const title = ERROR_TITLES[classifiedError.todoistErrorType] || "Something went wrong";
 	const message =

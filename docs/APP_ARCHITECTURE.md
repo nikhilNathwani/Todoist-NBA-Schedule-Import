@@ -4,7 +4,7 @@ How the NBA Todoist Schedule Importer works, from landing page to finished impor
 
 ## Overview
 
-An Express 5 app. The server renders each page's HTML (template-string functions in `app/views/`), and browser-side JavaScript (`public/scripts/`, loaded as ES modules) handles the picker page's interactivity. The browser talks to the server through one JSON endpoint, `POST /import-schedule`. Users log in with Todoist OAuth before importing.
+An Express 5 app. The server renders each page's HTML (template-string functions in `app/views/`), and browser-side JavaScript (`public/scripts/`, loaded as ES modules) handles the configure-import page's interactivity. The browser talks to the server through one JSON endpoint, `POST /import-schedule`. Users log in with Todoist OAuth before importing.
 
 `app.js` builds the app (session middleware, static files, body parsing, routers) and exports it. `server.js` runs it locally with `app.listen()`. On Vercel, the platform's built-in Express support imports `app.js` directly and runs it as a serverless function; `public/` files are served from Vercel's CDN. `vercel.json` has one setting, `"framework": "express"`, which turns that support on. Without it, Vercel treats the project as a static site and answers every app route with its own 404 (verified on a preview deployment).
 
@@ -49,11 +49,11 @@ An Express 5 app. The server renders each page's HTML (template-string functions
 
 ---
 
-### 4. Picker Page (server side)
+### 4. Configure-Import Page (server side)
 
 **Route:** `GET /configure-import`
-**Handler:** `app/routes/pages/picker.js`
-**View:** `app/views/picker.js`
+**Handler:** `app/routes/pages/configureImport.js`
+**View:** `app/views/configureImport.js`
 
 - Reads the token from the session. None, or expired: redirects to `/` to log in.
 - In parallel: the tier check below and `getTeams()` (`app/utils/parseSchedule.js`), which reads every team's name and city from the schedule JSON.
@@ -63,7 +63,7 @@ An Express 5 app. The server renders each page's HTML (template-string functions
 
 ---
 
-### 5. Picker Page (browser side)
+### 5. Configure-Import Page (browser side)
 
 **Entry point:** `public/scripts/main.js` (the page's only `<script type="module">`)
 
@@ -72,7 +72,7 @@ An Express 5 app. The server renders each page's HTML (template-string functions
 | File | Role |
 |---|---|
 | `api/importSchedule.js` | `importSchedule()`: `POST /import-schedule` |
-| `ui/picker.js` | Updates the "new project" subtitle; enables the submit button |
+| `ui/configureImport.js` | Updates the "new project" subtitle; enables the submit button |
 | `ui/header/importStatus.js` | Status enum (LOADING/SUCCESS/ERROR) and header text |
 | `ui/header/teamLogo.js` | Shows the selected team's logo |
 | `ui/nextSteps.js` | Builds the next-steps list shown after an import |
@@ -138,7 +138,7 @@ Choosing a team shows its logo, names the new project ("Celtics schedule"), and 
 ### Account tier
 
 - Free: 5 projects. Premium: 300. The plan comes from `getUser().isPremium`; the caps are constants because the API doesn't expose them.
-- Checked when the picker renders (to disable "Create New Project") and again at import time.
+- Checked when the configure-import page renders (to disable "Create New Project") and again at import time.
 - Inbox imports create a section inside the Inbox, which works on any plan.
 
 ### Sessions and security
@@ -164,26 +164,26 @@ Choosing a team shows its logo, names the new project ("Celtics schedule"), and 
 ## File Organization
 
 ```text
-app.js                     # Builds the Express app (middleware + routers + 404)
-server.js                  # Local server (npm run dev / npm start); Vercel imports app.js instead
+app.js                        # Builds the Express app (middleware + routers + 404)
+server.js                     # Local server (npm run dev / npm start); Vercel imports app.js instead
 app/
   routes/
-    pages/index.js         # GET /  (+ debug routes outside production)
-    pages/picker.js        # GET /configure-import
-    api/importSchedule.js  # POST /import-schedule (the app's JSON endpoint)
-    auth/login.js          # GET /auth/login
-    auth/callback.js       # GET /auth/callback
+    pages/index.js            # GET /  (+ debug routes outside production)
+    pages/configureImport.js  # GET /configure-import
+    api/importSchedule.js     # POST /import-schedule (the app's JSON endpoint)
+    auth/login.js             # GET /auth/login
+    auth/callback.js          # GET /auth/callback
   utils/
-    todoist.js             # Todoist API calls (OAuth token, tier, projects, tasks)
-    todoistErrors.js       # Error classification + demo-mode mocks
-    parseSchedule.js       # Schedule JSON reads, upcoming games, season over
-    cookieSession.js       # Save/read the encrypted token in the session
-    encryption.js          # @hapi/iron seal/unseal
-  views/                   # HTML template functions (pages, error page, shared head/footer)
+    todoist.js                # Todoist API calls (OAuth token, tier, projects, tasks)
+    todoistErrors.js          # Error classification + demo-mode mocks
+    parseSchedule.js          # Schedule JSON reads, upcoming games, season over
+    cookieSession.js          # Save/read the encrypted token in the session
+    encryption.js             # @hapi/iron seal/unseal
+  views/                      # HTML template functions (pages, error page, shared head/footer)
 public/
-  scripts/                 # Browser ES modules (entry: main.js)
+  scripts/                    # Browser ES modules (entry: main.js)
   style.css, images/
-tests/                     # Vitest: unit/ and integration/ (Supertest)
-scrape/                    # Python schedule scraper
-data/nba_schedule.json     # Schedule data
+tests/                        # Vitest: unit/ and integration/ (Supertest)
+scrape/                       # Python schedule scraper
+data/nba_schedule.json        # Schedule data
 ```

@@ -1,11 +1,11 @@
 /**
- * Picker page view updates
+ * Configure-import page view updates
  * "New project" subtitle and submit button
  */
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 //                                           //
-//       PICKER VIEW UPDATES                 //
+//   CONFIGURE-IMPORT VIEW UPDATES           //
 //                                           //
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 

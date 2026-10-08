@@ -1,5 +1,5 @@
 /**
- * Entry point for the picker page (/configure-import), loaded as an ES module.
+ * Entry point for the configure-import page (/configure-import), loaded as an ES module.
  * The server has already rendered the team list into the page; this file
  * adds the interactivity.
  * Every other script is pulled in through imports, so dependencies are

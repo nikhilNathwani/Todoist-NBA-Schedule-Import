@@ -1,7 +1,7 @@
 import { makeHead, makeFooter, makeLogoBanner } from "./components.js";
 import { escapeHTML } from "./escapeHTML.js";
 
-async function makePickerPageHTML(canCreateProjects, teams) {
+async function makeConfigureImportHTML(canCreateProjects, teams) {
 	const teamPickerHTML = makeTeamPickerHTML(teams);
 	const projectPickerHTML = makeProjectPickerHTML(canCreateProjects);
 
@@ -99,4 +99,4 @@ function makeProjectPickerHTML(canCreateProjects) {
 	return intro + newProjectOption + inboxOption + outro;
 }
 
-export { makePickerPageHTML };
+export { makeConfigureImportHTML };

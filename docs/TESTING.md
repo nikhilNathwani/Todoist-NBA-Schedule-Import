@@ -55,7 +55,7 @@ Examples in this repo:
 - Retrying failed game imports (with fake timers, so the 10s wait is instant)
 - Classifying Todoist failures by status code
 - Real `@hapi/iron` encryption: round trip, tampered or wrong-key values rejected
-- HTML escaping, including on the real error and picker pages (these tests fail if escaping is removed)
+- HTML escaping, including on the real error and configure-import pages (these tests fail if escaping is removed)
 
 ### 2. Integration tests
 
@@ -66,13 +66,13 @@ Files:
 - `tests/integration/app.test.js`
 - `tests/integration/routes/importScheduleRoute.test.js`
 - `tests/integration/routes/authRoutes.test.js`
-- `tests/integration/routes/pickerRoute.test.js`
+- `tests/integration/routes/configureImportRoute.test.js`
 
 Examples in this repo:
 
 - API status codes and JSON response shapes
 - OAuth state checks, using the real `cookie-session` middleware and a Supertest agent that keeps cookies between requests like a browser
-- The picker page: team options rendered in city order, "Create New Project" disabled at the plan limit, logged-out redirect, classified error pages
+- The configure-import page: team options rendered in city order, "Create New Project" disabled at the plan limit, logged-out redirect, classified error pages
 - The session cookie's flags (`httpOnly`, `secure`, `sameSite=Lax`, 1 hour), checked on the real `app.js`; a forged session cookie leaves the visitor logged out
 - OAuth error responses (bad code 400, rate limited 429, outage 502)
 - The fully assembled `app.js` boots and returns a 404 for unknown paths (each route test builds its own small app, so only this catches mistakes in how `app.js` wires them together)
@@ -95,7 +95,7 @@ tests/
     routes/
       importScheduleRoute.test.js
       authRoutes.test.js
-      pickerRoute.test.js
+      configureImportRoute.test.js
 ```
 
 ## How Vitest works

@@ -21,7 +21,7 @@ vi.mock("../../../app/utils/parseSchedule.js", () => ({
 	getTeams: getTeamsMock,
 }));
 
-import pickerRouter from "../../../app/routes/pages/picker.js";
+import configureImportRouter from "../../../app/routes/pages/configureImport.js";
 
 describe("GET /configure-import", () => {
 	beforeEach(() => {
@@ -36,11 +36,11 @@ describe("GET /configure-import", () => {
 
 	function createApp() {
 		const app = express();
-		app.use("/configure-import", pickerRouter);
+		app.use("/configure-import", configureImportRouter);
 		return app;
 	}
 
-	it("renders the picker page on success", async () => {
+	it("renders the configure-import page on success", async () => {
 		getAccessTokenMock.mockResolvedValue("token");
 		userReachedProjectLimitMock.mockResolvedValue(false);
 
@@ -152,7 +152,7 @@ describe("GET /configure-import", () => {
 			delete process.env.ENABLE_ERROR_DEMO;
 			vi.resetModules();
 			const { default: freshRoute } = await import(
-				"../../../app/routes/pages/picker.js"
+				"../../../app/routes/pages/configureImport.js"
 			);
 			const app = express();
 			app.use("/configure-import", freshRoute);
@@ -172,7 +172,7 @@ describe("GET /configure-import", () => {
 			process.env.ENABLE_ERROR_DEMO = "true";
 			vi.resetModules();
 			const { default: freshRoute } = await import(
-				"../../../app/routes/pages/picker.js"
+				"../../../app/routes/pages/configureImport.js"
 			);
 			const app = express();
 			app.use("/configure-import", freshRoute);

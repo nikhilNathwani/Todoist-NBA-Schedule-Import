@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { escapeHTML } from "../../app/views/escapeHTML.js";
 import { makeErrorPageHTML } from "../../app/views/errorPage.js";
-import { makePickerPageHTML } from "../../app/views/picker.js";
+import { makeConfigureImportHTML } from "../../app/views/configureImport.js";
 
 describe("escapeHTML", () => {
 	it("turns markup characters into text the browser displays, not runs", () => {
@@ -31,8 +31,8 @@ describe("escapeHTML", () => {
 		expect(html).not.toContain("<img src=x");
 	});
 
-	it("is applied to team data in the picker's dropdown", async () => {
-		const html = await makePickerPageHTML(true, {
+	it("is applied to team data in the configure-import page's team dropdown", async () => {
+		const html = await makeConfigureImportHTML(true, {
 			BOS: { name: 'Celtics"><script>x()</script>', city: "Boston" },
 		});
 

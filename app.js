@@ -6,7 +6,7 @@ import { fileURLToPath } from "url";
 /* Internal imports */
 // Routers: each handles the path it's mounted at in "Mount routes" below
 import indexPageRouter from "./app/routes/pages/index.js";
-import pickerPageRouter from "./app/routes/pages/picker.js";
+import configureImportRouter from "./app/routes/pages/configureImport.js";
 import loginRouter from "./app/routes/auth/login.js";
 import callbackRouter from "./app/routes/auth/callback.js";
 import importScheduleRouter from "./app/routes/api/importSchedule.js";
@@ -57,11 +57,11 @@ app.use(express.urlencoded({ extended: true }));
 // Mount routes: each router is mounted at the path it serves
 // Pages
 app.use("/", indexPageRouter); // GET / (landing page)
-app.use("/configure-import", pickerPageRouter); // GET /configure-import (team picker)
+app.use("/configure-import", configureImportRouter); // GET /configure-import (team picker)
 // Login (OAuth)
 app.use("/auth/login", loginRouter); // GET /auth/login
 app.use("/auth/callback", callbackRouter); // GET /auth/callback
-// Called by the picker page's JavaScript
+// Called by the configure-import page's JavaScript
 app.use("/import-schedule", importScheduleRouter); // POST /import-schedule
 
 // Anything no route above matched: a real 404, not the landing page
