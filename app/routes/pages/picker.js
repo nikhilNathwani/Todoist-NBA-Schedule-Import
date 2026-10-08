@@ -14,7 +14,7 @@ const router = express.Router();
 const ERROR_DEMO_ENABLED = process.env.ENABLE_ERROR_DEMO === "true";
 
 // Serve the team/project picker page
-router.get("/configure-import", async (req, res) => {
+router.get("/", async (req, res) => {
 	const mockErrorCode = ERROR_DEMO_ENABLED
 		? req.query.mockTodoistError
 		: undefined;

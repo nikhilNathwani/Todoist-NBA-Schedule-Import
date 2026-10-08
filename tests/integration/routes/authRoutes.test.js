@@ -16,8 +16,8 @@ vi.mock("../../../app/utils/todoist.js", () => ({
 	retrieveAccessToken: retrieveAccessTokenMock,
 }));
 
-import loginRoute from "../../../app/routes/auth/login.js";
-import callbackRoute from "../../../app/routes/auth/callback.js";
+import loginRouter from "../../../app/routes/auth/login.js";
+import callbackRouter from "../../../app/routes/auth/callback.js";
 
 describe("auth routes", () => {
 	beforeEach(() => {
@@ -30,8 +30,8 @@ describe("auth routes", () => {
 	function createApp() {
 		const app = express();
 		app.use(cookieSession({ name: "session", secret: "test-cookie-secret" }));
-		app.use("/auth", loginRoute);
-		app.use("/auth", callbackRoute);
+		app.use("/auth/login", loginRouter);
+		app.use("/auth/callback", callbackRouter);
 		return app;
 	}
 

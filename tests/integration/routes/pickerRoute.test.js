@@ -21,7 +21,7 @@ vi.mock("../../../app/utils/parseSchedule.js", () => ({
 	getTeams: getTeamsMock,
 }));
 
-import pickerRoute from "../../../app/routes/pages/picker.js";
+import pickerRouter from "../../../app/routes/pages/picker.js";
 
 describe("GET /configure-import", () => {
 	beforeEach(() => {
@@ -36,7 +36,7 @@ describe("GET /configure-import", () => {
 
 	function createApp() {
 		const app = express();
-		app.use(pickerRoute);
+		app.use("/configure-import", pickerRouter);
 		return app;
 	}
 
@@ -155,7 +155,7 @@ describe("GET /configure-import", () => {
 				"../../../app/routes/pages/picker.js"
 			);
 			const app = express();
-			app.use(freshRoute);
+			app.use("/configure-import", freshRoute);
 
 			getAccessTokenMock.mockResolvedValue("token");
 			userReachedProjectLimitMock.mockResolvedValue(false);
@@ -175,7 +175,7 @@ describe("GET /configure-import", () => {
 				"../../../app/routes/pages/picker.js"
 			);
 			const app = express();
-			app.use(freshRoute);
+			app.use("/configure-import", freshRoute);
 
 			getAccessTokenMock.mockResolvedValue("token");
 			userReachedProjectLimitMock.mockResolvedValue(false);

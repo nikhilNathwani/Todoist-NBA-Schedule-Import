@@ -5,7 +5,7 @@ import { retrieveAccessToken } from "../../utils/todoist.js";
 const router = express.Router();
 
 // Handle the OAuth callback from Todoist
-router.get("/callback", async (req, res) => {
+router.get("/", async (req, res) => {
 	const { code, state } = req.query;
 
 	// Verify the state parameter to prevent CSRF attacks: it must match the

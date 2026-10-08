@@ -39,7 +39,7 @@ vi.mock("../../../app/utils/todoist.js", () => ({
 	userReachedProjectLimit: userReachedProjectLimitMock,
 }));
 
-import importScheduleRoute from "../../../app/routes/api/importSchedule.js";
+import importScheduleRouter from "../../../app/routes/api/importSchedule.js";
 
 describe("POST /import-schedule", () => {
 	beforeEach(() => {
@@ -56,7 +56,7 @@ describe("POST /import-schedule", () => {
 	function createApp() {
 		const app = express();
 		app.use(express.json());
-		app.use(importScheduleRoute);
+		app.use("/import-schedule", importScheduleRouter);
 		return app;
 	}
 
@@ -249,7 +249,7 @@ describe("POST /import-schedule", () => {
 			);
 			const app = express();
 			app.use(express.json());
-			app.use(freshRoute);
+			app.use("/import-schedule", freshRoute);
 
 			getAccessTokenMock.mockResolvedValue("token");
 			initializeTodoistAPIMock.mockReturnValue({});
@@ -273,7 +273,7 @@ describe("POST /import-schedule", () => {
 			);
 			const app = express();
 			app.use(express.json());
-			app.use(freshRoute);
+			app.use("/import-schedule", freshRoute);
 
 			getAccessTokenMock.mockResolvedValue("token");
 			initializeTodoistAPIMock.mockReturnValue({});

@@ -4,14 +4,12 @@ import cookieSession from "cookie-session";
 import path from "path";
 import { fileURLToPath } from "url";
 /* Internal imports */
-// API routes
-import importScheduleRoute from "./app/routes/api/importSchedule.js";
-// Page routes
-import indexPageRoute from "./app/routes/pages/index.js";
-import pickerPageRoute from "./app/routes/pages/picker.js";
-// Auth routes
-import loginRoute from "./app/routes/auth/login.js";
-import callbackRoute from "./app/routes/auth/callback.js";
+// Routers: each handles the path it's mounted at in "Mount routes" below
+import indexPageRouter from "./app/routes/pages/index.js";
+import pickerPageRouter from "./app/routes/pages/picker.js";
+import loginRouter from "./app/routes/auth/login.js";
+import callbackRouter from "./app/routes/auth/callback.js";
+import importScheduleRouter from "./app/routes/api/importSchedule.js";
 // Views
 import { makeNotFoundPageHTML } from "./app/views/errorPage.js";
 
@@ -56,15 +54,15 @@ app.use(express.static(staticPathRoot));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Mount routes
-// API routes
-app.use("/", importScheduleRoute);
-// Auth routes
-app.use("/auth", loginRoute);
-app.use("/auth", callbackRoute);
-// Page routes
-app.use("/", pickerPageRoute);
-app.use("/", indexPageRoute);
+// Mount routes: each router is mounted at the path it serves
+// Pages
+app.use("/", indexPageRouter); // GET / (landing page)
+app.use("/configure-import", pickerPageRouter); // GET /configure-import (team picker)
+// Login (OAuth)
+app.use("/auth/login", loginRouter); // GET /auth/login
+app.use("/auth/callback", callbackRouter); // GET /auth/callback
+// Called by the picker page's JavaScript
+app.use("/import-schedule", importScheduleRouter); // POST /import-schedule
 
 // Anything no route above matched: a real 404, not the landing page
 app.use((req, res) => {

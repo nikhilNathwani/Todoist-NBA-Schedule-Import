@@ -5,7 +5,7 @@ const router = express.Router();
 const { CLIENT_ID, REDIRECT_URI } = process.env;
 
 // Redirect to Todoist for OAuth authorization
-router.get("/login", (req, res) => {
+router.get("/", (req, res) => {
 	// CSRF protection: a fresh random state for every login attempt, saved in
 	// this browser's session cookie. /callback only accepts a request that
 	// echoes back the same value (see callback.js).

@@ -35,7 +35,7 @@ const ERROR_DEMO_ENABLED = process.env.ENABLE_ERROR_DEMO === "true";
  * 6. Add a yearly reminder task to re-import next season
  * 7. Generate a deep link to the destination for the "Open Todoist" button
  */
-router.post("/import-schedule", async (req, res) => {
+router.post("/", async (req, res) => {
 	// Step 1: Extract user selections from request
 	const { team: teamID, project: destinationType, mockError } = req.body;
 	const mockErrorCode = ERROR_DEMO_ENABLED ? mockError : undefined;
