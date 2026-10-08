@@ -2,6 +2,7 @@ import crypto from "node:crypto";
 import express from "express";
 
 const router = express.Router();
+// "Client" is OAuth's word for this app, not the user
 const { CLIENT_ID, REDIRECT_URI } = process.env;
 
 // Redirect to Todoist for OAuth authorization
