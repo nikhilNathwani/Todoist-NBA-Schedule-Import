@@ -17,6 +17,10 @@ config.py
 # Test coverage report (npm run test:coverage)
 coverage/
 
+# Browser test output (npm run test:e2e)
+test-results/
+playwright-report/
+
 # Claude Code per-machine settings
 .claude/settings.local.json
 

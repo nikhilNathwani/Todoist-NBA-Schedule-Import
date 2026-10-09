@@ -24,3 +24,7 @@ jobs:
 
             - name: Run tests with coverage
               run: npm run test:coverage
+
+            # Uses the runner's preinstalled Google Chrome (playwright.config.js)
+            - name: Run browser tests
+              run: npm run test:e2e

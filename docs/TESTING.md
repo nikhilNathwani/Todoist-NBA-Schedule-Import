@@ -20,6 +20,7 @@ This project uses:
 - Vitest: test runner and assertion framework
 - Supertest: integration testing for Express routes
 - V8 coverage provider: code coverage reports
+- Playwright: browser tests, running the real app in Chrome
 
 ### Why Vitest instead of Jest here
 
@@ -79,6 +80,27 @@ Examples in this repo:
 - OAuth error responses (bad code 400, rate limited 429, outage 502)
 - The fully assembled `app.js` boots and returns a 404 for unknown paths (each route test builds its own small app, so only this catches mistakes in how `app.js` wires them together)
 
+### 3. Browser tests (Playwright)
+
+The Vitest suite never loads `public/scripts/`, and it can't see how pages behave across a real form post, redirect, refresh or Back. The browser tests run the whole app in Chrome for that.
+
+Files:
+
+- `playwright.config.js`: starts the app's own server on port 3100 (`node server.js`, never a running dev server) with test-only secrets from `tests/e2e/testEnv.js`, and drives the installed Google Chrome, so there's no browser download
+- `tests/e2e/session.js`: makes a logged-in session cookie with the app's own libraries (cookie-session signing, Iron sealing) and the test secrets
+- `tests/e2e/importFlow.spec.js`: the tests
+
+Demo mode stands in for every Todoist call (`?mockTierCheck=`, `?mockTodoistError=`), so the tests never reach Todoist. That means a real successful import isn't covered here; its result page is covered by `tests/integration/routes/result.test.js`.
+
+What they check:
+
+- Both states of the project picker; choosing a team shows its logo and names the new project
+- Submitting without a team is blocked by the browser (native `required` validation), and nothing is posted
+- An import: the loading screen shows while the post is in flight, a second click doesn't post again, the result page shows the failure with the team's logo, refreshing it doesn't re-post, and Back lands on a fresh form
+- The error page (with its status code), the logged-out redirect and the 404
+
+The double-submit check was confirmed to catch a regression: with the guard in `submitForm.js` removed, it fails with two posts instead of one.
+
 ## Project test structure
 
 ```text
@@ -99,6 +121,10 @@ tests/
       result.test.js
       setupGet.test.js
       setupPost.test.js
+  e2e/                          # Playwright browser tests (not run by Vitest)
+    testEnv.js                  # the test server's port and secrets
+    session.js                  # logged-in session cookie
+    importFlow.spec.js
 ```
 
 ## How Vitest works
@@ -195,13 +221,18 @@ Run coverage mode:
 
 - `npm run test:coverage`
 
+Run the browser tests (needs Google Chrome installed):
+
+- `npm run test:e2e`
+- Add `--headed` to watch them in a visible window, or `--ui` for Playwright's step-through UI
+
 Run one specific test file:
 
 - `npx vitest run tests/unit/todoist.test.js`
 
 Run tests matching a name:
 
-- `npx vitest -t "imports schedule and returns deep link"`
+- `npx vitest -t "saves the deep link"`
 
 ## How to interpret test output
 
@@ -234,7 +265,7 @@ This repo includes GitHub Actions workflow:
 
 - `.github/workflows/tests.yml`
 
-It runs tests on:
+It runs the Vitest suite (with coverage), then the browser tests, on:
 
 - pushes to `main`
 - all pull requests
