@@ -26,8 +26,10 @@ vi.mock("../../../app/utils/cookieSession.js", () => ({
 	getAccessToken: getAccessTokenMock,
 }));
 
+// getTeams is only used by the GET handler; stubbed so the router loads
 vi.mock("../../../app/utils/parseSchedule.js", () => ({
 	getTeamData: getTeamDataMock,
+	getTeams: vi.fn(),
 }));
 
 vi.mock("../../../app/utils/todoist.js", () => ({
@@ -39,7 +41,7 @@ vi.mock("../../../app/utils/todoist.js", () => ({
 	userReachedProjectLimit: userReachedProjectLimitMock,
 }));
 
-import setupApiRouter from "../../../app/routes/api/setup.js";
+import setupRouter from "../../../app/routes/setup.js";
 
 describe("POST /setup", () => {
 	beforeEach(() => {
@@ -56,7 +58,7 @@ describe("POST /setup", () => {
 	function createApp() {
 		const app = express();
 		app.use(express.json());
-		app.use("/setup", setupApiRouter);
+		app.use("/setup", setupRouter);
 		return app;
 	}
 
@@ -245,7 +247,7 @@ describe("POST /setup", () => {
 			delete process.env.ENABLE_ERROR_DEMO;
 			vi.resetModules();
 			const { default: freshRoute } = await import(
-				"../../../app/routes/api/setup.js"
+				"../../../app/routes/setup.js"
 			);
 			const app = express();
 			app.use(express.json());
@@ -269,7 +271,7 @@ describe("POST /setup", () => {
 			process.env.ENABLE_ERROR_DEMO = "true";
 			vi.resetModules();
 			const { default: freshRoute } = await import(
-				"../../../app/routes/api/setup.js"
+				"../../../app/routes/setup.js"
 			);
 			const app = express();
 			app.use(express.json());

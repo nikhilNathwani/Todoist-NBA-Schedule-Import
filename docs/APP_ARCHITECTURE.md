@@ -17,7 +17,7 @@ An Express 5 app. The server renders each page's HTML (template-string functions
 ### 1. Landing Page
 
 **Route:** `GET /`
-**Handler:** `app/routes/pages/index.js`
+**Handler:** `app/routes/index.js`
 **Views:** `app/views/index.js`, `app/views/seasonOver.js`
 
 - `isSeasonOver()` (`app/utils/parseSchedule.js`) compares now with the latest game time in `data/nba_schedule.json`. Both are absolute UTC moments, so the answer doesn't depend on the server's time zone.
@@ -52,7 +52,7 @@ An Express 5 app. The server renders each page's HTML (template-string functions
 ### 4. Setup Page (server side)
 
 **Route:** `GET /setup`
-**Handler:** `app/routes/pages/setup.js`
+**Handler:** `app/routes/setup.js` (GET)
 **View:** `app/views/setup.js`
 
 - Reads the token from the session. None, or expired: redirects to `/` to log in.
@@ -102,7 +102,7 @@ Choosing a team shows its logo, names the new project ("Celtics schedule"), and 
 ### 7. Import Schedule API
 
 **Route:** `POST /setup`
-**Handler:** `app/routes/api/setup.js`
+**Handler:** `app/routes/setup.js` (POST)
 **Body:** `{ team: "BOS", project: "newProject" | "inbox" }`
 
 1. Read the token from the session. Missing or expired: `401` with type `AUTH_EXPIRED` and "Your session has expired. Please log in again." The page's "Try again" link goes to `/setup`, which sends a logged-out visitor to the login page.
@@ -168,9 +168,8 @@ app.js                  # Builds the Express app (middleware + routers + 404)
 server.js               # Local server (npm run dev / npm start); Vercel imports app.js instead
 app/
   routes/
-    pages/index.js      # GET /  (+ debug routes outside production)
-    pages/setup.js      # GET /setup
-    api/setup.js        # POST /setup (the app's JSON endpoint)
+    index.js            # GET /  (+ debug routes outside production)
+    setup.js            # GET /setup (team picker) + POST /setup (runs the import, JSON)
     auth/login.js       # GET /auth/login
     auth/callback.js    # GET /auth/callback
   utils/

@@ -1,7 +1,7 @@
 import express from "express";
-import { makeLandingPageHTML } from "../../views/index.js";
-import { makeSeasonOverHTML } from "../../views/seasonOver.js";
-import { isSeasonOver } from "../../utils/parseSchedule.js";
+import { makeLandingPageHTML } from "../views/index.js";
+import { makeSeasonOverHTML } from "../views/seasonOver.js";
+import { isSeasonOver } from "../utils/parseSchedule.js";
 
 const router = express.Router();
 

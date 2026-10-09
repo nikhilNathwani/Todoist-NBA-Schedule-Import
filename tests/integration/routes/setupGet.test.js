@@ -13,15 +13,23 @@ vi.mock("../../../app/utils/cookieSession.js", () => ({
 	getAccessToken: getAccessTokenMock,
 }));
 
+// The router also imports the POST handler's helpers; stub them so the
+// module loads (no GET test calls them)
 vi.mock("../../../app/utils/todoist.js", () => ({
 	userReachedProjectLimit: userReachedProjectLimitMock,
+	initializeTodoistAPI: vi.fn(),
+	createDestination: vi.fn(),
+	importSchedule: vi.fn(),
+	addYearlyReminder: vi.fn(),
+	createDeepLink: vi.fn(),
 }));
 
 vi.mock("../../../app/utils/parseSchedule.js", () => ({
 	getTeams: getTeamsMock,
+	getTeamData: vi.fn(),
 }));
 
-import setupPageRouter from "../../../app/routes/pages/setup.js";
+import setupRouter from "../../../app/routes/setup.js";
 
 describe("GET /setup", () => {
 	beforeEach(() => {
@@ -36,7 +44,7 @@ describe("GET /setup", () => {
 
 	function createApp() {
 		const app = express();
-		app.use("/setup", setupPageRouter);
+		app.use("/setup", setupRouter);
 		return app;
 	}
 
@@ -152,7 +160,7 @@ describe("GET /setup", () => {
 			delete process.env.ENABLE_ERROR_DEMO;
 			vi.resetModules();
 			const { default: freshRoute } = await import(
-				"../../../app/routes/pages/setup.js"
+				"../../../app/routes/setup.js"
 			);
 			const app = express();
 			app.use("/setup", freshRoute);
@@ -172,7 +180,7 @@ describe("GET /setup", () => {
 			process.env.ENABLE_ERROR_DEMO = "true";
 			vi.resetModules();
 			const { default: freshRoute } = await import(
-				"../../../app/routes/pages/setup.js"
+				"../../../app/routes/setup.js"
 			);
 			const app = express();
 			app.use("/setup", freshRoute);

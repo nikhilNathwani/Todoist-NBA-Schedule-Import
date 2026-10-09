@@ -7,8 +7,8 @@
 -   **Key Data Flow:**
     1. NBA schedules are scraped (`scrape/main.py`) and saved as `data/nba_schedule.json`.
     2. `app/routes/auth/login.js` and `callback.js` run the Todoist OAuth flow and store the iron-encrypted access token in the `cookie-session` session.
-    3. `app/routes/pages/setup.js` renders the team/destination picker, team list included (`app/views/setup.js`); `public/scripts/main.js` adds the interactivity.
-    4. `POST /setup` (`app/routes/api/setup.js`) creates the Todoist tasks via `app/utils/todoist.js`; failures are classified by `app/utils/todoistErrors.js`.
+    3. `GET /setup` (`app/routes/setup.js`) renders the team/destination picker, team list included (`app/views/setup.js`); `public/scripts/main.js` adds the interactivity.
+    4. `POST /setup` (same file) creates the Todoist tasks via `app/utils/todoist.js`; failures are classified by `app/utils/todoistErrors.js`.
 
 ## Major Components
 

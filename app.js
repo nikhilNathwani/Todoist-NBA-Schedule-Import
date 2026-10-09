@@ -5,11 +5,10 @@ import path from "path";
 import { fileURLToPath } from "url";
 /* Internal imports */
 // Routers: each handles the path it's mounted at in "Mount routes" below
-import indexPageRouter from "./app/routes/pages/index.js";
-import setupPageRouter from "./app/routes/pages/setup.js";
+import indexRouter from "./app/routes/index.js";
+import setupRouter from "./app/routes/setup.js";
 import loginRouter from "./app/routes/auth/login.js";
 import callbackRouter from "./app/routes/auth/callback.js";
-import setupApiRouter from "./app/routes/api/setup.js";
 // Views
 import { makeNotFoundPageHTML } from "./app/views/errorPage.js";
 
@@ -55,15 +54,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Mount routes: each router is mounted at the path it serves
-app.use("/", indexPageRouter); // GET / (landing page)
+app.use("/", indexRouter); // GET / (landing page)
 // Login (OAuth)
 app.use("/auth/login", loginRouter); // GET /auth/login
 app.use("/auth/callback", callbackRouter); // GET /auth/callback
-// The setup page: GET shows the team and project picker; the page's
-// JavaScript POSTs the choice back to the same path, which runs the import
-// and answers in JSON
-app.use("/setup", setupPageRouter); // GET /setup
-app.use("/setup", setupApiRouter); // POST /setup
+// GET /setup shows the team and project picker; the page's JavaScript
+// POSTs the choice back to /setup, which runs the import
+app.use("/setup", setupRouter); // GET + POST /setup
 
 // Anything no route above matched: a real 404, not the landing page
 app.use((req, res) => {

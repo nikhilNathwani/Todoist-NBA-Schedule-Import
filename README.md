@@ -30,9 +30,9 @@ Todoist NBA Schedule Import connects to a user's Todoist account, lets them choo
 ```text
 app/
     routes/
+        index.js              # GET / (landing page)
+        setup.js              # GET /setup (team picker) + POST /setup (runs the import)
         auth/                 # OAuth login/callback
-        pages/                # Landing and setup pages
-        api/                  # The app's JSON endpoint (POST /setup)
     utils/
         todoist.js            # Todoist API operations
         cookieSession.js      # Encrypted token session helpers

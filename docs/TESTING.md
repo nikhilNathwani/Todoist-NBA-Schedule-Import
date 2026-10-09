@@ -64,9 +64,9 @@ Integration tests verify behavior across components (route + middleware + mocked
 Files:
 
 - `tests/integration/app.test.js`
-- `tests/integration/routes/setupApiRoute.test.js`
 - `tests/integration/routes/authRoutes.test.js`
-- `tests/integration/routes/setupPageRoute.test.js`
+- `tests/integration/routes/setupGet.test.js`
+- `tests/integration/routes/setupPost.test.js`
 
 Examples in this repo:
 
@@ -93,9 +93,9 @@ tests/
   integration/
     app.test.js
     routes/
-      setupApiRoute.test.js
       authRoutes.test.js
-      setupPageRoute.test.js
+      setupGet.test.js
+      setupPost.test.js
 ```
 
 ## How Vitest works
