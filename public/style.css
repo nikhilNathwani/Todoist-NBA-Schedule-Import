@@ -495,3 +495,15 @@ form.fade-out {
 		transform: rotate(360deg);
 	}
 }
+
+/* Transition 4:
+	-Between pages (e.g. the setup page's loading screen -> /result)
+	-The browser cross-fades the old page into the new one
+	-Browsers without cross-document view transitions (Firefox, older
+		Chrome/Safari) ignore this and navigate instantly, as before
+*/
+@media (prefers-reduced-motion: no-preference) {
+	@view-transition {
+		navigation: auto;
+	}
+}
