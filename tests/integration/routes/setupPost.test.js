@@ -55,14 +55,31 @@ describe("POST /setup", () => {
 		userReachedProjectLimitMock.mockReset();
 	});
 
-	function createApp() {
+	// The route saves its outcome in req.session; a plain object stands in
+	// for cookie-session so each test can read what was saved
+	let session;
+	function createApp(router = setupRouter) {
 		const app = express();
-		app.use(express.json());
-		app.use("/setup", setupRouter);
+		app.use(express.urlencoded({ extended: true }));
+		app.use((req, res, next) => {
+			session = req.session = {};
+			next();
+		});
+		app.use("/setup", router);
 		return app;
 	}
 
-	it("imports schedule and returns deep link", async () => {
+	// Every outcome, success or failure, redirects to the result page
+	function expectRedirectToResult(response) {
+		expect(response.status).toBe(303);
+		expect(response.headers.location).toBe("/result");
+	}
+
+	// Sent the way the browser sends the form: URL-encoded, not JSON
+	const post = (app, fields) =>
+		request(app).post("/setup").type("form").send(fields);
+
+	it("imports the schedule and saves the deep link for the result page", async () => {
 		getAccessTokenMock.mockResolvedValue("token");
 		userReachedProjectLimitMock.mockResolvedValue(false);
 		const fakeApi = { addTask: vi.fn() };
@@ -79,12 +96,17 @@ describe("POST /setup", () => {
 		addYearlyReminderMock.mockResolvedValue(undefined);
 		createDeepLinkMock.mockReturnValue("todoist://project/p1");
 
-		const response = await request(createApp())
-			.post("/setup")
-			.send({ team: "BOS", project: "newProject" });
+		const response = await post(createApp(), {
+			team: "BOS",
+			project: "newProject",
+		});
 
-		expect(response.status).toBe(200);
-		expect(response.body).toEqual({ deepLink: "todoist://project/p1" });
+		expectRedirectToResult(response);
+		expect(session.importResult).toEqual({
+			ok: true,
+			teamID: "BOS",
+			deepLink: "todoist://project/p1",
+		});
 		expect(getTeamDataMock).toHaveBeenCalledWith("BOS");
 		expect(createDestinationMock).toHaveBeenCalledWith(
 			fakeApi,
@@ -97,73 +119,78 @@ describe("POST /setup", () => {
 		expect(addYearlyReminderMock).toHaveBeenCalled();
 	});
 
-	it("returns 401 'session expired' (not the internal error) when there's no valid session", async () => {
+	it("saves 'session expired' (not the internal error) when there's no valid session", async () => {
 		getAccessTokenMock.mockRejectedValue(
 			new Error("Access token is not set in the session."),
 		);
 
-		const response = await request(createApp())
-			.post("/setup")
-			.send({ team: "BOS", project: "inbox" });
+		const response = await post(createApp(), {
+			team: "BOS",
+			project: "inbox",
+		});
 
-		expect(response.status).toBe(401);
-		expect(response.body).toEqual({
-			success: false,
+		expectRedirectToResult(response);
+		expect(session.importResult).toEqual({
+			ok: false,
+			teamID: "BOS",
 			errorType: "AUTH_EXPIRED",
 			message: "Your session has expired. Please log in again.",
 		});
 	});
 
-	it("returns 403 when free-tier project limit reached", async () => {
+	it("saves a project-limit failure when the free-tier limit is reached", async () => {
 		getAccessTokenMock.mockResolvedValue("token");
 		initializeTodoistAPIMock.mockReturnValue({});
 		userReachedProjectLimitMock.mockResolvedValue(true);
 
-		const response = await request(createApp())
-			.post("/setup")
-			.send({ team: "BOS", project: "newProject" });
+		const response = await post(createApp(), {
+			team: "BOS",
+			project: "newProject",
+		});
 
-		expect(response.status).toBe(403);
-		expect(response.body.success).toBe(false);
-		expect(response.body.message).toContain("project limit");
+		expectRedirectToResult(response);
+		expect(session.importResult.ok).toBe(false);
+		expect(session.importResult.message).toContain("project limit");
 		expect(getTeamDataMock).not.toHaveBeenCalled();
 	});
 
-	it("returns 500 when project limit check fails", async () => {
+	it("saves a failure when the project limit check throws", async () => {
 		getAccessTokenMock.mockResolvedValue("token");
 		initializeTodoistAPIMock.mockReturnValue({});
 		userReachedProjectLimitMock.mockRejectedValue(new Error("api down"));
 
-		const response = await request(createApp())
-			.post("/setup")
-			.send({ team: "BOS", project: "newProject" });
+		const response = await post(createApp(), {
+			team: "BOS",
+			project: "newProject",
+		});
 
-		expect(response.status).toBe(500);
-		expect(response.body.success).toBe(false);
-		expect(response.body.message).toContain(
+		expectRedirectToResult(response);
+		expect(session.importResult.ok).toBe(false);
+		expect(session.importResult.message).toContain(
 			"Failed to validate permissions",
 		);
 	});
 
-	it("returns 500 when import flow fails", async () => {
+	it("saves a failure when the import flow throws", async () => {
 		getAccessTokenMock.mockResolvedValue("token");
 		initializeTodoistAPIMock.mockReturnValue({});
 		userReachedProjectLimitMock.mockResolvedValue(false);
 		getTeamDataMock.mockRejectedValue(new Error("bad team"));
 
-		const response = await request(createApp())
-			.post("/setup")
-			.send({ team: "BOS", project: "newProject" });
+		const response = await post(createApp(), {
+			team: "BOS",
+			project: "newProject",
+		});
 
-		expect(response.status).toBe(500);
-		expect(response.body.success).toBe(false);
-		expect(response.body.message).toContain(
+		expectRedirectToResult(response);
+		expect(session.importResult.ok).toBe(false);
+		expect(session.importResult.message).toContain(
 			"Error importing games: bad team",
 		);
 	});
 
-	describe("classified Todoist error responses", () => {
-		it("maps a rate-limited createDestination failure to 429 with error details", async () => {
+	describe("classified Todoist errors", () => {
+		it("saves a rate-limited createDestination failure with its classified message", async () => {
 			getAccessTokenMock.mockResolvedValue("token");
 			initializeTodoistAPIMock.mockReturnValue({});
 			userReachedProjectLimitMock.mockResolvedValue(false);
@@ -180,20 +207,22 @@ describe("POST /setup", () => {
 				}),
 			);
 
-			const response = await request(createApp())
-				.post("/setup")
-				.send({ team: "BOS", project: "inbox" });
+			const response = await post(createApp(), {
+				team: "BOS",
+				project: "inbox",
+			});
 
-			expect(response.status).toBe(429);
-			expect(response.body).toMatchObject({
-				success: false,
+			expectRedirectToResult(response);
+			expect(session.importResult).toEqual({
+				ok: false,
+				teamID: "BOS",
 				errorType: "RATE_LIMITED",
-				retryable: true,
-				retryAfterSeconds: 12,
+				message:
+					"Todoist is rate-limiting requests right now. Please wait about 12s and try again.",
 			});
 		});
 
-		it("maps an expired-auth failure from the project-limit check to 401", async () => {
+		it("saves an expired-auth failure from the project-limit check", async () => {
 			getAccessTokenMock.mockResolvedValue("token");
 			initializeTodoistAPIMock.mockReturnValue({});
 			userReachedProjectLimitMock.mockRejectedValue(
@@ -203,15 +232,16 @@ describe("POST /setup", () => {
 				}),
 			);
 
-			const response = await request(createApp())
-				.post("/setup")
-				.send({ team: "BOS", project: "newProject" });
+			const response = await post(createApp(), {
+				team: "BOS",
+				project: "newProject",
+			});
 
-			expect(response.status).toBe(401);
-			expect(response.body.errorType).toBe("AUTH_EXPIRED");
+			expectRedirectToResult(response);
+			expect(session.importResult.errorType).toBe("AUTH_EXPIRED");
 		});
 
-		it("maps an outage-shaped failure to 502 Bad Gateway", async () => {
+		it("saves an outage-shaped failure", async () => {
 			getAccessTokenMock.mockResolvedValue("token");
 			initializeTodoistAPIMock.mockReturnValue({});
 			userReachedProjectLimitMock.mockResolvedValue(false);
@@ -228,11 +258,13 @@ describe("POST /setup", () => {
 				}),
 			);
 
-			const response = await request(createApp())
-				.post("/setup")
-				.send({ team: "BOS", project: "inbox" });
+			const response = await post(createApp(), {
+				team: "BOS",
+				project: "inbox",
+			});
 
-			expect(response.status).toBe(502);
+			expectRedirectToResult(response);
+			expect(session.importResult.errorType).toBe("SERVER_ERROR");
 		});
 	});
 
@@ -249,17 +281,17 @@ describe("POST /setup", () => {
 			const { default: freshRoute } = await import(
 				"../../../app/routes/setup.js"
 			);
-			const app = express();
-			app.use(express.json());
-			app.use("/setup", freshRoute);
+			const app = createApp(freshRoute);
 
 			getAccessTokenMock.mockResolvedValue("token");
 			initializeTodoistAPIMock.mockReturnValue({});
 			userReachedProjectLimitMock.mockResolvedValue(false);
 
-			await request(app)
-				.post("/setup")
-				.send({ team: "BOS", project: "newProject", mockError: "500" });
+			await post(app, {
+				team: "BOS",
+				project: "newProject",
+				mockError: "500",
+			});
 
 			expect(userReachedProjectLimitMock).toHaveBeenCalledWith(
 				"token",
@@ -273,17 +305,17 @@ describe("POST /setup", () => {
 			const { default: freshRoute } = await import(
 				"../../../app/routes/setup.js"
 			);
-			const app = express();
-			app.use(express.json());
-			app.use("/setup", freshRoute);
+			const app = createApp(freshRoute);
 
 			getAccessTokenMock.mockResolvedValue("token");
 			initializeTodoistAPIMock.mockReturnValue({});
 			userReachedProjectLimitMock.mockResolvedValue(false);
 
-			await request(app)
-				.post("/setup")
-				.send({ team: "BOS", project: "newProject", mockError: "500" });
+			await post(app, {
+				team: "BOS",
+				project: "newProject",
+				mockError: "500",
+			});
 
 			expect(userReachedProjectLimitMock).toHaveBeenCalledWith(
 				"token",

@@ -5,8 +5,10 @@ async function makeSetupPageHTML(canCreateProjects, teams) {
 	const teamPickerHTML = makeTeamPickerHTML(teams);
 	const projectPickerHTML = makeProjectPickerHTML(canCreateProjects);
 
+	// A normal form post: POST /setup runs the import, then redirects to
+	// /result. events/submitForm.js only shows a loading screen meanwhile.
 	const form = `
-		<form>
+		<form method="post" action="/setup">
 			${teamPickerHTML}
 			${projectPickerHTML}
 			<button id="submitButton" class="button" type="submit" disabled>Import schedule</button>

@@ -7,6 +7,7 @@ import { fileURLToPath } from "url";
 // Routers: each handles the path it's mounted at in "Mount routes" below
 import indexRouter from "./app/routes/index.js";
 import setupRouter from "./app/routes/setup.js";
+import resultRouter from "./app/routes/result.js";
 import loginRouter from "./app/routes/auth/login.js";
 import callbackRouter from "./app/routes/auth/callback.js";
 // Views
@@ -58,9 +59,10 @@ app.use("/", indexRouter); // GET / (landing page)
 // Login (OAuth)
 app.use("/auth/login", loginRouter); // GET /auth/login
 app.use("/auth/callback", callbackRouter); // GET /auth/callback
-// GET /setup shows the team and project picker; the page's JavaScript
-// POSTs the choice back to /setup, which runs the import
+// GET /setup shows the team and project picker; its form POSTs back to
+// /setup, which runs the import and redirects to /result
 app.use("/setup", setupRouter); // GET + POST /setup
+app.use("/result", resultRouter); // GET /result
 
 // Anything no route above matched: a real 404, not the landing page
 app.use((req, res) => {

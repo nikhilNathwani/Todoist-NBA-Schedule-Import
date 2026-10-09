@@ -7,14 +7,14 @@
 -   **Key Data Flow:**
     1. NBA schedules are scraped (`scrape/main.py`) and saved as `data/nba_schedule.json`.
     2. `app/routes/auth/login.js` and `callback.js` run the Todoist OAuth flow and store the iron-encrypted access token in the `cookie-session` session.
-    3. `GET /setup` (`app/routes/setup.js`) renders the team/destination picker, team list included (`app/views/setup.js`); `public/scripts/main.js` adds the interactivity.
-    4. `POST /setup` (same file) creates the Todoist tasks via `app/utils/todoist.js`; failures are classified by `app/utils/todoistErrors.js`.
+    3. `GET /setup` (`app/routes/setup.js`) renders the team/destination picker, team list included (`app/views/setup.js`); `public/scripts/main.js` adds the interactivity and a loading screen.
+    4. The form posts to `POST /setup` (same file), which creates the Todoist tasks via `app/utils/todoist.js` (failures classified by `app/utils/todoistErrors.js`), saves the outcome in the session, and redirects to `GET /result` (`app/routes/result.js`, `app/views/result.js`).
 
 ## Major Components
 
 -   **`app.js`**: Builds and exports the Express app (middleware, routers, 404). `server.js` runs it locally; Vercel imports `app.js` directly (`vercel.json` declares `"framework": "express"`, required for that).
 -   **No `/api/...` URLs:** Vercel reserves that prefix for an `api/` folder, so routes live at `/auth/...` and `/setup`.
--   **`app/routes/`**: Page, API, and OAuth route handlers.
+-   **`app/routes/`**: Page and OAuth route handlers, one router per path.
 -   **`app/views/`**: Functions that return page HTML, one file per page; `app/views/shared/` holds the pieces they reuse (head/footer, `escapeHTML`).
 -   **`app/utils/`**: Todoist API calls, error classification, session/encryption helpers, schedule parsing.
 -   **`public/scripts/`**: Browser ES modules. Each file imports what it uses; no shared globals.

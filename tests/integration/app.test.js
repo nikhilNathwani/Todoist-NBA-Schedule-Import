@@ -75,12 +75,27 @@ describe("app", () => {
 		expect(login.status).toBe(302);
 		expect(login.headers.location).toMatch(/^https:\/\/todoist\.com\/oauth\/authorize\?/);
 
-		// No session, so the import route answers "session expired"
-		const importResponse = await request(app)
+		// No session, so the import fails with "session expired" and, like
+		// every outcome, redirects to /result, which shows it
+		const agent = request.agent(app);
+		const importResponse = await agent
 			.post("/setup")
+			.type("form")
 			.send({ team: "BOS", project: "inbox" });
-		expect(importResponse.status).toBe(401);
-		expect(importResponse.body.errorType).toBe("AUTH_EXPIRED");
+		expect(importResponse.status).toBe(303);
+		expect(importResponse.headers.location).toBe("/result");
+
+		const result = await agent.get("/result");
+		expect(result.status).toBe(200);
+		expect(result.text).toContain("Your session has expired");
+		expect(result.text).toContain('href="/setup"');
+	});
+
+	it("sends a visitor with no import yet from /result to /setup", async () => {
+		const response = await request(app).get("/result");
+
+		expect(response.status).toBe(302);
+		expect(response.headers.location).toBe("/setup");
 	});
 
 	it("responds 404 with a not-found page for unknown paths", async () => {

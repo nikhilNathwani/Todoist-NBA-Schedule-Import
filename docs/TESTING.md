@@ -65,12 +65,14 @@ Files:
 
 - `tests/integration/app.test.js`
 - `tests/integration/routes/authRoutes.test.js`
+- `tests/integration/routes/result.test.js`
 - `tests/integration/routes/setupGet.test.js`
 - `tests/integration/routes/setupPost.test.js`
 
 Examples in this repo:
 
-- API status codes and JSON response shapes
+- The import's outcomes: each one, success or failure, saved in the session with a `303` redirect to `/result`
+- The result page: success and failure content, escaping, the team logo only for a real team, and the redirect when nothing has been imported
 - OAuth state checks, using the real `cookie-session` middleware and a Supertest agent that keeps cookies between requests like a browser
 - The setup page: team options rendered in city order, "Create New Project" disabled at the plan limit, logged-out redirect, classified error pages
 - The session cookie's flags (`httpOnly`, `secure`, `sameSite=Lax`, 1 hour), checked on the real `app.js`; a forged session cookie leaves the visitor logged out
@@ -94,6 +96,7 @@ tests/
     app.test.js
     routes/
       authRoutes.test.js
+      result.test.js
       setupGet.test.js
       setupPost.test.js
 ```

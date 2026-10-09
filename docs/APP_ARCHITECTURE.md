@@ -4,7 +4,7 @@ How the NBA Todoist Schedule Importer works, from landing page to finished impor
 
 ## Overview
 
-An Express 5 app. The server renders each page's HTML (template-string functions in `app/views/`), and browser-side JavaScript (`public/scripts/`, loaded as ES modules) handles the setup page's interactivity. The browser talks to the server through one JSON endpoint, `POST /setup`. Users log in with Todoist OAuth before importing.
+An Express 5 app. The server renders each page's HTML (template-string functions in `app/views/`), and a little browser-side JavaScript (`public/scripts/`, loaded as ES modules) adds the setup page's interactivity. The import is a plain form post: `POST /setup` runs it and redirects to `GET /result`, which shows how it went. Users log in with Todoist OAuth before importing.
 
 `app.js` builds the app (session middleware, static files, body parsing, routers) and exports it. `server.js` runs it locally with `app.listen()`. On Vercel, the platform's built-in Express support imports `app.js` directly and runs it as a serverless function; `public/` files are served from Vercel's CDN. `vercel.json` has one setting, `"framework": "express"`, which turns that support on. Without it, Vercel treats the project as a static site and answers every app route with its own 404 (verified on a preview deployment).
 
@@ -71,15 +71,11 @@ An Express 5 app. The server renders each page's HTML (template-string functions
 
 | File | Role |
 |---|---|
-| `api/setup.js` | `importSchedule()`: `POST /setup` |
 | `ui/setup.js` | Updates the "new project" subtitle; enables the submit button |
-| `ui/header/importStatus.js` | Status enum (LOADING/SUCCESS/ERROR) and header text |
-| `ui/header/teamLogo.js` | Shows the selected team's logo |
-| `ui/nextSteps.js` | Builds the next-steps list shown after an import |
+| `ui/header/teamLogo.js` | Shows the selected team's logo; grows the logo banner |
 | `ui/demoBanner.js` | Banner shown when `?mockTodoistError=` is in the URL |
-| `utils/transitions.js` | Fade-out/fade-in sequence and 3-second minimum loading time |
 | `events/selectTeam.js` | Dropdown `change` listener |
-| `events/submitForm.js` | Form `submit` listener |
+| `events/submitForm.js` | Form `submit` listener: loading screen, double-submit guard |
 
 On load, `main.js` attaches the dropdown and form listeners. The team list is already in the HTML, so there's nothing to fetch.
 
@@ -91,38 +87,47 @@ Choosing a team shows its logo, names the new project ("Celtics schedule"), and 
 
 ### 6. Submitting the Form
 
+**Form:** `<form method="post" action="/setup">`, posting `team` and `project` URL-encoded
 **Script:** `public/scripts/events/submitForm.js`
 
-- Prevents the normal form post. Only the first submit counts, and the button is disabled, so a double-click can't start two imports.
-- `transitionToLoading()`: starts the loading timer, sets the header to LOADING, fades the form out and removes it once its `transitionend` fires.
-- Calls `importSchedule(team, project)`.
+- The browser posts the form normally; the script doesn't cancel it. The import takes a few seconds, and until the response arrives the browser keeps the page on screen, so the script swaps the form for a loading screen: spinner, "Importing schedule", "Please keep this window open".
+- Only the first submit counts (later ones are cancelled), so a double-click can't start two imports.
+- If Back from the result page restores this page from the browser's back-forward cache, still on the loading screen, it reloads for a fresh form.
+- The fields aren't disabled during the post: disabled fields are left out of a form submission.
 
 ---
 
-### 7. Import Schedule API
+### 7. The Import
 
 **Route:** `POST /setup`
 **Handler:** `app/routes/setup.js` (POST)
-**Body:** `{ team: "BOS", project: "newProject" | "inbox" }`
+**Body:** `team=BOS&project=newProject` (or `project=inbox`)
 
-1. Read the token from the session. Missing or expired: `401` with type `AUTH_EXPIRED` and "Your session has expired. Please log in again." The page's "Try again" link goes to `/setup`, which sends a logged-out visitor to the login page.
-2. If `newProject`, re-check the project limit (it may have changed since the page loaded). At the limit: `403`.
+1. Read the token from the session. Missing or expired: fails with type `AUTH_EXPIRED` and "Your session has expired. Please log in again." The result page's "Try again" link goes to `/setup`, which sends a logged-out visitor to the login page.
+2. If `newProject`, re-check the project limit (it may have changed since the page loaded). At the limit: fails with a message to use the Inbox.
 3. `getTeamData()` reads the team from the schedule JSON and keeps only games later than now.
 4. `createDestination()`: a new project named "<Team> schedule" in the team's color (checked against Todoist's color list), or a new section inside the Inbox.
 5. `importSchedule()` adds one task per game, all in parallel. Each task's `dueDatetime` is the game's UTC time. Failed games are retried once, together, after 10 seconds. If any still fail, the request fails with a message naming them; games that did import are kept.
 6. `addYearlyReminder()`: a recurring "every October 10th" task to re-import next season.
-7. Returns `{ deepLink }` to the new project or section.
+7. Builds a deep link to the new project or section.
+8. Saves the outcome in the session as `importResult` and redirects (`303`) to `/result`.
+
+Every failure ends the same way: the classified (or generic) message is saved and the browser is redirected to `/result`. The POST never renders a page itself, because a page that came straight from a POST re-sends it when refreshed, and that could re-run an import that had already created a project. The `303` makes the browser follow with a GET, so the result page is safe to refresh.
 
 ---
 
 ### 8. Result
 
-**Scripts:** `utils/transitions.js` → `ui/nextSteps.js`
+**Route:** `GET /result`
+**Handler:** `app/routes/result.js`
+**View:** `app/views/result.js`
 
-- `transitionToResult()` waits until at least 3 seconds have passed since loading began, updates the header, then pauses 1.2 seconds.
+- Reads `importResult` from the session. None yet (a direct visit): redirects to `/setup`. It stays in the session until the next import replaces it, so a refresh shows the same result.
+- The header shows the imported team's logo (only if the saved team ID is a real team, since it came from the form) and a check or warning icon.
 - Success: "Import complete!" and links to open Todoist, import another team, or contact me.
-- Error: "An error occurred", the server's message as the subtitle, and a "Send error report" email link that includes the message.
-- The list fades in through a CSS `@keyframes` animation that plays as soon as it's added.
+- Error: "An error occurred", the saved message as the subtitle, and a "Send error report" email link that includes the message.
+- The list fades in through a CSS `@keyframes` animation that plays on load.
+- The page always returns `200`; the failure's real status is in the server log.
 
 ---
 
@@ -151,8 +156,8 @@ Choosing a team shows its logo, names the new project ("Celtics schedule"), and 
 ### Error handling
 
 - `app/utils/todoistErrors.js` sorts each Todoist failure by status code into a type: `AUTH_EXPIRED` (401), `FORBIDDEN`, `NOT_FOUND`, `RATE_LIMITED` (429, with a suggested wait: Todoist's `retry_after` if the response body has one, otherwise 30 seconds), `SERVER_ERROR` (500), `SERVICE_UNAVAILABLE` (502/503/504), `NETWORK_ERROR`, and so on. Each type carries whether it's worth retrying and a user-facing message.
-- Pages respond with the matching HTTP status and an error page; the import API responds with the status plus `{ errorType, message, retryable, retryAfterSeconds }`.
-- Demo mode: with `ENABLE_ERROR_DEMO=true`, `?mockTodoistError=<code>` on `/setup` simulates that failure instead of calling Todoist.
+- A failure while loading the setup page responds with the matching HTTP status and an error page (`app/views/errorPage.js`). A failure during the import is saved with its message and shown on the result page.
+- Demo mode: with `ENABLE_ERROR_DEMO=true`, `?mockTodoistError=<code>` on `/setup` makes the page's tier check simulate that failure instead of calling Todoist, showing the error page. The POST also honors a `mockError` field, but the page never renders the form in that mode, so it's only reachable from tests or a hand-built request.
 - Unknown paths get a real `404` page.
 
 ### Data
@@ -169,7 +174,8 @@ server.js               # Local server (npm run dev / npm start); Vercel imports
 app/
   routes/
     index.js            # GET /  (+ debug routes outside production)
-    setup.js            # GET /setup (team picker) + POST /setup (runs the import, JSON)
+    setup.js            # GET /setup (team picker) + POST /setup (runs the import)
+    result.js           # GET /result (how the import went)
     auth/login.js       # GET /auth/login
     auth/callback.js    # GET /auth/callback
   utils/

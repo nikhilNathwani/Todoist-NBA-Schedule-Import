@@ -32,6 +32,7 @@ app/
     routes/
         index.js              # GET / (landing page)
         setup.js              # GET /setup (team picker) + POST /setup (runs the import)
+        result.js             # GET /result (how the import went)
         auth/                 # OAuth login/callback
     utils/
         todoist.js            # Todoist API operations
@@ -51,8 +52,8 @@ data/nba_schedule.json    # Canonical schedule data
 1. User visits landing page and starts Todoist OAuth.
 2. Callback verifies state, exchanges code for token, and stores encrypted token in session cookie.
 3. Setup page checks the user's plan and project count, then the user selects team and destination.
-4. API route reads team schedule from local JSON and creates Todoist tasks.
-5. Response returns a deep link to open imported tasks in Todoist.
+4. The form posts to `/setup`, which reads the team's schedule from local JSON and creates the Todoist tasks.
+5. It then redirects to `/result`, which shows success (with a link to open the tasks in Todoist) or the error.
 
 Full walkthrough: [docs/APP_ARCHITECTURE.md](docs/APP_ARCHITECTURE.md).
 

@@ -56,6 +56,8 @@ describe("GET /setup", () => {
 
 		expect(response.status).toBe(200);
 		expect(response.text).toContain("Select your NBA team");
+		// A plain form post back to this path runs the import
+		expect(response.text).toContain('<form method="post" action="/setup">');
 	});
 
 	it("renders the team options into the page, sorted by city", async () => {

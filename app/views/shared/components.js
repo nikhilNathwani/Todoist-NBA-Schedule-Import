@@ -1,3 +1,5 @@
+import { escapeHTML } from "./escapeHTML.js";
+
 function makeHead(title = "NBA -> Todoist Schedule Import") {
 	return `
 		<head>
@@ -55,15 +57,20 @@ function makeFooter() {
 		</footer>`;
 }
 
-function makeLogoBanner(isLarge = false) {
+// teamID swaps the NBA logo for that team's, and arrowIcon replaces the
+// arrow between the logos (the result page uses both)
+function makeLogoBanner(isLarge = false, { teamID, arrowIcon } = {}) {
 	const sizeClass = isLarge ? "logo-banner-large" : "";
+	const leftLogo = teamID
+		? `<img src="/images/team-logos/${escapeHTML(teamID)}.svg" alt="${escapeHTML(teamID)} Logo" />`
+		: `<img src="/images/nba-logo.png" alt="NBA Logo" />`;
 	return `
 		<div class="logo-banner ${sizeClass}">
 			<div class="logo-container" id="nbaLogoContainer">
-				<img src="/images/nba-logo.png" alt="NBA Logo" />
+				${leftLogo}
 			</div>
 			<div id="arrow">
-				<i class="fa-solid fa-arrow-right"></i>
+				${arrowIcon || '<i class="fa-solid fa-arrow-right"></i>'}
 			</div>
 			<div class="logo-container">
 				<img

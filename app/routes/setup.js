@@ -17,8 +17,9 @@ import { makeSetupPageHTML } from "../views/setup.js";
 import { makeErrorPageHTML } from "../views/errorPage.js";
 
 // The setup page and its form submission share this path:
-// GET shows the team and project picker (HTML), and the page's JavaScript
-// POSTs the user's choice back here to run the import (JSON)
+// GET shows the team and project picker, and the form POSTs the user's
+// choice back here. The POST runs the import, saves the outcome in the
+// session and redirects to /result (routes/result.js), success or failure.
 const router = express.Router();
 
 // Gate: a mock error code (?mockTodoistError on the page, mockError in the
@@ -85,6 +86,12 @@ router.get("/", async (req, res) => {
  * 5. Import all upcoming games as tasks into the destination
  * 6. Add a yearly reminder task to re-import next season
  * 7. Generate a deep link to the destination for the "Open Todoist" button
+ * 8. Redirect to the result page
+ *
+ * Failures redirect to the result page too, rather than rendering an error
+ * here: a page that came straight from a POST re-sends that POST when
+ * refreshed, which could re-run an import that had already created a
+ * project.
  */
 router.post("/", async (req, res) => {
 	// Step 1: Extract user selections from request
@@ -98,11 +105,12 @@ router.post("/", async (req, res) => {
 		todoistApi = initializeTodoistAPI(accessToken);
 	} catch (error) {
 		// No valid session: usually the 1-hour cookie expired while the
-		// setup page sat open. The page's "Try again" link then lands on
-		// the login page (see the GET handler above).
+		// setup page sat open. The result page's "Try again" link then lands
+		// on the login page (see the GET handler above).
 		console.error("No valid session for import:", error.message);
-		return res.status(401).json({
-			success: false,
+		return showResult(req, res, {
+			ok: false,
+			teamID,
 			errorType: TODOIST_ERROR_TYPES.AUTH_EXPIRED,
 			message: "Your session has expired. Please log in again.",
 		});
@@ -116,18 +124,15 @@ router.post("/", async (req, res) => {
 				mockErrorCode,
 			);
 			if (reachedLimit) {
-				return res.status(403).json({
-					success: false,
+				return showResult(req, res, {
+					ok: false,
+					teamID,
 					message:
 						"Cannot create new project: you've reached your project limit. Please use your Inbox instead.",
 				});
 			}
 		} catch (error) {
-			return respondWithClassifiedError(
-				res,
-				error,
-				"Failed to validate permissions",
-			);
+			return showFailure(req, res, teamID, error, "Failed to validate permissions");
 		}
 	}
 
@@ -163,9 +168,10 @@ router.post("/", async (req, res) => {
 		const todoistDeepLink = createDeepLink(destinationIds);
 		console.log("Link to imported schedule:", todoistDeepLink);
 
-		res.status(200).json({ deepLink: todoistDeepLink });
+		// Step 8: Show the result page
+		showResult(req, res, { ok: true, teamID, deepLink: todoistDeepLink });
 	} catch (error) {
-		respondWithClassifiedError(res, error, "Error importing games");
+		showFailure(req, res, teamID, error, "Error importing games");
 	}
 });
 
@@ -173,29 +179,36 @@ export default router;
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 //                                           //
-//       ERROR RESPONSE MAPPING              //
+//       RESULT HANDOFF                      //
 //                                           //
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
+// Save the outcome for GET /result and send the browser there. 303 makes the
+// browser follow with a GET, so the result page is safe to refresh.
+function showResult(req, res, result) {
+	req.session.importResult = result;
+	res.redirect(303, "/result");
+}
+
 // Errors thrown by app/utils/todoist.js are classified (see todoistErrors.js)
-// and carry `.todoistErrorType`. Anything without that tag is an
-// unclassified local error (a real bug, not a Todoist API response) and
-// keeps the original generic 500 behavior.
-function respondWithClassifiedError(res, error, fallbackPrefix) {
+// and carry `.todoistErrorType` and a user-facing message. Anything without
+// that tag is an unclassified local error (a real bug, not a Todoist API
+// response).
+function showFailure(req, res, teamID, error, fallbackPrefix) {
 	if (!error.todoistErrorType) {
 		console.error(`${fallbackPrefix}:`, error.message);
-		return res.status(500).json({
-			success: false,
+		return showResult(req, res, {
+			ok: false,
+			teamID,
 			message: `${fallbackPrefix}: ${error.message}`,
 		});
 	}
 
 	console.error(`${fallbackPrefix} [${error.todoistErrorType}]:`, error.message);
-	return res.status(mapTodoistErrorTypeToHttpStatus(error.todoistErrorType)).json({
-		success: false,
+	return showResult(req, res, {
+		ok: false,
+		teamID,
 		errorType: error.todoistErrorType,
 		message: error.message,
-		retryable: error.retryable,
-		retryAfterSeconds: error.retryAfterSeconds,
 	});
 }
