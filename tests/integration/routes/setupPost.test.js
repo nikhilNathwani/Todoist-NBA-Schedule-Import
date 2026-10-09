@@ -22,7 +22,9 @@ const {
 	userReachedProjectLimitMock: vi.fn(),
 }));
 
-vi.mock("../../../app/utils/cookieSession.js", () => ({
+// Only the token read is faked; the import-result helpers run for real
+vi.mock("../../../app/utils/cookieSession.js", async (importOriginal) => ({
+	...(await importOriginal()),
 	getAccessToken: getAccessTokenMock,
 }));
 

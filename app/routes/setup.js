@@ -1,5 +1,5 @@
 import express from "express";
-import { getAccessToken } from "../utils/cookieSession.js";
+import { getAccessToken, saveImportResult } from "../utils/cookieSession.js";
 import { getTeams, getTeamData } from "../utils/parseSchedule.js";
 import {
 	initializeTodoistAPI,
@@ -204,7 +204,7 @@ export default router;
 // Save the outcome for GET /result and send the browser there. 303 makes the
 // browser follow with a GET, so the result page is safe to refresh.
 function showResult(req, res, result) {
-	req.session.importResult = result;
+	saveImportResult(req, result);
 	res.redirect(303, "/result");
 }
 

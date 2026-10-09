@@ -21,6 +21,19 @@ async function getAccessToken(req) {
 	return await decrypt(encryptedToken);
 }
 
+// The outcome of the last import, saved by POST /setup for GET /result
+// (routes/setup.js, routes/result.js): { ok, teamID, deepLink } on success,
+// { ok: false, teamID, errorType?, message } on failure. Kept until the next
+// import replaces it, so the result page can be refreshed.
+function saveImportResult(req, result) {
+	req.session.importResult = result;
+}
+
+// undefined if nothing has been imported in this session
+function getImportResult(req) {
+	return req.session.importResult;
+}
+
 // NOTE: If you uncomment printReqSession below, add it back to the export statement
 // function printReqSession(req) {
 // 	console.log(
@@ -31,4 +44,4 @@ async function getAccessToken(req) {
 // 	);
 // }
 
-export { saveAccessToken, getAccessToken };
+export { saveAccessToken, getAccessToken, saveImportResult, getImportResult };

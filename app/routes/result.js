@@ -1,15 +1,15 @@
 import express from "express";
+import { getImportResult } from "../utils/cookieSession.js";
 import { getTeams } from "../utils/parseSchedule.js";
 import { makeResultPageHTML } from "../views/result.js";
 
 const router = express.Router();
 
 // Show how the last import went. POST /setup saves the outcome in the
-// session and redirects here, so refreshing this page re-reads the outcome
-// instead of re-running the import. It stays in the session until the next
-// import replaces it.
+// session (saveImportResult) and redirects here, so refreshing this page
+// re-reads the outcome instead of re-running the import.
 router.get("/", async (req, res) => {
-	const result = req.session.importResult;
+	const result = getImportResult(req);
 	if (!result) {
 		// Nothing imported yet in this session
 		return res.redirect("/setup");
