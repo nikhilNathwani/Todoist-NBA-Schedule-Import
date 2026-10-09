@@ -73,7 +73,7 @@ An Express 5 app. The server renders each page's HTML (template-string functions
 |---|---|
 | `ui/setup.js` | Updates the "new project" subtitle; enables the submit button |
 | `ui/header/teamLogo.js` | Shows the selected team's logo; grows the logo banner |
-| `ui/demoBanner.js` | Banner shown when `?mockTodoistError=` is in the URL |
+| `ui/demoBanner.js` | Banner shown when a demo parameter (`?mockTierCheck=`, `?mockTodoistError=`) is in the URL |
 | `events/selectTeam.js` | Dropdown `change` listener |
 | `events/submitForm.js` | Form `submit` listener: loading screen, double-submit guard |
 
@@ -157,7 +157,7 @@ Every failure ends the same way: the classified (or generic) message is saved an
 
 - `app/utils/todoistErrors.js` sorts each Todoist failure by status code into a type: `AUTH_EXPIRED` (401), `FORBIDDEN`, `NOT_FOUND`, `RATE_LIMITED` (429, with a suggested wait: Todoist's `retry_after` if the response body has one, otherwise 30 seconds), `SERVER_ERROR` (500), `SERVICE_UNAVAILABLE` (502/503/504), `NETWORK_ERROR`, and so on. Each type carries whether it's worth retrying and a user-facing message.
 - A failure while loading the setup page responds with the matching HTTP status and an error page (`app/views/errorPage.js`). A failure during the import is saved with its message and shown on the result page.
-- Demo mode: with `ENABLE_ERROR_DEMO=true`, `?mockTodoistError=<code>` on `/setup` makes the page's tier check simulate that failure instead of calling Todoist, showing the error page. The POST also honors a `mockError` field, but the page never renders the form in that mode, so it's only reachable from tests or a hand-built request.
+- Demo mode: with `ENABLE_ERROR_DEMO=true`, parameters on `/setup` stand in for Todoist. `?mockTierCheck=reached` or `available` shows either state of the project picker; `?mockTierCheck=<code>` makes the page's tier check fail (the error page); `?mockTodoistError=<code>` makes the import fail (the result page), carried into the POST as a hidden `mockError` field. They combine, e.g. `?mockTierCheck=reached&mockTodoistError=429`.
 - Unknown paths get a real `404` page.
 
 ### Data

@@ -22,10 +22,12 @@ import { makeErrorPageHTML } from "../views/errorPage.js";
 // session and redirects to /result (routes/result.js), success or failure.
 const router = express.Router();
 
-// Gate: a mock error code (?mockTodoistError on the page, mockError in the
-// POST body) is only honored when this is explicitly enabled (see
-// .env.example) -- disabled by default so it can't be triggered on a real
-// deployment unless deliberately turned on for a demo.
+// Gate: the demo parameters below are only honored when this is explicitly
+// enabled (see .env.example) -- disabled by default so they can't be
+// triggered on a real deployment unless deliberately turned on for a demo.
+//   ?mockTierCheck=reached|available|<error code>  the page's tier check
+//   ?mockTodoistError=<error code>                 the import (the page
+//     passes it to the POST as the mockError form field)
 const ERROR_DEMO_ENABLED = process.env.ENABLE_ERROR_DEMO === "true";
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
@@ -35,9 +37,12 @@ const ERROR_DEMO_ENABLED = process.env.ENABLE_ERROR_DEMO === "true";
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
 router.get("/", async (req, res) => {
-	const mockErrorCode = ERROR_DEMO_ENABLED
-		? req.query.mockTodoistError
-		: undefined;
+	const demo = ERROR_DEMO_ENABLED
+		? {
+				tierCheck: req.query.mockTierCheck,
+				importError: req.query.mockTodoistError,
+			}
+		: {};
 
 	// No valid session (never logged in, or the 1-hour cookie expired):
 	// send them to the start page to log in, rather than an error page
@@ -52,10 +57,14 @@ router.get("/", async (req, res) => {
 		// The tier check (a Todoist API call) and the team list (a local
 		// file read) don't depend on each other, so run them in parallel
 		const [reachedLimit, teams] = await Promise.all([
-			userReachedProjectLimit(accessToken, mockErrorCode),
+			checkProjectLimit(accessToken, demo.tierCheck),
 			getTeams(),
 		]);
-		const html = await makeSetupPageHTML(!reachedLimit, teams);
+		const html = await makeSetupPageHTML(
+			!reachedLimit,
+			teams,
+			demo.importError,
+		);
 		res.send(html);
 	} catch (error) {
 		console.error("Error rendering setup page:", error);
@@ -66,6 +75,15 @@ router.get("/", async (req, res) => {
 		res.status(500).send("An error occurred");
 	}
 });
+
+// The page's tier check. In demo mode, "reached" or "available" stands in
+// for Todoist's answer so both states of the project picker can be shown,
+// and an error code simulates that failure (the error page).
+function checkProjectLimit(accessToken, mockTierCheck) {
+	if (mockTierCheck === "reached") return true;
+	if (mockTierCheck === "available") return false;
+	return userReachedProjectLimit(accessToken, mockTierCheck);
+}
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 //                                           //

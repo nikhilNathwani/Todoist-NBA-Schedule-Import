@@ -71,7 +71,7 @@ function initializeTodoistAPI(accessToken) {
 // mockErrorCode (optional): one of MOCKABLE_ERROR_CODES in todoistErrors.js.
 // When set, simulates that Todoist API failure instead of making a real
 // call, so the classification/handling below can be demoed on demand --
-// see ?mockTodoistError= on /setup.
+// see the demo parameters in routes/setup.js.
 async function userReachedProjectLimit(accessToken, mockErrorCode) {
 	try {
 		if (mockErrorCode) {

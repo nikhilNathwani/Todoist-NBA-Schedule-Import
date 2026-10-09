@@ -158,43 +158,79 @@ describe("GET /setup", () => {
 			process.env.ENABLE_ERROR_DEMO = originalEnv;
 		});
 
-		it("ignores ?mockTodoistError when demo mode is disabled", async () => {
-			delete process.env.ENABLE_ERROR_DEMO;
+		// The route reads ENABLE_ERROR_DEMO when it loads, so load a fresh copy
+		async function appWithDemo(enabled) {
+			if (enabled) process.env.ENABLE_ERROR_DEMO = "true";
+			else delete process.env.ENABLE_ERROR_DEMO;
 			vi.resetModules();
 			const { default: freshRoute } = await import(
 				"../../../app/routes/setup.js"
 			);
 			const app = express();
 			app.use("/setup", freshRoute);
-
 			getAccessTokenMock.mockResolvedValue("token");
 			userReachedProjectLimitMock.mockResolvedValue(false);
+			return app;
+		}
 
-			await request(app).get("/setup?mockTodoistError=500");
+		it("ignores the demo parameters when demo mode is disabled", async () => {
+			const app = await appWithDemo(false);
+
+			const response = await request(app).get(
+				"/setup?mockTierCheck=500&mockTodoistError=500",
+			);
 
 			expect(userReachedProjectLimitMock).toHaveBeenCalledWith(
 				"token",
 				undefined,
 			);
+			expect(response.text).not.toContain('name="mockError"');
 		});
 
-		it("forwards ?mockTodoistError when demo mode is enabled", async () => {
-			process.env.ENABLE_ERROR_DEMO = "true";
-			vi.resetModules();
-			const { default: freshRoute } = await import(
-				"../../../app/routes/setup.js"
-			);
-			const app = express();
-			app.use("/setup", freshRoute);
+		it("simulates a tier-check failure for ?mockTierCheck=<error code>", async () => {
+			const app = await appWithDemo(true);
 
-			getAccessTokenMock.mockResolvedValue("token");
-			userReachedProjectLimitMock.mockResolvedValue(false);
-
-			await request(app).get("/setup?mockTodoistError=500");
+			await request(app).get("/setup?mockTierCheck=500");
 
 			expect(userReachedProjectLimitMock).toHaveBeenCalledWith(
 				"token",
 				"500",
+			);
+		});
+
+		it("shows the at-the-limit picker for ?mockTierCheck=reached, without calling Todoist", async () => {
+			const app = await appWithDemo(true);
+
+			const response = await request(app).get("/setup?mockTierCheck=reached");
+
+			expect(userReachedProjectLimitMock).not.toHaveBeenCalled();
+			expect(response.text).toContain("Project limit reached");
+			expect(response.text).toMatch(/value="newProject"\s+disabled/);
+		});
+
+		it("shows the open picker for ?mockTierCheck=available, without calling Todoist", async () => {
+			const app = await appWithDemo(true);
+
+			const response = await request(app).get(
+				"/setup?mockTierCheck=available",
+			);
+
+			expect(userReachedProjectLimitMock).not.toHaveBeenCalled();
+			expect(response.text).toMatch(/value="newProject"\s+checked/);
+		});
+
+		it("passes ?mockTodoistError to the import through a hidden form field", async () => {
+			const app = await appWithDemo(true);
+
+			const response = await request(app).get("/setup?mockTodoistError=429");
+
+			// The page itself does a real tier check and renders the form
+			expect(userReachedProjectLimitMock).toHaveBeenCalledWith(
+				"token",
+				undefined,
+			);
+			expect(response.text).toContain(
+				'<input type="hidden" name="mockError" value="429">',
 			);
 		});
 	});

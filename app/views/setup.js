@@ -1,9 +1,15 @@
 import { makeHead, makeFooter, makeLogoBanner } from "./shared/components.js";
 import { escapeHTML } from "./shared/escapeHTML.js";
 
-async function makeSetupPageHTML(canCreateProjects, teams) {
+// mockImportError: set only in error-demo mode (?mockTodoistError, see
+// routes/setup.js)
+async function makeSetupPageHTML(canCreateProjects, teams, mockImportError) {
 	const teamPickerHTML = makeTeamPickerHTML(teams);
 	const projectPickerHTML = makeProjectPickerHTML(canCreateProjects);
+	// Carries the demo's import failure into the POST
+	const mockErrorInput = mockImportError
+		? `<input type="hidden" name="mockError" value="${escapeHTML(mockImportError)}">`
+		: "";
 
 	// A normal form post: POST /setup runs the import, then redirects to
 	// /result. events/submitForm.js only shows a loading screen meanwhile.
@@ -11,6 +17,7 @@ async function makeSetupPageHTML(canCreateProjects, teams) {
 		<form method="post" action="/setup">
 			${teamPickerHTML}
 			${projectPickerHTML}
+			${mockErrorInput}
 			<button id="submitButton" class="button" type="submit" disabled>Import schedule</button>
 		</form>
 	`;

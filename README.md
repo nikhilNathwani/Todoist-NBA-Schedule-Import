@@ -66,7 +66,7 @@ Use `.env.local` (see `.env.example`):
 - `ENCRYPTION_KEY`
 - `COOKIE_SECRET`
 - `REDIRECT_URI`
-- `ENABLE_ERROR_DEMO` (optional; `true` enables `?mockTodoistError=` demos)
+- `ENABLE_ERROR_DEMO` (optional; `true` enables the `?mockTierCheck=` and `?mockTodoistError=` demos on `/setup`)
 
 ## Getting Started
 
