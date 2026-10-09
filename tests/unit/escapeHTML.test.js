@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { escapeHTML } from "../../app/views/escapeHTML.js";
+import { escapeHTML } from "../../app/views/shared/escapeHTML.js";
 import { makeErrorPageHTML } from "../../app/views/errorPage.js";
 import { makeSetupPageHTML } from "../../app/views/setup.js";
 

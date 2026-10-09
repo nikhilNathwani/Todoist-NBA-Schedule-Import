@@ -146,7 +146,7 @@ Choosing a team shows its logo, names the new project ("Celtics schedule"), and 
 - `cookie-session` stores the session in a cookie signed with `COOKIE_SECRET`: `httpOnly`, `secure` on HTTPS (every request on Vercel; not on plain `http://localhost`, where a secure cookie wouldn't be set at all), `sameSite: "Lax"` (`Strict` would drop the cookie on the redirect back from Todoist), 1-hour lifetime.
 - Inside it, the access token is sealed with `@hapi/iron` (`app/utils/encryption.js`, key `ENCRYPTION_KEY`): AES-256-CBC encryption plus an HMAC-SHA256 integrity check, so it can't be read or altered.
 - The OAuth `state` is random per login, tied to the browser's session, and single-use.
-- Values inserted into page HTML that don't come from the view file itself (team data, error messages that can include Todoist's text) go through `escapeHTML()` (`app/views/escapeHTML.js`), which turns `& < > " '` into entity codes. Template strings don't escape automatically the way Flask's Jinja does.
+- Values inserted into page HTML that don't come from the view file itself (team data, error messages that can include Todoist's text) go through `escapeHTML()` (`app/views/shared/escapeHTML.js`), which turns `& < > " '` into entity codes. Template strings don't escape automatically the way Flask's Jinja does.
 
 ### Error handling
 
@@ -178,7 +178,8 @@ app/
     parseSchedule.js    # Schedule JSON reads, upcoming games, season over
     cookieSession.js    # Save/read the encrypted token in the session
     encryption.js       # @hapi/iron seal/unseal
-  views/                # HTML template functions (pages, error page, shared head/footer)
+  views/                # One HTML template function file per page
+    shared/             # Pieces pages reuse: head/footer/logo, escapeHTML
 public/
   scripts/              # Browser ES modules (entry: main.js)
   style.css, images/

@@ -1,4 +1,4 @@
-import { makeHead, makeFooter, makeLogoBanner } from "./components.js";
+import { makeHead, makeFooter, makeLogoBanner } from "./shared/components.js";
 
 function makeSeasonOverHTML(seasonEndYear) {
 	return `

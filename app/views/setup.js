@@ -1,5 +1,5 @@
-import { makeHead, makeFooter, makeLogoBanner } from "./components.js";
-import { escapeHTML } from "./escapeHTML.js";
+import { makeHead, makeFooter, makeLogoBanner } from "./shared/components.js";
+import { escapeHTML } from "./shared/escapeHTML.js";
 
 async function makeSetupPageHTML(canCreateProjects, teams) {
 	const teamPickerHTML = makeTeamPickerHTML(teams);

@@ -1,5 +1,5 @@
-import { makeHead, makeFooter, makeLogoBanner } from "./components.js";
-import { escapeHTML } from "./escapeHTML.js";
+import { makeHead, makeFooter, makeLogoBanner } from "./shared/components.js";
+import { escapeHTML } from "./shared/escapeHTML.js";
 
 // Renders a styled error page for failures that happen before the setup
 // page's form can even be shown (e.g. the project-limit check right after

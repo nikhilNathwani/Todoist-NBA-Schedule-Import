@@ -15,7 +15,7 @@
 -   **`app.js`**: Builds and exports the Express app (middleware, routers, 404). `server.js` runs it locally; Vercel imports `app.js` directly (`vercel.json` declares `"framework": "express"`, required for that).
 -   **No `/api/...` URLs:** Vercel reserves that prefix for an `api/` folder, so routes live at `/auth/...` and `/setup`.
 -   **`app/routes/`**: Page, API, and OAuth route handlers.
--   **`app/views/`**: Functions that return page HTML.
+-   **`app/views/`**: Functions that return page HTML, one file per page; `app/views/shared/` holds the pieces they reuse (head/footer, `escapeHTML`).
 -   **`app/utils/`**: Todoist API calls, error classification, session/encryption helpers, schedule parsing.
 -   **`public/scripts/`**: Browser ES modules. Each file imports what it uses; no shared globals.
 -   **`scrape/`**: Python scraper for CBS Sports schedules (run once a year).

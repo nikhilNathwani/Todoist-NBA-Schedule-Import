@@ -56,7 +56,7 @@ Findings from audits of this app, kept so they don't get lost. Several were firs
 
 **Was:** template strings inserted team data and error text as-is. Nothing a visitor types reached the HTML, but error text from Todoist could.
 
-**Fix:** `escapeHTML()` (`app/views/escapeHTML.js`) on every inserted value that doesn't come from the view file itself. The "Open Todoist" link in the browser is set with the `href` property instead of pasted into HTML.
+**Fix:** `escapeHTML()` (`app/views/shared/escapeHTML.js`) on every inserted value that doesn't come from the view file itself. The "Open Todoist" link in the browser is set with the `href` property instead of pasted into HTML.
 
 ---
 
