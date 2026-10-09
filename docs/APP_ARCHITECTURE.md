@@ -71,7 +71,7 @@ An Express 5 app. The server renders each page's HTML (template-string functions
 
 | File | Role |
 |---|---|
-| `ui/setup.js` | Updates the "new project" subtitle; enables the submit button |
+| `ui/setup.js` | Updates the "new project" subtitle |
 | `ui/header/teamLogo.js` | Shows the selected team's logo; grows the logo banner |
 | `ui/demoBanner.js` | Banner shown when a demo parameter (`?mockTierCheck=`, `?mockTodoistError=`) is in the URL |
 | `events/selectTeam.js` | Dropdown `change` listener |
@@ -81,7 +81,7 @@ On load, `main.js` attaches the dropdown and form listeners. The team list is al
 
 **Why the team list is rendered on the server:** it's static data the page needs on first load, and the route already runs on the server for the tier check. Rendering it there means one request instead of two, no moment with an empty dropdown, and no separate failure case for "teams didn't load." An earlier version fetched it from a `GET /api/get-teams` endpoint after the page loaded.
 
-Choosing a team shows its logo, names the new project ("Celtics schedule"), and enables "Import schedule".
+Choosing a team shows its logo and names the new project ("Celtics schedule"). The team dropdown is `required`, so no script gates the button: until a team is picked, CSS (`form:invalid`) grays "Import schedule" out, and clicking it anyway makes the browser block the submit and show its own "Please select an item in the list" message.
 
 ---
 
@@ -110,7 +110,7 @@ Choosing a team shows its logo, names the new project ("Celtics schedule"), and 
 5. `importSchedule()` adds one task per game, all in parallel. Each task's `dueDatetime` is the game's UTC time. Failed games are retried once, together, after 10 seconds. If any still fail, the request fails with a message naming them; games that did import are kept.
 6. `addYearlyReminder()`: a recurring "every October 10th" task to re-import next season.
 7. Builds a deep link to the new project or section.
-8. Saves the outcome in the session as `importResult` and redirects (`303`) to `/result`.
+8. Saves the outcome in the session (`saveImportResult()` in `app/utils/cookieSession.js`) and redirects (`303`) to `/result`.
 
 Every failure ends the same way: the classified (or generic) message is saved and the browser is redirected to `/result`. The POST never renders a page itself, because a page that came straight from a POST re-sends it when refreshed, and that could re-run an import that had already created a project. The `303` makes the browser follow with a GET, so the result page is safe to refresh.
 
@@ -120,9 +120,9 @@ Every failure ends the same way: the classified (or generic) message is saved an
 
 **Route:** `GET /result`
 **Handler:** `app/routes/result.js`
-**View:** `app/views/result.js`
+**View:** `app/views/result.js`, built on the shared status-page layout (`app/views/shared/statusPage.js`) that the error and 404 pages also use
 
-- Reads `importResult` from the session. None yet (a direct visit): redirects to `/setup`. It stays in the session until the next import replaces it, so a refresh shows the same result.
+- Reads the outcome with `getImportResult()`. None yet (a direct visit): redirects to `/setup`. It stays in the session until the next import replaces it, so a refresh shows the same result.
 - The header shows the imported team's logo (only if the saved team ID is a real team, since it came from the form) and a check or warning icon.
 - Success: "Import complete!" and links to open Todoist, import another team, or contact me.
 - Error: "An error occurred", the saved message as the subtitle, and a "Send error report" email link that includes the message.
@@ -185,7 +185,7 @@ app/
     cookieSession.js    # Save/read the encrypted token in the session
     encryption.js       # @hapi/iron seal/unseal
   views/                # One HTML template function file per page
-    shared/             # Pieces pages reuse: head/footer/logo, escapeHTML
+    shared/             # Pieces pages reuse: head/footer/logo, the status-page layout, escapeHTML
 public/
   scripts/              # Browser ES modules (entry: main.js)
   style.css, images/

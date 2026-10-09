@@ -4,7 +4,7 @@
  */
 
 import { updateTeamLogo } from "../ui/header/teamLogo.js";
-import { updateNewProjectSubtitle, enableSubmitButton } from "../ui/setup.js";
+import { updateNewProjectSubtitle } from "../ui/setup.js";
 
 // Set up event listener for team selection
 export function listenForTeamSelection(teamSelect) {
@@ -20,5 +20,4 @@ export function listenForTeamSelection(teamSelect) {
 function handleTeamSelection(teamID, teamName) {
 	updateTeamLogo(teamID);
 	updateNewProjectSubtitle(teamName);
-	enableSubmitButton();
 }

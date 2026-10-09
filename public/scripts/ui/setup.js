@@ -1,6 +1,6 @@
 /**
  * Setup page view updates
- * "New project" subtitle and submit button
+ * "New project" subtitle
  */
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
@@ -18,9 +18,4 @@ export function updateNewProjectSubtitle(teamName) {
 	if (!newProjectInput.disabled && teamName) {
 		newProjectSubtitle.textContent = `Import games into a new Todoist project called "${teamName} schedule"`;
 	}
-}
-
-export function enableSubmitButton() {
-	const submitButton = document.getElementById("submitButton");
-	submitButton.disabled = false;
 }

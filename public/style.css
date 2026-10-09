@@ -264,6 +264,18 @@ h3 {
 	transform: none;
 }
 
+/* The setup form's team dropdown is `required`, so until a team is picked
+   the form is :invalid and its button looks inactive. Unlike a disabled
+   button it still takes the click, and the browser then says what's
+   missing ("Please select an item in the list"). */
+form:invalid .button,
+form:invalid .button:hover,
+form:invalid .button:active {
+	font-weight: normal;
+	background-color: var(--clr-disabled);
+	transform: none;
+}
+
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 /*                                         */
 /*      LANDING PAGE                       */

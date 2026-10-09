@@ -60,6 +60,8 @@ describe("GET /setup", () => {
 		expect(response.text).toContain("Select your NBA team");
 		// A plain form post back to this path runs the import
 		expect(response.text).toContain('<form method="post" action="/setup">');
+		// The browser itself blocks submitting without a team
+		expect(response.text).toMatch(/<select[^>]*name="team"[^>]*required/);
 	});
 
 	it("renders the team options into the page, sorted by city", async () => {

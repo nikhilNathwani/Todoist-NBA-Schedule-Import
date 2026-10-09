@@ -18,7 +18,7 @@ async function makeSetupPageHTML(canCreateProjects, teams, mockImportError) {
 			${teamPickerHTML}
 			${projectPickerHTML}
 			${mockErrorInput}
-			<button id="submitButton" class="button" type="submit" disabled>Import schedule</button>
+			<button id="submitButton" class="button" type="submit">Import schedule</button>
 		</form>
 	`;
 
@@ -64,7 +64,7 @@ function makeTeamPickerHTML(teams) {
 			<legend>
 				1. Select your NBA team
 			</legend>
-			<select id="team-selector" name="team" aria-label="NBA Team">
+			<select id="team-selector" name="team" aria-label="NBA Team" required>
 				<option value="" disabled selected>Choose a team</option>
 				${teamOptions}
 			</select>

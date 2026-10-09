@@ -1,10 +1,10 @@
-import { makeHead, makeFooter, makeLogoBanner } from "./shared/components.js";
-import { escapeHTML } from "./shared/escapeHTML.js";
+import { makeStatusPageHTML } from "./shared/statusPage.js";
 
-// Renders a styled error page for failures that happen before the setup
-// page's form can even be shown (e.g. the project-limit check right after
-// OAuth failing). Mirrors seasonOver.js's structure so a real Todoist outage
-// looks like an intentional part of the app, not a broken page.
+// Renders an error page for failures that happen before the setup page's
+// form can even be shown (e.g. the project-limit check right after OAuth
+// failing), in the same status-page layout as the import result, so a real
+// Todoist outage looks like an intentional part of the app, not a broken
+// page.
 function makeErrorPageHTML(classifiedError) {
 	const title = ERROR_TITLES[classifiedError.todoistErrorType] || "Something went wrong";
 	const message =
@@ -24,30 +24,15 @@ function makeNotFoundPageHTML() {
 }
 
 function renderErrorPage(title, message, action) {
-	return `
-	<!DOCTYPE html>
-	<html lang="en">
-		${makeHead("NBA Schedule Import — Error")}
-		<body>
-			<main>
-				<div class="app-frame season-over" id="appFrameLanding">
-					<div class="app-header">
-						${makeLogoBanner(true)}
-						<h1>${escapeHTML(title)}</h1>
-						<h3>
-							${escapeHTML(message)}
-							<br />
-							<br />
-							<a href="${escapeHTML(action.href)}">${escapeHTML(action.label)}</a>
-						</h3>
-					</div>
-				</div>
-			</main>
-			${makeFooter()}
-			<script type="module" src="/scripts/ui/demoBanner.js"></script>
-		</body>
-	</html>
-`;
+	return makeStatusPageHTML({
+		pageTitle: "Error",
+		icon: "error",
+		title,
+		message,
+		links: [action],
+		// ?mockTierCheck=<code> lands here; the banner says it's simulated
+		demoBanner: true,
+	});
 }
 
 const ERROR_TITLES = {
@@ -60,18 +45,32 @@ const ERROR_TITLES = {
 	NETWORK_ERROR: "Couldn't reach Todoist",
 };
 
-const DEFAULT_ACTION = { href: "/", label: "Back to start" };
+const DEFAULT_ACTION = {
+	href: "/",
+	label: "Back to start",
+	icon: "fa-solid fa-arrow-left",
+};
+const TRY_AGAIN = {
+	href: "/setup",
+	label: "Try again",
+	icon: "fa-solid fa-arrow-left",
+};
+const LOG_IN_AGAIN = {
+	href: "/auth/login",
+	label: "Log in again",
+	icon: "fa-solid fa-right-to-bracket",
+};
 // "Log in again" starts OAuth directly (/auth/login makes a fresh state and
 // redirects to Todoist's permission page), rather than detouring through the
 // landing page's own "Log in" button.
 const ACTION_LINKS = {
-	AUTH_EXPIRED: { href: "/auth/login", label: "Log in again" },
-	FORBIDDEN: { href: "/auth/login", label: "Log in again" },
-	RATE_LIMITED: { href: "/setup", label: "Try again" },
-	SERVER_ERROR: { href: "/setup", label: "Try again" },
-	SERVICE_UNAVAILABLE: { href: "/setup", label: "Try again" },
-	NETWORK_ERROR: { href: "/setup", label: "Try again" },
-	NOT_FOUND: { href: "/setup", label: "Try again" },
+	AUTH_EXPIRED: LOG_IN_AGAIN,
+	FORBIDDEN: LOG_IN_AGAIN,
+	RATE_LIMITED: TRY_AGAIN,
+	SERVER_ERROR: TRY_AGAIN,
+	SERVICE_UNAVAILABLE: TRY_AGAIN,
+	NETWORK_ERROR: TRY_AGAIN,
+	NOT_FOUND: TRY_AGAIN,
 };
 
 export { makeErrorPageHTML, makeNotFoundPageHTML };
