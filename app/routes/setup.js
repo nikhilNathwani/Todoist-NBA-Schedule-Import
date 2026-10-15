@@ -69,7 +69,9 @@ router.get("/", async (req, res) => {
 	} catch (error) {
 		console.error("Error rendering setup page:", error);
 		if (error.todoistErrorType) {
-			const status = mapTodoistErrorTypeToHttpStatus(error.todoistErrorType);
+			const status = mapTodoistErrorTypeToHttpStatus(
+				error.todoistErrorType,
+			);
 			return res.status(status).send(makeErrorPageHTML(error));
 		}
 		res.status(500).send("An error occurred");
@@ -150,7 +152,13 @@ router.post("/", async (req, res) => {
 				});
 			}
 		} catch (error) {
-			return showFailure(req, res, teamID, error, "Failed to validate permissions");
+			return showFailure(
+				req,
+				res,
+				teamID,
+				error,
+				"Failed to validate permissions",
+			);
 		}
 	}
 
@@ -222,7 +230,10 @@ function showFailure(req, res, teamID, error, fallbackPrefix) {
 		});
 	}
 
-	console.error(`${fallbackPrefix} [${error.todoistErrorType}]:`, error.message);
+	console.error(
+		`${fallbackPrefix} [${error.todoistErrorType}]:`,
+		error.message,
+	);
 	return showResult(req, res, {
 		ok: false,
 		teamID,

@@ -6,11 +6,14 @@ import { makeStatusPageHTML } from "./shared/statusPage.js";
 // Todoist outage looks like an intentional part of the app, not a broken
 // page.
 function makeErrorPageHTML(classifiedError) {
-	const title = ERROR_TITLES[classifiedError.todoistErrorType] || "Something went wrong";
+	const title =
+		ERROR_TITLES[classifiedError.todoistErrorType] ||
+		"Something went wrong";
 	const message =
 		classifiedError.message ||
 		"An unexpected error occurred talking to Todoist.";
-	const action = ACTION_LINKS[classifiedError.todoistErrorType] || DEFAULT_ACTION;
+	const action =
+		ACTION_LINKS[classifiedError.todoistErrorType] || DEFAULT_ACTION;
 	return renderErrorPage(title, message, action);
 }
 

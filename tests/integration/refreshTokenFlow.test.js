@@ -37,7 +37,10 @@ describe("login, then the token expires (refresh-token mode)", () => {
 						refresh_token: "refresh-xyz",
 						scope: "data:read_write",
 					}),
-					{ status: 200, headers: { "Content-Type": "application/json" } },
+					{
+						status: 200,
+						headers: { "Content-Type": "application/json" },
+					},
 				),
 			),
 		);

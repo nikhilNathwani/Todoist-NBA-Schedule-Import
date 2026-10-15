@@ -58,7 +58,9 @@ describe("retrieveAccessToken", () => {
 	it("handles the older response (long-lived token, no refresh token) the same way", async () => {
 		stubTokenResponse({ access_token: "access-abc", token_type: "Bearer" });
 
-		await expect(retrieveAccessToken("code-123")).resolves.toBe("access-abc");
+		await expect(retrieveAccessToken("code-123")).resolves.toBe(
+			"access-abc",
+		);
 	});
 
 	it("rejects a used or expired code with Todoist's reason attached", async () => {

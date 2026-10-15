@@ -117,9 +117,7 @@ describe("todoist utilities", () => {
 			};
 		});
 
-		await expect(
-			userReachedProjectLimit("token"),
-		).rejects.toMatchObject({
+		await expect(userReachedProjectLimit("token")).rejects.toMatchObject({
 			todoistErrorType: "RATE_LIMITED",
 			retryAfterSeconds: 15,
 		});
@@ -175,14 +173,19 @@ describe("todoist utilities", () => {
 
 		await expect(
 			createDestination(api, "newProject", "BOS schedule", "gray"),
-		).rejects.toThrow('Team color "gray" for BOS schedule isn\'t a Todoist color key');
+		).rejects.toThrow(
+			'Team color "gray" for BOS schedule isn\'t a Todoist color key',
+		);
 		expect(api.addProject).not.toHaveBeenCalled();
 	});
 
 	it("uses only valid Todoist color keys in the schedule data", async () => {
-		const { colors } = await vi.importActual("@doist/todoist-api-typescript");
+		const { colors } = await vi.importActual(
+			"@doist/todoist-api-typescript",
+		);
 		const valid = new Set(colors.map((c) => c.key));
-		const { default: schedule } = await import("../../data/nba_schedule.json");
+		const { default: schedule } =
+			await import("../../data/nba_schedule.json");
 		const invalid = Object.values(schedule)
 			.map((team) => team.color)
 			.filter((color) => !valid.has(color));
@@ -232,7 +235,10 @@ describe("todoist utilities", () => {
 
 		await expect(
 			createDestination(api, "newProject", "BOS schedule", "red"),
-		).rejects.toMatchObject({ todoistErrorType: "SERVER_ERROR", retryable: true });
+		).rejects.toMatchObject({
+			todoistErrorType: "SERVER_ERROR",
+			retryable: true,
+		});
 	});
 
 	it("creates deep link to section when section id exists", () => {
@@ -293,7 +299,9 @@ describe("todoist utilities", () => {
 						miaCallCount++;
 						if (miaCallCount === 1) {
 							return Promise.reject(
-								Object.assign(new Error("Server error"), { httpStatusCode: 503 }),
+								Object.assign(new Error("Server error"), {
+									httpStatusCode: 503,
+								}),
 							);
 						}
 					}
@@ -301,13 +309,25 @@ describe("todoist utilities", () => {
 				}),
 			};
 			const schedule = [
-				{ opponent: "LAL", isHomeGame: true, gameTimeUtcIso8601: "2026-01-01T10:00:00Z" },
-				{ opponent: "MIA", isHomeGame: false, gameTimeUtcIso8601: "2026-01-02T10:00:00Z" },
+				{
+					opponent: "LAL",
+					isHomeGame: true,
+					gameTimeUtcIso8601: "2026-01-01T10:00:00Z",
+				},
+				{
+					opponent: "MIA",
+					isHomeGame: false,
+					gameTimeUtcIso8601: "2026-01-02T10:00:00Z",
+				},
 			];
 
-			const promise = importSchedule(api, schedule, "BOS", { projectId: "p1" });
+			const promise = importSchedule(api, schedule, "BOS", {
+				projectId: "p1",
+			});
 			const expectation = expect(promise).resolves.toBeUndefined();
-			await vi.advanceTimersByTimeAsync(GAME_RETRY_BACKOFF_SECONDS * 1000);
+			await vi.advanceTimersByTimeAsync(
+				GAME_RETRY_BACKOFF_SECONDS * 1000,
+			);
 			await expectation;
 
 			// LAL once, MIA twice (failed, then succeeded on retry)
@@ -325,29 +345,45 @@ describe("todoist utilities", () => {
 				addTask: vi.fn().mockImplementation((task) => {
 					if (task.content === "BOS at MIA") {
 						return Promise.reject(
-							Object.assign(new Error("Server error"), { httpStatusCode: 503 }),
+							Object.assign(new Error("Server error"), {
+								httpStatusCode: 503,
+							}),
 						);
 					}
 					return Promise.resolve({});
 				}),
 			};
 			const schedule = [
-				{ opponent: "LAL", isHomeGame: true, gameTimeUtcIso8601: "2026-01-01T10:00:00Z" },
-				{ opponent: "MIA", isHomeGame: false, gameTimeUtcIso8601: "2026-01-02T10:00:00Z" },
+				{
+					opponent: "LAL",
+					isHomeGame: true,
+					gameTimeUtcIso8601: "2026-01-01T10:00:00Z",
+				},
+				{
+					opponent: "MIA",
+					isHomeGame: false,
+					gameTimeUtcIso8601: "2026-01-02T10:00:00Z",
+				},
 			];
 
-			const promise = importSchedule(api, schedule, "BOS", { projectId: "p1" });
+			const promise = importSchedule(api, schedule, "BOS", {
+				projectId: "p1",
+			});
 			const expectation = expect(promise).rejects.toMatchObject({
 				todoistErrorType: "SERVICE_UNAVAILABLE",
 				retryable: true,
 				message: expect.stringContaining("BOS at MIA"),
 			});
-			await vi.advanceTimersByTimeAsync(GAME_RETRY_BACKOFF_SECONDS * 1000);
+			await vi.advanceTimersByTimeAsync(
+				GAME_RETRY_BACKOFF_SECONDS * 1000,
+			);
 			await expectation;
 
 			const finalMessage = await promise.catch((e) => e.message);
 			expect(finalMessage).toContain("1 of 2 games");
-			expect(finalMessage).toContain("other 1 were imported successfully");
+			expect(finalMessage).toContain(
+				"other 1 were imported successfully",
+			);
 
 			// LAL added once and never touched again (no rollback); MIA tried twice
 			expect(api.addTask).toHaveBeenCalledTimes(3);

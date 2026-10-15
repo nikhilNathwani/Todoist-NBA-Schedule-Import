@@ -60,7 +60,10 @@ describe("app", () => {
 		const response = await request(app)
 			.get("/setup")
 			.set("X-Forwarded-Proto", "https")
-			.set("Cookie", `session=${forged}; session.sig=not-a-real-signature`);
+			.set(
+				"Cookie",
+				`session=${forged}; session.sig=not-a-real-signature`,
+			);
 
 		expect(response.status).toBe(302);
 		expect(response.headers.location).toBe("/");
@@ -73,7 +76,9 @@ describe("app", () => {
 			.get("/auth/login")
 			.set("X-Forwarded-Proto", "https");
 		expect(login.status).toBe(302);
-		expect(login.headers.location).toMatch(/^https:\/\/todoist\.com\/oauth\/authorize\?/);
+		expect(login.headers.location).toMatch(
+			/^https:\/\/todoist\.com\/oauth\/authorize\?/,
+		);
 
 		// No session, so the import fails with "session expired" and, like
 		// every outcome, redirects to /result, which shows it

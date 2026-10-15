@@ -111,7 +111,10 @@ async function userReachedProjectLimit(accessToken, mockErrorCode) {
 // simulation mechanism, applied at this API call site instead.
 async function createDestination(api, destination, name, color, mockErrorCode) {
 	if (mockErrorCode) {
-		throw toClassifiedError(createMockTodoistError(mockErrorCode), "createDestination");
+		throw toClassifiedError(
+			createMockTodoistError(mockErrorCode),
+			"createDestination",
+		);
 	}
 
 	if (destination === "inbox") {

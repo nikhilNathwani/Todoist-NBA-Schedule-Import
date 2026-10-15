@@ -69,13 +69,13 @@ An Express 5 app. The server renders each page's HTML (template-string functions
 
 `main.js` imports everything else explicitly; no script relies on globals:
 
-| File | Role |
-|---|---|
-| `ui/setup.js` | Updates the "new project" subtitle |
-| `ui/header/teamLogo.js` | Shows the selected team's logo; grows the logo banner |
-| `ui/demoBanner.js` | Banner shown when a demo parameter (`?mockTierCheck=`, `?mockTodoistError=`) is in the URL |
-| `events/selectTeam.js` | Dropdown `change` listener |
-| `events/submitForm.js` | Form `submit` listener: loading screen, double-submit guard |
+| File                    | Role                                                                                       |
+| ----------------------- | ------------------------------------------------------------------------------------------ |
+| `ui/setup.js`           | Updates the "new project" subtitle                                                         |
+| `ui/header/teamLogo.js` | Shows the selected team's logo; grows the logo banner                                      |
+| `ui/demoBanner.js`      | Banner shown when a demo parameter (`?mockTierCheck=`, `?mockTodoistError=`) is in the URL |
+| `events/selectTeam.js`  | Dropdown `change` listener                                                                 |
+| `events/submitForm.js`  | Form `submit` listener: loading screen, double-submit guard                                |
 
 On load, `main.js` attaches the dropdown and form listeners. The team list is already in the HTML, so there's nothing to fetch.
 

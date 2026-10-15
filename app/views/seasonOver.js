@@ -13,8 +13,8 @@ function makeSeasonOverHTML(seasonEndYear) {
 						<h1>NBA Schedule Import</h1>
 						<h3>
 							<b>Come back in October</b> when the ${seasonEndYear}-${
-		(seasonEndYear + 1) % 100
-	} NBA schedule is available.
+								(seasonEndYear + 1) % 100
+							} NBA schedule is available.
 							<br />
 							<br />
 							Then import your favorite team's games into Todoist!

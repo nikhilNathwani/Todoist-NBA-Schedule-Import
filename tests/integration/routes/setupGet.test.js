@@ -112,9 +112,8 @@ describe("GET /setup", () => {
 	// then answers 401, which should read as "log in again", with a link
 	// that starts OAuth directly.
 	it("shows 'Session expired' with a direct login link when Todoist rejects the token", async () => {
-		const { toClassifiedError } = await import(
-			"../../../app/utils/todoistErrors.js"
-		);
+		const { toClassifiedError } =
+			await import("../../../app/utils/todoistErrors.js");
 		getAccessTokenMock.mockResolvedValue("expired-token");
 		userReachedProjectLimitMock.mockRejectedValue(
 			toClassifiedError(
@@ -167,9 +166,8 @@ describe("GET /setup", () => {
 			if (enabled) process.env.ENABLE_ERROR_DEMO = "true";
 			else delete process.env.ENABLE_ERROR_DEMO;
 			vi.resetModules();
-			const { default: freshRoute } = await import(
-				"../../../app/routes/setup.js"
-			);
+			const { default: freshRoute } =
+				await import("../../../app/routes/setup.js");
 			const app = express();
 			app.use("/setup", freshRoute);
 			getAccessTokenMock.mockResolvedValue("token");
@@ -205,7 +203,9 @@ describe("GET /setup", () => {
 		it("shows the at-the-limit picker for ?mockTierCheck=reached, without calling Todoist", async () => {
 			const app = await appWithDemo(true);
 
-			const response = await request(app).get("/setup?mockTierCheck=reached");
+			const response = await request(app).get(
+				"/setup?mockTierCheck=reached",
+			);
 
 			expect(userReachedProjectLimitMock).not.toHaveBeenCalled();
 			expect(response.text).toContain("Project limit reached");
@@ -226,7 +226,9 @@ describe("GET /setup", () => {
 		it("passes ?mockTodoistError to the import through a hidden form field", async () => {
 			const app = await appWithDemo(true);
 
-			const response = await request(app).get("/setup?mockTodoistError=429");
+			const response = await request(app).get(
+				"/setup?mockTodoistError=429",
+			);
 
 			// The page itself does a real tier check and renders the form
 			expect(userReachedProjectLimitMock).toHaveBeenCalledWith(

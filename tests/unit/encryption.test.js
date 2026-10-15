@@ -37,7 +37,8 @@ describe("encryption (real @hapi/iron)", () => {
 
 	it("can't be unsealed with a different ENCRYPTION_KEY", async () => {
 		const sealed = await encrypt("a-token");
-		process.env.ENCRYPTION_KEY = "a-different-password-of-at-least-32-chars";
+		process.env.ENCRYPTION_KEY =
+			"a-different-password-of-at-least-32-chars";
 
 		await expect(decrypt(sealed)).rejects.toThrow();
 	});

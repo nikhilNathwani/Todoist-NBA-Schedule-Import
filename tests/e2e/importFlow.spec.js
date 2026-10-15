@@ -87,7 +87,9 @@ test.describe("logged in", () => {
 							"duringPost",
 							JSON.stringify({
 								title: document.querySelector("h1").textContent,
-								spinner: document.querySelectorAll("#arrow .spinner").length,
+								spinner:
+									document.querySelectorAll("#arrow .spinner")
+										.length,
 							}),
 						);
 						document.getElementById("submitButton").click();
@@ -111,7 +113,9 @@ test.describe("logged in", () => {
 			"src",
 			/team-logos\/BOS\.svg/,
 		);
-		await expect(page.getByRole("link", { name: "Try again" })).toBeVisible();
+		await expect(
+			page.getByRole("link", { name: "Try again" }),
+		).toBeVisible();
 
 		// Refreshing the result re-reads it; it doesn't re-send the post
 		await page.reload();
@@ -136,10 +140,9 @@ test.describe("logged in", () => {
 		await expect(page.locator("h1")).toHaveText(
 			"Todoist is temporarily unavailable",
 		);
-		await expect(page.getByRole("link", { name: "Try again" })).toHaveAttribute(
-			"href",
-			"/setup",
-		);
+		await expect(
+			page.getByRole("link", { name: "Try again" }),
+		).toHaveAttribute("href", "/setup");
 	});
 });
 

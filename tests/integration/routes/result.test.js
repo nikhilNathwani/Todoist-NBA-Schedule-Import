@@ -71,7 +71,11 @@ describe("GET /result", () => {
 	it("falls back to the NBA logo for a team ID that isn't a real team", async () => {
 		const response = await request(
 			createApp({
-				importResult: { ok: false, teamID: "constructor", message: "x" },
+				importResult: {
+					ok: false,
+					teamID: "constructor",
+					message: "x",
+				},
 			}),
 		).get("/result");
 

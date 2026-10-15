@@ -53,7 +53,11 @@ function makeResultPageHTML(result, teamID) {
 				icon: "fa-regular fa-envelope",
 				newTab: true,
 			},
-			{ href: "/setup", label: "Try again", icon: "fa-solid fa-arrow-left" },
+			{
+				href: "/setup",
+				label: "Try again",
+				icon: "fa-solid fa-arrow-left",
+			},
 		],
 	});
 }

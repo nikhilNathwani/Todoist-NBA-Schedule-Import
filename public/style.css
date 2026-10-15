@@ -306,7 +306,6 @@ form:invalid .button:active {
 	gap: 1rem;
 }
 
-
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 /*                                         */
 /*      LANDING PAGE - SEASON OVER         */
@@ -321,7 +320,7 @@ form:invalid .button:active {
 	margin-top: 4rem;
 }
 
-#appFrameLanding.season-over a{
+#appFrameLanding.season-over a {
 	color: var(--clr-accent-dark);
 }
 
@@ -461,7 +460,9 @@ li i {
 	-Form fades out to the left for 1s
 */
 form {
-	transition: opacity 1s ease, transform 1s ease;
+	transition:
+		opacity 1s ease,
+		transform 1s ease;
 }
 
 form.fade-out {
@@ -477,7 +478,10 @@ form.fade-out {
 		so that a vertical scrollbar doesnt appear
 */
 .logo-banner {
-	transition: height 1s ease, font-size 1s ease, gap 1s ease,
+	transition:
+		height 1s ease,
+		font-size 1s ease,
+		gap 1s ease,
 		margin-top 1s ease;
 }
 
@@ -487,7 +491,9 @@ form.fade-out {
 	-Arrow fades out and turns into loading spinner
 */
 .app-status {
-	transition: max-height 1s ease, opacity 1s ease;
+	transition:
+		max-height 1s ease,
+		opacity 1s ease;
 }
 
 .app-status.fade-in {

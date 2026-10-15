@@ -213,7 +213,9 @@ function createMockTodoistError(mockErrorCode) {
 	}
 
 	const httpStatusCode = Number(mockErrorCode);
-	const error = new Error(`Mocked Todoist API error (HTTP ${httpStatusCode})`);
+	const error = new Error(
+		`Mocked Todoist API error (HTTP ${httpStatusCode})`,
+	);
 	error.name = "TodoistRequestError";
 	error.httpStatusCode = httpStatusCode;
 	error.responseData =

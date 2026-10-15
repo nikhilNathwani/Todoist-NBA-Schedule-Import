@@ -14,7 +14,10 @@ describe("error page", () => {
 	);
 
 	it("sends retryable failures back to the setup page", () => {
-		const html = makeErrorPageHTML({ todoistErrorType: "RATE_LIMITED", message: "x" });
+		const html = makeErrorPageHTML({
+			todoistErrorType: "RATE_LIMITED",
+			message: "x",
+		});
 		expect(html).toContain('href="/setup"');
 	});
 });

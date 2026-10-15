@@ -29,7 +29,9 @@ describe("auth routes", () => {
 	// plain HTTP), so the OAuth state really round-trips through a cookie
 	function createApp() {
 		const app = express();
-		app.use(cookieSession({ name: "session", secret: "test-cookie-secret" }));
+		app.use(
+			cookieSession({ name: "session", secret: "test-cookie-secret" }),
+		);
 		app.use("/auth/login", loginRouter);
 		app.use("/auth/callback", callbackRouter);
 		return app;
@@ -41,7 +43,9 @@ describe("auth routes", () => {
 	async function startLogin() {
 		const agent = request.agent(createApp());
 		const response = await agent.get("/auth/login");
-		const state = new URL(response.headers.location).searchParams.get("state");
+		const state = new URL(response.headers.location).searchParams.get(
+			"state",
+		);
 		return { agent, response, state };
 	}
 
@@ -50,7 +54,9 @@ describe("auth routes", () => {
 
 		expect(response.status).toBe(302);
 		const url = new URL(response.headers.location);
-		expect(url.origin + url.pathname).toBe("https://todoist.com/oauth/authorize");
+		expect(url.origin + url.pathname).toBe(
+			"https://todoist.com/oauth/authorize",
+		);
 		expect(url.searchParams.get("client_id")).toBe("test-client-id");
 		expect(url.searchParams.get("scope")).toBe("data:read_write");
 		expect(url.searchParams.get("redirect_uri")).toBe(
@@ -75,7 +81,9 @@ describe("auth routes", () => {
 		saveAccessTokenMock.mockResolvedValue(undefined);
 		const { agent, state } = await startLogin();
 
-		const response = await agent.get(`/auth/callback?code=abc&state=${state}`);
+		const response = await agent.get(
+			`/auth/callback?code=abc&state=${state}`,
+		);
 
 		expect(response.status).toBe(302);
 		expect(response.headers.location).toBe("/setup");
@@ -86,7 +94,9 @@ describe("auth routes", () => {
 	it("rejects callback when state does not match", async () => {
 		const { agent } = await startLogin();
 
-		const response = await agent.get("/auth/callback?code=abc&state=wrong-state");
+		const response = await agent.get(
+			"/auth/callback?code=abc&state=wrong-state",
+		);
 
 		expect(response.status).toBe(403);
 		expect(response.text).toContain("State mismatch");
@@ -110,7 +120,9 @@ describe("auth routes", () => {
 		const { agent, state } = await startLogin();
 
 		await agent.get(`/auth/callback?code=abc&state=${state}`);
-		const replay = await agent.get(`/auth/callback?code=abc&state=${state}`);
+		const replay = await agent.get(
+			`/auth/callback?code=abc&state=${state}`,
+		);
 
 		expect(replay.status).toBe(403);
 		expect(retrieveAccessTokenMock).toHaveBeenCalledTimes(1);
@@ -138,9 +150,12 @@ describe("auth routes", () => {
 		],
 		[
 			"Todoist rate-limiting us",
-			Object.assign(new Error("Todoist is rate-limiting requests right now."), {
-				httpStatusCode: 429,
-			}),
+			Object.assign(
+				new Error("Todoist is rate-limiting requests right now."),
+				{
+					httpStatusCode: 429,
+				},
+			),
 			429,
 			"rate-limiting",
 		],
@@ -156,7 +171,9 @@ describe("auth routes", () => {
 		retrieveAccessTokenMock.mockRejectedValue(error);
 		const { agent, state } = await startLogin();
 
-		const response = await agent.get(`/auth/callback?code=abc&state=${state}`);
+		const response = await agent.get(
+			`/auth/callback?code=abc&state=${state}`,
+		);
 
 		expect(response.status).toBe(status);
 		expect(response.text).toContain(text);
@@ -167,7 +184,9 @@ describe("auth routes", () => {
 		retrieveAccessTokenMock.mockRejectedValue(new Error("boom"));
 		const { agent, state } = await startLogin();
 
-		const response = await agent.get(`/auth/callback?code=abc&state=${state}`);
+		const response = await agent.get(
+			`/auth/callback?code=abc&state=${state}`,
+		);
 
 		expect(response.status).toBe(500);
 		expect(response.text).toContain(
