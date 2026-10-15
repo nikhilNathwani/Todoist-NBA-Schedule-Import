@@ -1,0 +1,9 @@
+# npm owns this file's formatting
+package-lock.json
+# Agent instructions
+AGENTS.md
+CLAUDE.md
+# Scraped schedule data
+data/nba_schedule.json
+# Standalone presentation
+docs/lovable-presentation.html
