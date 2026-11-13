@@ -20,7 +20,7 @@ pytz==2026.4
 # Managed by pip freeze to ensure consistent versions.
 
 # For beautifulsoup4
-soupsieve==2.10
+soupsieve==4.0
 typing_extensions==4.16.0
 
 # For requests
