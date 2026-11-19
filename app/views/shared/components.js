@@ -52,7 +52,7 @@ function makeFooter() {
 			<a
 				target="_blank"
 				href="https://github.com/nikhilNathwani/Todoist-NBA-Schedule-Saver"
-				>Github</a
+				>GitHub</a
 			>
 		</footer>`;
 }
